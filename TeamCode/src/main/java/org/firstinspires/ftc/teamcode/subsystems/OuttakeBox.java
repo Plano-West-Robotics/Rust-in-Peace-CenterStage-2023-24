@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class AryanOuttakeBox {
+public class OuttakeBox {
     private final Telemetry telemetry;
     private final Servo fork;
     private int targetPosition;
@@ -14,7 +14,7 @@ public class AryanOuttakeBox {
         MIDDLE,
         CLOSE
     }
-    public AryanOuttakeBox(HardwareMap hardwareMap,Telemetry telemetry) {
+    public OuttakeBox(HardwareMap hardwareMap, Telemetry telemetry) {
 
         this.telemetry = telemetry;
 

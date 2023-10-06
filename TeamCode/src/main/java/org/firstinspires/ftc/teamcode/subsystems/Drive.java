@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class AryanDrive {
+public class Drive {
 
     // Null by default
     private final DcMotor frontLeft;
@@ -16,7 +16,7 @@ public class AryanDrive {
     private final Telemetry telemetry;
 
     // This is a constructor
-    public AryanDrive(HardwareMap hardwareMap, Telemetry telemetry) {
+    public Drive(HardwareMap hardwareMap, Telemetry telemetry) {
 
         // Instantiates motors
         frontLeft = hardwareMap.get(DcMotor.class,"FLmotor");

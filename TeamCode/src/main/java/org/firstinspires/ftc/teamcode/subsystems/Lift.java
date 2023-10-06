@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class AryanLift {
+public class Lift {
     private final Telemetry telemetry;
 
     private final DcMotor lift;
@@ -22,7 +22,7 @@ public class AryanLift {
         HIGH
     }
     // THIS IS A CONSTRUCTOR
-    public AryanLift(HardwareMap hardwareMap, Telemetry telemetry) {
+    public Lift(HardwareMap hardwareMap, Telemetry telemetry) {
 
         lift = hardwareMap.get(DcMotor.class, "lift");
         lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

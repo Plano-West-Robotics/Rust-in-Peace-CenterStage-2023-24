@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class AryanIntake {
+public class Intake {
     private final Telemetry telemetry;
     private final Servo arm;
     private final DcMotor intake;
@@ -17,7 +17,7 @@ public class AryanIntake {
         MIDDLE,
         DOWN
     }
-    public AryanIntake(HardwareMap hardwareMap, Telemetry telemetry) {
+    public Intake(HardwareMap hardwareMap, Telemetry telemetry) {
 
         this.telemetry = telemetry;
 
