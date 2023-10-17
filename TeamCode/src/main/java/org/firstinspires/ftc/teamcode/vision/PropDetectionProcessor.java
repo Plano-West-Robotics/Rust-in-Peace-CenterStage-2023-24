@@ -14,10 +14,12 @@ import org.opencv.imgproc.Imgproc;
 
 public class PropDetectionProcessor implements VisionProcessor {
 
+    // Enumeration that helps set what color the game team prop is
     public enum Prop {
         BLUE, RED
     }
 
+    // Enumeration that holds the location that the prop is detected at
     public enum Location {
         Left,
         Center,
@@ -26,9 +28,11 @@ public class PropDetectionProcessor implements VisionProcessor {
     private Location location;
     public Prop propColor = Prop.RED;
 
+    // Scalars that provide the lowHSV and highHSV for image processing
     Scalar lowHSV;
     Scalar highHSV;
 
+    // Rects define the areas that the prop must be on to be considered left, right, or center
     static final Rect LEFT_ROI = new Rect(
             new Point(30*3, 35*2.25),
             new Point(210*3, 445*2.25));
@@ -40,24 +44,26 @@ public class PropDetectionProcessor implements VisionProcessor {
             new Point(230*3, 35*2.25),
             new Point(400*3,445*2.25 ));
 
+    // Sets how much percent of the rect an object must take up to be considered to be on the corresponding location
     static double PERCENT_COLOR_THRESHOLD = 0.2;
 
     @Override
     public void init(int width, int height, CameraCalibration calibration) {
-
+    // Not useful
     }
 
     @Override
     public Object processFrame(Mat frame, long captureTimeNanos) {
-        Imgproc.cvtColor(frame, frame, Imgproc.COLOR_RGB2HSV);
+        Imgproc.cvtColor(frame, frame, Imgproc.COLOR_RGB2HSV); // Converts image to HSV color
 
         if (propColor == Prop.BLUE) {
             lowHSV = new Scalar(55.3, 62.3, 53.8);
             highHSV = new Scalar(213.9, 240.8, 255);
         } else {
-            lowHSV = new Scalar(0, 106.3, 198.3);
-            highHSV = new Scalar(14.2, 255, 255);
+            lowHSV = new Scalar(0, 76.5, 179.9);
+            highHSV = new Scalar(7.1, 218.2, 255);
         }
+
         Core.inRange(frame, lowHSV, highHSV, frame);
 
         Mat left = frame.submat(LEFT_ROI);
@@ -108,6 +114,10 @@ public class PropDetectionProcessor implements VisionProcessor {
         Imgproc.putText(frame, location.name(), new Point(220*3,60*2.25),1,5, red);
 
         return null; // No context object
+    }
+
+    public Location getLocation() {
+        return location;
     }
 
     @Override
