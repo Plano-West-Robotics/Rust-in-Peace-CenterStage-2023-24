@@ -1,14 +1,16 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+@Config
 public class OuttakeBox {
     private final Telemetry telemetry;
     private final Servo fork;
-    private int targetPosition;
+    public static double targetPosition;
     enum Position {
         OPEN,
         MIDDLE,
@@ -20,7 +22,7 @@ public class OuttakeBox {
 
         fork = hardwareMap.get(Servo.class,"fork");
     }
-    void goTo(int targetPosition) {
+    public void goTo(double targetPosition) {
         fork.setPosition(targetPosition);
     }
     public void goTo(Position targetPosition) {
@@ -29,5 +31,9 @@ public class OuttakeBox {
             case MIDDLE: goTo(0);
             case CLOSE: goTo(1);
         }
+    }
+
+    public void update() {
+        fork.setPosition(targetPosition);
     }
 }
