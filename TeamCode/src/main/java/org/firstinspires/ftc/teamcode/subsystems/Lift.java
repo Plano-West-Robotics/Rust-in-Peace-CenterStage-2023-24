@@ -8,12 +8,11 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Lift {
     private final Telemetry telemetry;
 
-    private final DcMotor lift;
+    private final DcMotor slideLeft;
+    private final DcMotor slideRight;
 
     private boolean manual;
-
     private double speed;
-
     private int targetPosition;
 
     enum Position {
@@ -24,8 +23,11 @@ public class Lift {
     // THIS IS A CONSTRUCTOR
     public Lift(HardwareMap hardwareMap, Telemetry telemetry) {
 
-        lift = hardwareMap.get(DcMotor.class, "lift");
-        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        slideLeft = hardwareMap.get(DcMotor.class, "SLmotor");
+        slideLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        slideRight = hardwareMap.get(DcMotor.class, "SRmotor");
+        slideRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         manual = false;
 
@@ -40,8 +42,9 @@ public class Lift {
         this.manual = manual;
     }
 
+    // TODO: add both slide powers
     public void setPower(double power) {
-        lift.setPower(power * speed);
+        slideRight.setPower(power * speed);
     }
 
     public void setSpeed(double speed) {
@@ -81,7 +84,7 @@ public class Lift {
         if (manual) {
             setPower(joystick); // Maybe negative, depends on the motor
         } else {
-            setPower(calculate(lift.getCurrentPosition()));
+            setPower(calculate(slideRight.getCurrentPosition()));
         }
     }
 }
