@@ -33,9 +33,9 @@ public class Drive {
         backRight = hardwareMap.get(DcMotor.class, "BRmotor");
 
         // Sets direction for motors -- forward is default
-        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        frontLeft.setDirection(DcMotor.Direction.FORWARD);
         frontRight.setDirection(DcMotor.Direction.REVERSE);
-        backLeft.setDirection(DcMotor.Direction.FORWARD);
+        backLeft.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.FORWARD);
 
         // Set motor to run by RPM and not voltage
@@ -96,13 +96,10 @@ public class Drive {
         x *= 1.1; // Counteract imperfect strafing
         y *= -1; // Switch because it just works like that
 
-        // TODO: figure out why switching the x of flpower to negative and the x of blpower to positive works
-        // the same direction switch is in updatefieldcentric
-        // also the 0.9 and 1.1 is to make the robot have less strafing error where it tilts at high speeds
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-        double flPower = (y - x*0.9 + rx) / denominator;
+        double flPower = (y + x + rx) / denominator;
         double frPower = (y - x - rx) / denominator;
-        double blPower = (y + x*1.1 + rx) / denominator;
+        double blPower = (y - x + rx) / denominator;
         double brPower = (y + x - rx) / denominator;
         setDrivePowers(flPower, frPower, blPower, brPower);
     }
@@ -129,9 +126,9 @@ public class Drive {
         // This ensures all the powers maintain the same ratio,
         // but only if at least one is out of the range [-1, 1]
         double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
-        double flPower = (rotY - rotX + rx) / denominator;
+        double flPower = (rotY + rotX + rx) / denominator;
         double frPower = (rotY - rotX - rx) / denominator;
-        double blPower = (rotY + rotX + rx) / denominator;
+        double blPower = (rotY - rotX + rx) / denominator;
         double brPower = (rotY + rotX - rx) / denominator;
         setDrivePowers(flPower, frPower, blPower, brPower);
     }
