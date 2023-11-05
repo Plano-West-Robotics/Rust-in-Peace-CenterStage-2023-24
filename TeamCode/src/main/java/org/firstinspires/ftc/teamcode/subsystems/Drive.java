@@ -96,6 +96,9 @@ public class Drive {
         x *= 1.1; // Counteract imperfect strafing
         y *= -1; // Switch because it just works like that
 
+        // TODO: figure out why switching the x of flpower to negative and the x of blpower to positive works
+        // the same direction switch is in updatefieldcentric
+        // also the 0.9 and 1.1 is to make the robot have less strafing error where it tilts at high speeds
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
         double flPower = (y - x*0.9 + rx) / denominator;
         double frPower = (y - x - rx) / denominator;
