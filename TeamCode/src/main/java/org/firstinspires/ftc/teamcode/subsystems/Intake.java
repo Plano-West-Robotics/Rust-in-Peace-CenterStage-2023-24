@@ -1,17 +1,17 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Intake {
     private final Telemetry telemetry;
-    private final Servo arm;
+    private final CRServo arm;
     private final DcMotor intake;
     private double speed;
-    private int targetPosition;
+    private double targetPosition;
     enum Position {
         TOP,
         MIDDLE,
@@ -21,21 +21,22 @@ public class Intake {
 
         this.telemetry = telemetry;
 
-        arm = hardwareMap.get(Servo.class,"arm");
+        arm = hardwareMap.get(CRServo.class,"ARMservo");
+        arm.setDirection(CRServo.Direction.REVERSE);
 
-        intake = hardwareMap.get(DcMotor.class, "intake");
+        intake = hardwareMap.get(DcMotor.class, "INmotor");
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         speed = 1;
     }
     public void setTargetPositionPreset(Position targetPosition) {
         switch (targetPosition) {
-            case TOP: setTargetPosition(100); break;
-            case MIDDLE: setTargetPosition(50); break;
+            case TOP: setTargetPosition(1); break;
+            case MIDDLE: setTargetPosition(0.5); break;
             case DOWN: setTargetPosition(0); break;
         }
     }
-    public void setTargetPosition(int targetPosition) {
+    public void setTargetPosition(double targetPosition) {
         this.targetPosition = targetPosition;
     }
     public void spinForward(){
@@ -52,5 +53,9 @@ public class Intake {
     }
     public double getSpeed() {
         return speed;
+    }
+
+    public void setArmPower(double power) {
+        arm.setPower(power);
     }
 }

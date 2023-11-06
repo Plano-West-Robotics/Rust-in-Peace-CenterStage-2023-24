@@ -29,8 +29,10 @@ public class Lift {
         slideRight = hardwareMap.get(DcMotor.class, "SRmotor");
         slideRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        manual = false;
+        slideRight.setDirection(DcMotor.Direction.REVERSE);
 
+        manual = false;
+        // a value between 0 and 1 where 1 is max speed
         speed = 1;
 
         setTargetPositionPreset(Position.BOTTOM);
@@ -44,6 +46,7 @@ public class Lift {
 
     // TODO: add both slide powers
     public void setPower(double power) {
+        slideLeft.setPower(power * speed);
         slideRight.setPower(power * speed);
     }
 
@@ -86,5 +89,9 @@ public class Lift {
         } else {
             setPower(calculate(slideRight.getCurrentPosition()));
         }
+    }
+
+    public double getEncoderValue() {
+        return slideRight.getCurrentPosition();
     }
 }
