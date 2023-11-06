@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.subsystems.Drive;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
+import org.firstinspires.ftc.teamcode.subsystems.OuttakeController;
 
 import java.util.Arrays;
 
@@ -16,13 +17,16 @@ public class RobotCentricTeleOp extends OpMode {
     Lift lift;
     Intake intake;
 
+    OuttakeController control;
+
+
     @Override
     public void init() {
         drive = new Drive(hardwareMap, telemetry);
         lift = new Lift(hardwareMap, telemetry);
         intake = new Intake(hardwareMap, telemetry);
+        control = new OuttakeController(hardwareMap, telemetry, lift);
     }
-
     @Override
     public void loop() {
 
@@ -44,6 +48,7 @@ public class RobotCentricTeleOp extends OpMode {
             intake.stopSpin();
         }
 
+
         // Intake - Arm
         if (gamepad1.right_bumper) {
             intake.setArmPower(0.2);
@@ -53,6 +58,18 @@ public class RobotCentricTeleOp extends OpMode {
             intake.setArmPower(0);
         }
 
+        //Arm - toggle
+        /** If arm up, then arm down, vice versa
+         */
+        if(gamepad1.a) {    //GAMEPAD BUTTON IS NOT FINAL. JUST PLACEHOLDER
+
+            if (control.getArmUp()) {
+                control.armDown();
+            } else {
+                control.armUp();
+            }
+
+        }
         // Chassis
         drive.update(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 

@@ -21,8 +21,8 @@ public class Lift {
         HIGH
     }
     // THIS IS A CONSTRUCTOR
-    public Lift(HardwareMap hardwareMap, Telemetry telemetry) {
 
+    public Lift(HardwareMap hardwareMap, Telemetry telemetry) {
         slideLeft = hardwareMap.get(DcMotor.class, "SLmotor");
         slideLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -40,6 +40,7 @@ public class Lift {
         this.telemetry = telemetry;
     }
 
+    //region Lift
     public void setManual(boolean manual) {
         this.manual = manual;
     }
@@ -66,7 +67,13 @@ public class Lift {
         this.targetPosition = targetPosition;
     }
 
+    /** calculates the power that the slide needs
+     *
+     * @param currentPosition
+     * @return
+     */
     public double calculate(int currentPosition) {
+
         int distance = Math.abs(targetPosition - currentPosition);
         if (distance < 20) {
             return 0.01;
@@ -94,4 +101,5 @@ public class Lift {
     public double getEncoderValue() {
         return slideRight.getCurrentPosition();
     }
+    //endregion
 }
