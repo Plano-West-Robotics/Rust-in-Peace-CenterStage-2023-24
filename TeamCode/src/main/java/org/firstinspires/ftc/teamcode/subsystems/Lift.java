@@ -15,6 +15,8 @@ public class Lift {
     private double speed;
     private int targetPosition;
 
+    private int liftOffset;
+
     enum Position {
         BOTTOM,
         MEDIUM,
@@ -34,6 +36,8 @@ public class Lift {
         manual = false;
         // a value between 0 and 1 where 1 is max speed
         speed = 1;
+
+        liftOffset = slideRight.getCurrentPosition();
 
         setTargetPositionPreset(Position.BOTTOM);
 
@@ -94,12 +98,16 @@ public class Lift {
         if (manual) {
             setPower(joystick); // Maybe negative, depends on the motor
         } else {
-            setPower(calculate(slideRight.getCurrentPosition()));
+            setPower(calculate(slideRight.getCurrentPosition()-liftOffset));
         }
     }
 
     public double getEncoderValue() {
-        return slideRight.getCurrentPosition();
+        return slideRight.getCurrentPosition()-liftOffset;
     }
+    public void resetEncoder() {
+        liftOffset = slideRight.getCurrentPosition();
+    }
+
     //endregion
 }

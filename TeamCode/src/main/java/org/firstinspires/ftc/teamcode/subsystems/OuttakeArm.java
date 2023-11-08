@@ -7,24 +7,37 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class OuttakeArm {
     private final Telemetry telemetry;
-    private final Servo arm;
+    public final Servo leftArm;
+    public final Servo rightArm;
+
+    final double leftPos;
+    final double rightPos;
+
     public enum Position {
         UP,
         DOWN
     }
     public OuttakeArm(HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
-        arm = hardwareMap.get(Servo.class,"arm");
+        leftArm = hardwareMap.get(Servo.class,"LAservo");
+        rightArm = hardwareMap.get(Servo.class, "RAservo");
+
+        leftArm.scaleRange(0, 0.7);
+        rightArm.setDirection(Servo.Direction.REVERSE);
+
+        leftPos = leftArm.getPosition();
+        rightPos = rightArm.getPosition();
     }
 
     public void goTo(double targetPosition) {
-        arm.setPosition(targetPosition);
+        leftArm.setPosition(targetPosition);
     }
 
     public void goTo(Position targetPosition) {
-        switch (targetPosition) {
-            case UP: goTo(-1);   // NOT FINAL
-            case DOWN: goTo(0);  // NOT FINAL
+        if (targetPosition == Position.UP) {
+            goTo(1);
+        } else if (targetPosition == Position.DOWN) {
+            goTo(0);
         }
     }
 }

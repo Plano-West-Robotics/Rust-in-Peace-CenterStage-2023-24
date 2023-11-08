@@ -7,15 +7,17 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class OuttakeController {
 
      Lift lift;
-     OuttakeArm arm;
+     public OuttakeArm arm;
+     public OuttakeBox box;
 
      private boolean isUp;
 
-
      public OuttakeController(HardwareMap hardwareMap, Telemetry telemetry, Lift liftParam) {
          lift = liftParam;
-         arm = new OuttakeArm(hardwareMap,telemetry);
+         arm = new OuttakeArm(hardwareMap, telemetry);
+         box = new OuttakeBox(hardwareMap, telemetry);
 
+         isUp = false;
      }
 
 
@@ -25,11 +27,8 @@ public class OuttakeController {
      */
     public void armUp(){
          if(liftIsUp()){
-
              arm.goTo(OuttakeArm.Position.UP);
              isUp = true;
-
-
          }
      }
 
@@ -61,6 +60,18 @@ public class OuttakeController {
      */
     public boolean getArmUp(){
          return isUp;
+     }
+
+     public void spinBoxIn() {
+        box.intake();
+     }
+
+     public void spinBoxOut() {
+        box.outtake();
+     }
+
+     public void stopBox() {
+        box.stopSpinning();
      }
 
 }

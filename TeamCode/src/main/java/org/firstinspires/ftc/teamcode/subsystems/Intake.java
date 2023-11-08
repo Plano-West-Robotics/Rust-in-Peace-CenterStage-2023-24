@@ -3,16 +3,17 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Intake {
     private final Telemetry telemetry;
-    private final CRServo arm;
+    private final Servo arm;
     private final DcMotor intake;
     private double speed;
     private double targetPosition;
-    enum Position {
+    public enum Position {
         TOP,
         MIDDLE,
         DOWN
@@ -21,13 +22,16 @@ public class Intake {
 
         this.telemetry = telemetry;
 
-        arm = hardwareMap.get(CRServo.class,"ARMservo");
-        arm.setDirection(CRServo.Direction.REVERSE);
+        arm = hardwareMap.get(Servo.class,"ARMservo");
+        arm.setDirection(Servo.Direction.REVERSE);
+        arm.scaleRange(0, 0.5);
 
         intake = hardwareMap.get(DcMotor.class, "INmotor");
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        speed = 1;
+        speed = 0.5;
+
+        targetPosition = intake.getCurrentPosition();
     }
     public void setTargetPositionPreset(Position targetPosition) {
         switch (targetPosition) {
@@ -39,6 +43,7 @@ public class Intake {
     public void setTargetPosition(double targetPosition) {
         this.targetPosition = targetPosition;
     }
+
     public void spinForward(){
         intake.setPower(1 * speed);
     }
@@ -48,6 +53,7 @@ public class Intake {
     public void stopSpin(){
         intake.setPower(0);
     }
+
     public void setSpeed(double speed) {
         this.speed = speed;
     }
@@ -55,7 +61,11 @@ public class Intake {
         return speed;
     }
 
-    public void setArmPower(double power) {
-        arm.setPower(power);
+    public double getCurrentPosition() {
+        return arm.getPosition();
+    }
+
+    public void update() {
+        arm.setPosition(targetPosition);
     }
 }
