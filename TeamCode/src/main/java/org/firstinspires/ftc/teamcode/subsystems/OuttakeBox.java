@@ -31,4 +31,8 @@ public class OuttakeBox {
     public void stopSpinning() {
         box.setPower(0);
     }
+
+    public double getPower() {
+        return box.getPower();
+    }
 }

@@ -11,6 +11,7 @@ public class OuttakeController {
      public OuttakeBox box;
 
      private boolean isUp;
+     public final int LIFT_UP_MIN = 400;
 
      public OuttakeController(HardwareMap hardwareMap, Telemetry telemetry, Lift liftParam) {
          lift = liftParam;
@@ -48,7 +49,7 @@ public class OuttakeController {
      * @return true if life is UP, false if DOWN
      */
      public boolean liftIsUp() {
-        if(lift.getEncoderValue() < 10){ // NOT FINAL VALUE
+        if(lift.getEncoderValue() < LIFT_UP_MIN){
             return false;
         }
         return true;
