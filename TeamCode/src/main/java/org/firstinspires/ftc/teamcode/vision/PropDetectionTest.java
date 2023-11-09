@@ -1,13 +1,10 @@
 package org.firstinspires.ftc.teamcode.vision;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 @Autonomous(name = "PropDetectionTest")
 public class PropDetectionTest extends LinearOpMode {
@@ -35,7 +32,8 @@ public class PropDetectionTest extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-            // ...
+            visionPortal.getProcessorEnabled(propDetector);
+            telemetry.addLine(String.valueOf(propDetector.getLocation()));
         }
 
         // Save more CPU resources when camera is no longer needed.
