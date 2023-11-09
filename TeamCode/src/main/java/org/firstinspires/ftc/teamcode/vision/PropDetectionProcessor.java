@@ -33,6 +33,7 @@ public class PropDetectionProcessor implements VisionProcessor {
     Scalar highHSV;
 
     // Rects define the areas that the prop must be on to be considered left, right, or center
+    // remove the multipliers when building on robot. x multipliers -3, y multipliers -2.25
     static final Rect LEFT_ROI = new Rect(
             new Point(30*3, 35*2.25),
             new Point(210*3, 445*2.25));
