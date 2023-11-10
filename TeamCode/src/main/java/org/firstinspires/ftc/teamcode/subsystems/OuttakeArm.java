@@ -22,7 +22,7 @@ public class OuttakeArm {
         leftArm = hardwareMap.get(Servo.class,"LAservo");
         rightArm = hardwareMap.get(Servo.class, "RAservo");
 
-        leftArm.scaleRange(0, 0.45);
+        leftArm.scaleRange(0, 0.5);
         rightArm.setDirection(Servo.Direction.REVERSE);
 
         leftPos = leftArm.getPosition();

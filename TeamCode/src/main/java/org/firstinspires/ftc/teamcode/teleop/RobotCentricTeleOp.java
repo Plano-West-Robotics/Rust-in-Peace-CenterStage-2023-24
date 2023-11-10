@@ -21,6 +21,7 @@ public class RobotCentricTeleOp extends OpMode {
     OuttakeController control;
 
     double intakeArmTrigger;
+    boolean outtakeArmDirectionDown = false;
 
     @Override
     public void init() {
@@ -38,23 +39,37 @@ public class RobotCentricTeleOp extends OpMode {
     @Override
     public void loop() {
 
-        // test variable lift
+        // test bottom lift limit, dpad up/down auto combos
 
         // Lift
         if (Math.abs(gamepad2.left_stick_y) > 0) lift.update(-gamepad2.left_stick_y);
         else lift.update(0.1);
 
-        // Auto release combo
-        if (gamepad2.a) {
+        // Auto release combos --
+        if (gamepad2.dpad_up) {
             lift.setManual(false);
             lift.setTargetPositionPreset(Lift.Position.MEDIUM);
         }
+//        else if (gamepad2.dpad_down) {
+//            control.armDown();
+//            outtakeArmDirectionDown = true;
+//        }
+
+//        // Ensures the arm is fully down before moving lift down
+//        if (outtakeArmDirectionDown && control.arm.leftArm.getPosition() < 0.1) {
+//            lift.setManual(false);
+//            lift.setTargetPositionPreset(Lift.Position.BOTTOM);
+//            outtakeArmDirectionDown = false;
+//        }
 
         if (!lift.getManual() && control.liftIsUp() && !control.getArmUp()) control.armUp();
+        else if (!lift.getManual() && control.liftIsUp() && control.getArmUp()) control.armDown();
 
         // Intake - Spin
         if (gamepad2.left_bumper) {
             intake.spinForward();
+            lift.setPower(-0.1, true);
+            control.spinBoxOut();
         } else if (gamepad2.left_trigger > 0) {
             intake.spinBackwards();
         } else {
@@ -87,9 +102,6 @@ public class RobotCentricTeleOp extends OpMode {
         } else if (gamepad2.dpad_right) {
             control.armDown();
         }
-
-        if (control.getArmUp()) control.armUp();
-        else control.armDown();
 
         // Outtake Box
         if (gamepad2.b) {

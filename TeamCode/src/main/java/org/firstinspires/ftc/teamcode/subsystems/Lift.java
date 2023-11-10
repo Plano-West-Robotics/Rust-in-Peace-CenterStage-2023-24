@@ -56,11 +56,11 @@ public class Lift {
                 slideLeft.setPower(power * speed);
                 slideRight.setPower(power * speed);
             } else if (power < 0) {
-                if (height < 20) power = 0;
+                if (height < 45) power = 0;
                 slideLeft.setPower(power * speed);
                 slideRight.setPower(power * speed);
             } else if (power > 0) {
-                if (height > 2220) power = 0;
+                if (height > 2100) power = 0;
                 slideLeft.setPower(power * speed);
                 slideRight.setPower(power * speed);
             }
@@ -76,7 +76,7 @@ public class Lift {
             slideLeft.setPower(power * speed);
             slideRight.setPower(power * speed);
         } else if (power < 0) {
-            if (height < 20) power = 0;
+            if (height < 45) power = 0.1;
             slideLeft.setPower(power * speed);
             slideRight.setPower(power * speed);
         } else if (power > 0) {
@@ -92,7 +92,7 @@ public class Lift {
 
     public void setTargetPositionPreset(Position targetPosition) {
         switch (targetPosition) {
-            case BOTTOM: setTargetPosition(20); break; // Generally values from 0 to 1000
+            case BOTTOM: setTargetPosition(45); break; // Generally values from 0 to 1000
             case MEDIUM: setTargetPosition(1000); break;
             case HIGH: setTargetPosition(2000); break;
         }
