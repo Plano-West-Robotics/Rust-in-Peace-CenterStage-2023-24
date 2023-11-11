@@ -25,7 +25,7 @@ public class RobotCentricTeleOp extends OpMode {
 
     @Override
     public void init() {
-        drive = new Drive(hardwareMap, telemetry);
+        drive = new Drive(hardwareMap, telemetry, false);
         lift = new Lift(hardwareMap, telemetry);
         intake = new Intake(hardwareMap, telemetry);
         control = new OuttakeController(hardwareMap, telemetry, lift);
@@ -69,7 +69,7 @@ public class RobotCentricTeleOp extends OpMode {
         if (gamepad2.left_bumper) {
             intake.spinForward();
             lift.setPower(-0.1, true);
-            control.spinBoxOut();
+            control.spinBoxIn();
         } else if (gamepad2.left_trigger > 0) {
             intake.spinBackwards();
         } else {

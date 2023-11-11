@@ -36,27 +36,68 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.subsystems.Drive;
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.Lift;
+import org.firstinspires.ftc.teamcode.subsystems.OuttakeController;
+import org.firstinspires.ftc.teamcode.vision.PropDetectionProcessor;
+import org.firstinspires.ftc.vision.VisionPortal;
 
 @Autonomous(name="Red Backboard-Side Auto", group="Auto")
 public class RedBackAuto extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
+
+    // Vision
+    private PropDetectionProcessor propDetector;
+    private VisionPortal visionPortal;
+
     Drive drive;
+    Lift lift;
+    Intake intake;
+    OuttakeController control;
 
     @Override
     public void runOpMode() {
-        drive = new Drive(hardwareMap, telemetry);
+        propDetector = new PropDetectionProcessor();
+        visionPortal = VisionPortal.easyCreateWithDefaults(
+                hardwareMap.get(WebcamName.class, "Webcam 1"), propDetector);
+
+        drive = new Drive(hardwareMap, telemetry, true);
+        lift = new Lift(hardwareMap, telemetry);
+        intake = new Intake(hardwareMap, telemetry);
+        control = new OuttakeController(hardwareMap, telemetry, lift);
+
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            drive.update(0,-0.2,0);
-            sleep(5000);
-            drive.update(0,0,0);
+            // red by default
+            visionPortal.getProcessorEnabled(propDetector);
 
+            drive.moveForward(2000);
+            sleep(2000);
+
+            control.spinBoxOut();
+            intake.spinBackwards();
+            sleep(1500);
+            intake.stopSpin();
+            control.spinBoxIn();
+
+            drive.strafeRight(5000);
+
+            if (propDetector.getLocation() == PropDetectionProcessor.Location.Left) {
+
+            } else if (propDetector.getLocation() == PropDetectionProcessor.Location.Right) {
+
+            } else {
+
+            }
+
+            telemetry.addLine(String.valueOf(propDetector.getLocation()));
             telemetry.update();
         }
     }

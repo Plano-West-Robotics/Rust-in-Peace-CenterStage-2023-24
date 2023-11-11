@@ -23,8 +23,10 @@ public class Drive {
     private final Telemetry telemetry;
     private final Imu imu;
 
+    private final int TICKS_PER_DEGREES = 20;
+
     // This is a constructor
-    public Drive(HardwareMap hardwareMap, Telemetry telemetry) {
+    public Drive(HardwareMap hardwareMap, Telemetry telemetry, boolean auto) {
 
         // Instantiates motors
         frontLeft = hardwareMap.get(DcMotor.class,"FLmotor");
@@ -47,6 +49,17 @@ public class Drive {
             motor.setMotorType(motorConfigurationType);
         }
 
+        if (auto) {
+            frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        } else {
+            frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
         // Set mode is good practice -- RUN_WITHOUT_ENCODER is default
         frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -139,5 +152,75 @@ public class Drive {
 
     public int[] getEncoderValues() {
         return new int[]{frontLeft.getCurrentPosition(), frontRight.getCurrentPosition(), backLeft.getCurrentPosition(), backRight.getCurrentPosition()};
+    }
+
+    // TeleOp
+    public void moveForward(int ticks) {
+        frontLeft.setTargetPosition(calculateTicks(frontLeft, ticks));
+        frontRight.setTargetPosition(calculateTicks(frontRight, ticks));
+        backLeft.setTargetPosition(calculateTicks(backLeft, ticks));
+        backRight.setTargetPosition(calculateTicks(backRight, ticks));
+
+        changeMotorModeToPosition();
+    }
+
+    public void moveBackward(int ticks) {
+        frontLeft.setTargetPosition(calculateTicks(frontLeft, -ticks));
+        frontRight.setTargetPosition(calculateTicks(frontRight, -ticks));
+        backLeft.setTargetPosition(calculateTicks(backLeft, -ticks));
+        backRight.setTargetPosition(calculateTicks(backRight, -ticks));
+
+        changeMotorModeToPosition();
+    }
+
+    public void strafeLeft(int ticks) {
+        frontLeft.setTargetPosition(calculateTicks(frontLeft, -ticks));
+        frontRight.setTargetPosition(calculateTicks(frontRight, ticks));
+        backLeft.setTargetPosition(calculateTicks(backLeft, ticks));
+        backRight.setTargetPosition(calculateTicks(backRight, -ticks));
+
+        changeMotorModeToPosition();
+    }
+
+    public void strafeRight(int ticks) {
+        frontLeft.setTargetPosition(calculateTicks(frontLeft, ticks));
+        frontRight.setTargetPosition(calculateTicks(frontRight, -ticks));
+        backLeft.setTargetPosition(calculateTicks(backLeft, -ticks));
+        backRight.setTargetPosition(calculateTicks(backRight, ticks));
+
+        changeMotorModeToPosition();
+    }
+
+    public void turnLeft(int degrees) {
+        int ticks = degrees * TICKS_PER_DEGREES;
+
+        frontLeft.setTargetPosition(calculateTicks(frontLeft, -ticks));
+        frontRight.setTargetPosition(calculateTicks(frontRight, ticks));
+        backLeft.setTargetPosition(calculateTicks(backLeft, -ticks));
+        backRight.setTargetPosition(calculateTicks(backRight, ticks));
+
+        changeMotorModeToPosition();
+    }
+
+    public void turnRight(int degrees) {
+        int ticks = degrees * TICKS_PER_DEGREES;
+
+        frontLeft.setTargetPosition(calculateTicks(frontLeft, ticks));
+        frontRight.setTargetPosition(calculateTicks(frontRight, -ticks));
+        backLeft.setTargetPosition(calculateTicks(backLeft, ticks));
+        backRight.setTargetPosition(calculateTicks(backRight, -ticks));
+
+        changeMotorModeToPosition();
+    }
+
+    public int calculateTicks(DcMotor motor, int distanceTicks) {
+        return distanceTicks + motor.getCurrentPosition();
+    }
+
+    public void changeMotorModeToPosition(){
+        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 }
