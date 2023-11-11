@@ -73,7 +73,7 @@ public class FieldCentricTeleOp extends OpMode {
         if (gamepad2.left_bumper) {
             intake.spinForward();
             lift.setPower(-0.1, true);
-            control.spinBoxOut();
+            control.spinBoxIn();
         } else if (gamepad2.right_bumper) {
             intake.spinBackwards();
         } else {
@@ -127,6 +127,7 @@ public class FieldCentricTeleOp extends OpMode {
         */
 
         drive.setSpeed(1- gamepad1.right_trigger);
+        if (gamepad1.back) drive.resetHeading();
 
 
 
