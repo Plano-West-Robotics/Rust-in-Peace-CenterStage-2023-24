@@ -46,7 +46,7 @@ public class FieldCentricTeleOp extends OpMode {
         // test bottom lift limit, dpad up/down auto combos
 
         // Lift
-        if (Math.abs(gamepad2.left_stick_y) > 0) lift.update(-gamepad2.left_stick_y);
+        if (Math.abs(gamepad2.left_stick_y) > 0) lift.update(-gamepad2.left_stick_y * 0.6);
         else lift.update(0.1);
 
         // Auto release combos --
@@ -109,8 +109,9 @@ public class FieldCentricTeleOp extends OpMode {
         // Reset Lift Encoder
         if (gamepad2.back) lift.resetEncoder();
 
+        /*
         //Chassis Speed
-        if(gamepad2.right_bumper){
+        if(gamepad1.right_bumper){
             speed += .25;
             if(speed > 1) speed = 1;
 
@@ -123,9 +124,15 @@ public class FieldCentricTeleOp extends OpMode {
 
         }
 
+        */
+
+        drive.setSpeed(1- gamepad1.right_trigger);
+
+
+
 
         // Chassis
-        drive.updateFieldCentric(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+        drive.updateFieldCentric(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
 
         telemetry.addData("Chassis Motors (FL-FR-BL-BR)", Arrays.toString(drive.getEncoderValues()));
         telemetry.addData("Slide Motor (SR-Cloned to left)", lift.getEncoderValue());
