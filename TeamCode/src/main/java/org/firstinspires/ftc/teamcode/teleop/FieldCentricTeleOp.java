@@ -74,7 +74,7 @@ public class FieldCentricTeleOp extends OpMode {
             intake.spinForward();
             lift.setPower(-0.1, true);
             control.spinBoxOut();
-        } else if (gamepad2.left_trigger > 0) {
+        } else if (gamepad2.right_bumper) {
             intake.spinBackwards();
         } else {
             intake.stopSpin();
@@ -82,35 +82,25 @@ public class FieldCentricTeleOp extends OpMode {
 
 
         // Intake - Arm
-        if (gamepad2.right_trigger < intakeArmTrigger) {
-            if (intakeArmTrigger > 0 && intakeArmTrigger < 0.7) intake.setTargetPositionPreset(Intake.Position.MIDDLE);
-        } else if (gamepad2.right_trigger > intakeArmTrigger) {
-            intakeArmTrigger = gamepad2.right_trigger;
-        }
 
-        if (gamepad2.right_trigger < 0.1){
-            intakeArmTrigger = 0;
-        }
-
-        if (gamepad2.right_bumper) {
-            intake.setTargetPositionPreset(Intake.Position.TOP);
-        } else if (gamepad2.right_trigger > 0.9) {
+        if (gamepad2.right_trigger > 0) {
             intake.setTargetPositionPreset(Intake.Position.DOWN);
+        } else if (gamepad2.left_trigger > 0) {
+            intake.setTargetPositionPreset(Intake.Position.TOP);
         }
 
         intake.update();
 
         // Outtake Arm
-        if(gamepad2.dpad_left) {
-            control.armUp();
-        } else if (gamepad2.dpad_right) {
-            control.armDown();
+        if(Math.abs(gamepad2.right_stick_y) > 0){
+            control.arm.goTo(gamepad2.right_stick_y < 0 ? OuttakeArm.Position.UP : OuttakeArm.Position.DOWN);
+
         }
 
         // Outtake Box
-        if (gamepad2.b) {
+        if (gamepad2.x) {
             control.spinBoxIn();
-        } else if (gamepad2.x) {
+        } else if (gamepad2.b) {
             control.spinBoxOut();
         } else if (gamepad2.y){
             control.stopBox();
