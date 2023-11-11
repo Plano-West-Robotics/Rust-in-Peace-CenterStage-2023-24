@@ -23,7 +23,7 @@ public class PropDetectionTest extends LinearOpMode {
     public void runOpMode() {
         propDetector = new PropDetectionProcessor();
         visionPortal = VisionPortal.easyCreateWithDefaults(
-                hardwareMap.get(WebcamName.class, "Webcam 1"), propDetector);
+                hardwareMap.get(WebcamName.class, "CAM"), propDetector);
 
         telemetry.addData(">", "Touch Play to start OpMode");
         telemetry.update();

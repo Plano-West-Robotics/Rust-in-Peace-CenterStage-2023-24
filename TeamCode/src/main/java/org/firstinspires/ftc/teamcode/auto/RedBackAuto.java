@@ -44,6 +44,8 @@ import org.firstinspires.ftc.teamcode.subsystems.OuttakeController;
 import org.firstinspires.ftc.teamcode.vision.PropDetectionProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
 
+import java.util.Arrays;
+
 @Autonomous(name="Red Backboard-Side Auto", group="Auto")
 public class RedBackAuto extends LinearOpMode {
 
@@ -62,43 +64,68 @@ public class RedBackAuto extends LinearOpMode {
     public void runOpMode() {
         propDetector = new PropDetectionProcessor();
         visionPortal = VisionPortal.easyCreateWithDefaults(
-                hardwareMap.get(WebcamName.class, "Webcam 1"), propDetector);
+                hardwareMap.get(WebcamName.class, "CAM"), propDetector);
 
         drive = new Drive(hardwareMap, telemetry, true);
         lift = new Lift(hardwareMap, telemetry);
         intake = new Intake(hardwareMap, telemetry);
         control = new OuttakeController(hardwareMap, telemetry, lift);
 
+        lift.setManual(false);
+
         // Wait for the game to start (driver presses PLAY)
-        waitForStart();
+        while (!isStarted() && !isStopRequested()) {
+            telemetry.addData("Chassis Motors (FL-FR-BL-BR)", Arrays.toString(drive.getEncoderValues()));
+            telemetry.update();
+        }
         runtime.reset();
 
         // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
-            // red by default
-            visionPortal.getProcessorEnabled(propDetector);
 
-            drive.moveForward(2000);
-            sleep(2000);
+        // red by default
+        visionPortal.getProcessorEnabled(propDetector);
 
-            control.spinBoxOut();
-            intake.spinBackwards();
-            sleep(1500);
-            intake.stopSpin();
-            control.spinBoxIn();
+        drive.setSpeed(0.7);
 
-            drive.strafeRight(5000);
+        lift.setPower(0.7, true);
+        sleep(500);
+        lift.setPower(0.1, true);
+        control.armUp();
+        control.armDown();
 
-            if (propDetector.getLocation() == PropDetectionProcessor.Location.Left) {
+        drive.moveBackward(1100);
 
-            } else if (propDetector.getLocation() == PropDetectionProcessor.Location.Right) {
+        lift.setPower(-0.4, true);
+        sleep(700);
+        lift.setPower(0, true);
 
-            } else {
+        intake.arm.setPosition(1);
+        intake.setSpeed(0.5);
+        control.spinBoxOut();
+        intake.spinBackwards();
+        sleep(3000);
+        intake.stopSpin();
+        control.spinBoxIn();
 
-            }
+        lift.setPower(0.7, true);
+        sleep(500);
+        lift.setPower(0.1, true);
+        control.armUp();
+        control.armDown();
 
-            telemetry.addLine(String.valueOf(propDetector.getLocation()));
-            telemetry.update();
-        }
+        drive.strafeLeft(2500);
+
+//        if (propDetector.getLocation() == PropDetectionProcessor.Location.Left) {
+//
+//        } else if (propDetector.getLocation() == PropDetectionProcessor.Location.Right) {
+//
+//        } else {
+//
+//        }
+//
+        telemetry.addLine(String.valueOf(propDetector.getLocation()));
+        telemetry.update();
+
+        visionPortal.close();
     }
 }

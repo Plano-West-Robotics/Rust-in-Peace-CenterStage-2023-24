@@ -35,8 +35,8 @@ public class Drive {
         backRight = hardwareMap.get(DcMotor.class, "BRmotor");
 
         // Sets direction for motors -- forward is default
-        frontLeft.setDirection(DcMotor.Direction.FORWARD);
-        frontRight.setDirection(DcMotor.Direction.REVERSE);
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        frontRight.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.FORWARD);
 
@@ -54,17 +54,18 @@ public class Drive {
             frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         } else {
             frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
-        // Set mode is good practice -- RUN_WITHOUT_ENCODER is default
-        frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -79,7 +80,7 @@ public class Drive {
         this.telemetry = telemetry;
     }
 
-    private void setDrivePowers(double flPower, double frPower, double blPower, double brPower) {
+    public void setDrivePowers(double flPower, double frPower, double blPower, double brPower) {
         frontLeft.setPower(flPower * speed);
         frontRight.setPower(frPower * speed);
         backLeft.setPower(blPower * speed);
@@ -107,7 +108,6 @@ public class Drive {
      */
     public void update(double x, double y, double rx) {
         x *= 1.1; // Counteract imperfect strafing
-        y *= -1; // Switch because it just works like that
 
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
         double flPower = (y + x + rx) / denominator;
@@ -125,8 +125,6 @@ public class Drive {
      * @param rx the rotation coefficient (heading)
      */
     public void updateFieldCentric(double x, double y, double rx) {
-        y *= -1;
-
         double botHeading = imu.getHeading();
 
         // Rotate the movement direction counter to the bot's rotation
@@ -162,6 +160,8 @@ public class Drive {
         backRight.setTargetPosition(calculateTicks(backRight, ticks));
 
         changeMotorModeToPosition();
+        setDrivePowers(speed,speed,speed,speed);
+        block();
     }
 
     public void moveBackward(int ticks) {
@@ -171,6 +171,8 @@ public class Drive {
         backRight.setTargetPosition(calculateTicks(backRight, -ticks));
 
         changeMotorModeToPosition();
+        setDrivePowers(speed,speed,speed,speed);
+        block();
     }
 
     public void strafeLeft(int ticks) {
@@ -180,6 +182,8 @@ public class Drive {
         backRight.setTargetPosition(calculateTicks(backRight, -ticks));
 
         changeMotorModeToPosition();
+        setDrivePowers(speed,speed,speed,speed);
+        block();
     }
 
     public void strafeRight(int ticks) {
@@ -189,6 +193,8 @@ public class Drive {
         backRight.setTargetPosition(calculateTicks(backRight, ticks));
 
         changeMotorModeToPosition();
+        setDrivePowers(speed,speed,speed,speed);
+        block();
     }
 
     public void turnLeft(int degrees) {
@@ -200,6 +206,8 @@ public class Drive {
         backRight.setTargetPosition(calculateTicks(backRight, ticks));
 
         changeMotorModeToPosition();
+        setDrivePowers(speed,speed,speed,speed);
+        block();
     }
 
     public void turnRight(int degrees) {
@@ -211,6 +219,8 @@ public class Drive {
         backRight.setTargetPosition(calculateTicks(backRight, -ticks));
 
         changeMotorModeToPosition();
+        setDrivePowers(speed,speed,speed,speed);
+        block();
     }
 
     public int calculateTicks(DcMotor motor, int distanceTicks) {
@@ -222,5 +232,11 @@ public class Drive {
         frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    public void block(){
+        while ((frontLeft.isBusy() || frontRight.isBusy()) || (backLeft.isBusy() || backRight.isBusy())) {
+            // take up resources
+        }
     }
 }
