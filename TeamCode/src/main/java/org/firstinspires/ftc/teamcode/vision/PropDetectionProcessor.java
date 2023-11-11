@@ -4,7 +4,6 @@ import android.graphics.Canvas;
 
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 import org.firstinspires.ftc.vision.VisionProcessor;
-
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -12,6 +11,8 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
+//import com.acmerobotics.dashboard.config.Config;
+//@Config
 public class PropDetectionProcessor implements VisionProcessor {
 
     // Enumeration that helps set what color the game team prop is
@@ -58,11 +59,11 @@ public class PropDetectionProcessor implements VisionProcessor {
         Imgproc.cvtColor(frame, frame, Imgproc.COLOR_RGB2HSV); // Converts image to HSV color
 
         if (propColor == Prop.BLUE) {
-            lowHSV = new Scalar(55.3, 62.3, 53.8);
-            highHSV = new Scalar(213.9, 240.8, 255);
+            lowHSV = new Scalar(80.8, 94.9, 21.3);
+            highHSV = new Scalar(141.7, 236.6, 255);
         } else {
-            lowHSV = new Scalar(0, 76.5, 179.9);
-            highHSV = new Scalar(7.1, 218.2, 255);
+            lowHSV = new Scalar(107.7, 172.8, 116.2);
+            highHSV = new Scalar(255, 255, 255);
         }
 
         Core.inRange(frame, lowHSV, highHSV, frame);
