@@ -7,11 +7,17 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AprilTagDetectionSub {
 
     private final AprilTagProcessor aprilTagProcessor;
     private final Telemetry telemetry;
+
+    public enum Alliance {
+        BLUE,
+        RED
+    }
 
     public AprilTagDetectionSub(HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
@@ -22,33 +28,27 @@ public class AprilTagDetectionSub {
         return aprilTagProcessor.getDetections();
     }
 
-    public AprilTagDetection getLeftTag() {
-        ArrayList<AprilTagDetection> detections = detectTags();
+    private AprilTagDetection getTagById(List<AprilTagDetection> detections, int id) {
         for (AprilTagDetection detection : detections) {
-            if (detection.id == 1) {
+            if (detection.id == id) {
                 return detection;
             }
         }
         return null;
     }
 
-    public AprilTagDetection getCenterTag() {
-        ArrayList<AprilTagDetection> detections = detectTags();
-        for (AprilTagDetection detection : detections) {
-            if (detection.id == 2) {
-                return detection;
-            }
-        }
-        return null;
+    public AprilTagDetection getLeftTag(Alliance color) {
+        int targetId = (color == Alliance.BLUE) ? 1 : 4;
+        return getTagById(detectTags(), targetId);
     }
 
-    public AprilTagDetection getRightTag() {
-        ArrayList<AprilTagDetection> detections = detectTags();
-        for (AprilTagDetection detection : detections) {
-            if (detection.id == 3) {
-                return detection;
-            }
-        }
-        return null;
+    public AprilTagDetection getCenterTag(Alliance color) {
+        int targetId = (color == Alliance.BLUE) ? 2 : 5;
+        return getTagById(detectTags(), targetId);
+    }
+
+    public AprilTagDetection getRightTag(Alliance color) {
+        int targetId = (color == Alliance.BLUE) ? 3 : 6;
+        return getTagById(detectTags(), targetId);
     }
 }
