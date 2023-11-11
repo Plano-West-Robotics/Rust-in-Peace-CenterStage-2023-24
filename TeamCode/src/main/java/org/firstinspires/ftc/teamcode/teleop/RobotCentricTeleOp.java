@@ -25,7 +25,7 @@ public class RobotCentricTeleOp extends OpMode {
 
     @Override
     public void init() {
-        drive = new Drive(hardwareMap, telemetry);
+        drive = new Drive(hardwareMap, telemetry, false);
         lift = new Lift(hardwareMap, telemetry);
         intake = new Intake(hardwareMap, telemetry);
         control = new OuttakeController(hardwareMap, telemetry, lift);
