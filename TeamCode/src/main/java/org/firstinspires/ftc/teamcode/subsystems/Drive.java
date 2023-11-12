@@ -125,7 +125,7 @@ public class Drive {
      * @param rx the rotation coefficient (heading)
      */
     public void updateFieldCentric(double x, double y, double rx) {
-        double botHeading = imu.getHeading();
+        double botHeading = -imu.getHeading();
 
         // Rotate the movement direction counter to the bot's rotation
         double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
@@ -137,10 +137,10 @@ public class Drive {
         // This ensures all the powers maintain the same ratio,
         // but only if at least one is out of the range [-1, 1]
         double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
-        double flPower = (rotY + rotX + rx) / denominator;
-        double frPower = (rotY - rotX - rx) / denominator;
-        double blPower = (rotY - rotX + rx) / denominator;
-        double brPower = (rotY + rotX - rx) / denominator;
+        double flPower = (rotY - rotX + rx) / denominator;
+        double frPower = (rotY + rotX - rx) / denominator;
+        double blPower = (rotY + rotX + rx) / denominator;
+        double brPower = (rotY - rotX - rx) / denominator;
         setDrivePowers(flPower, frPower, blPower, brPower);
     }
 
@@ -238,5 +238,9 @@ public class Drive {
         while ((frontLeft.isBusy() || frontRight.isBusy()) || (backLeft.isBusy() || backRight.isBusy())) {
             // take up resources
         }
+    }
+
+    public double getHeading() {
+        return imu.getHeading();
     }
 }

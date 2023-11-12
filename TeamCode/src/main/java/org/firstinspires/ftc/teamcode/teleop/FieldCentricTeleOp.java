@@ -37,14 +37,12 @@ public class FieldCentricTeleOp extends OpMode {
         control.arm.goTo(OuttakeArm.Position.DOWN);
 
         speed = 0.75;
+
+        lift.loadPosition();
     }
 
     @Override
     public void loop() {
-
-
-        // test bottom lift limit, dpad up/down auto combos
-
         // Lift
         if (Math.abs(gamepad2.left_stick_y) > 0) lift.update(-gamepad2.left_stick_y * 0.6);
         else lift.update(0.1);
@@ -93,7 +91,7 @@ public class FieldCentricTeleOp extends OpMode {
 
         // Outtake Arm
         if(Math.abs(gamepad2.right_stick_y) > 0){
-            control.arm.goTo(gamepad2.right_stick_y < 0 ? OuttakeArm.Position.UP : OuttakeArm.Position.DOWN);
+            control.arm.goTo(gamepad2.right_stick_y < 0 ? OuttakeArm.Position.DOWN : OuttakeArm.Position.UP);
 
         }
 
@@ -117,7 +115,7 @@ public class FieldCentricTeleOp extends OpMode {
 
             drive.setSpeed(speed);
         }
-        else if(gamepad2.left_bumper){
+        else if(gamepad1.left_bumper){
             speed -= .25;
             if(speed < .1) speed = .1;
             drive.setSpeed(speed);
@@ -129,11 +127,16 @@ public class FieldCentricTeleOp extends OpMode {
         drive.setSpeed(1- gamepad1.right_trigger);
         if (gamepad1.back) drive.resetHeading();
 
+        if (gamepad2.dpad_down) lift.setPower(-0.2, true);
 
+        // reset field yaw
+        if (gamepad1.back) {
+            drive.resetHeading();
+        }
 
 
         // Chassis
-        drive.updateFieldCentric(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
+        drive.update(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
 
         telemetry.addData("Chassis Motors (FL-FR-BL-BR)", Arrays.toString(drive.getEncoderValues()));
         telemetry.addData("Slide Motor (SR-Cloned to left)", lift.getEncoderValue());
@@ -141,5 +144,6 @@ public class FieldCentricTeleOp extends OpMode {
         telemetry.addData("Outtake Arm (LA-Cloned to right)", control.getArmUp() ? "UP" : "DOWN");
         telemetry.addData("Outtake Arm Position (L-R)", control.arm.leftArm.getPosition() + " " + control.arm.rightArm.getPosition());
         telemetry.addData("Outtake Box Direction (BOX)", control.box.getPower() == 0 ? "STOP" : control.box.getPower() == 1 ? "OUT" : "IN");
+        telemetry.addData("IMU Orientation", drive.getHeading());
     }
 }

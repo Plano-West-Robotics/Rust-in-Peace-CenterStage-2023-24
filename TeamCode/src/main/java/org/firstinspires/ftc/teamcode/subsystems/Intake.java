@@ -29,7 +29,7 @@ public class Intake {
         intake = hardwareMap.get(DcMotor.class, "INmotor");
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        speed = 0.5;
+        speed = 0.7;
 
         targetPosition = intake.getCurrentPosition();
     }

@@ -47,8 +47,8 @@ import org.firstinspires.ftc.vision.VisionPortal;
 
 import java.util.Arrays;
 
-@Autonomous(name="Red Backboard-Side Auto", group="Auto")
-public class RedBackAuto extends LinearOpMode {
+@Autonomous(name="Blue Far-Side Auto", group="Auto")
+public class BlueFarAuto extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -95,26 +95,10 @@ public class RedBackAuto extends LinearOpMode {
         lift.setPower(0.1, true);
         control.armUp();
         control.armDown();
-//
-//        drive.moveBackward(1100);
 
         drive.setSpeed(0.7);
-        drive.strafeLeft(50);
-        drive.moveForward(1000);
-        drive.strafeLeft(1400);
-        lift.setPower(0.5);
-        sleep(1000);
-        lift.setPower(0.1);
-        control.armDown();
-        control.armUp();
-        drive.setSpeed(0.5);
-        drive.moveForward(680);
-        control.spinBoxOut();
-        sleep(5000);
-        control.stopBox();
-        control.armDown();
-        sleep(1000);
-        drive.strafeRight(1200);
+        drive.strafeRight(100);
+        drive.moveForward(2000);
 
         telemetry.addLine(String.valueOf(propDetector.getLocation()));
         telemetry.update();

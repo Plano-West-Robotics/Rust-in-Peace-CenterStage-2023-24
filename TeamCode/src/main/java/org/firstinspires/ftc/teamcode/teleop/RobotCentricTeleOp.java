@@ -34,6 +34,8 @@ public class RobotCentricTeleOp extends OpMode {
 
         // Bypass lift check to prevent swinging
         control.arm.goTo(OuttakeArm.Position.DOWN);
+
+        lift.loadPosition();
     }
 
     @Override
@@ -50,17 +52,6 @@ public class RobotCentricTeleOp extends OpMode {
             lift.setManual(false);
             lift.setTargetPositionPreset(Lift.Position.MEDIUM);
         }
-//        else if (gamepad2.dpad_down) {
-//            control.armDown();
-//            outtakeArmDirectionDown = true;
-//        }
-
-//        // Ensures the arm is fully down before moving lift down
-//        if (outtakeArmDirectionDown && control.arm.leftArm.getPosition() < 0.1) {
-//            lift.setManual(false);
-//            lift.setTargetPositionPreset(Lift.Position.BOTTOM);
-//            outtakeArmDirectionDown = false;
-//        }
 
         if (!lift.getManual() && control.liftIsUp() && !control.getArmUp()) control.armUp();
         else if (!lift.getManual() && control.liftIsUp() && control.getArmUp()) control.armDown();
@@ -72,11 +63,11 @@ public class RobotCentricTeleOp extends OpMode {
             control.spinBoxIn();
         } else if (gamepad2.left_trigger > 0) {
             intake.spinBackwards();
+            lift.setPower(-0.1, true);
+            control.spinBoxOut();
         } else {
             intake.stopSpin();
         }
-
-
         // Intake - Arm
         if (gamepad2.right_trigger < intakeArmTrigger) {
             if (intakeArmTrigger > 0 && intakeArmTrigger < 0.7) intake.setTargetPositionPreset(Intake.Position.MIDDLE);

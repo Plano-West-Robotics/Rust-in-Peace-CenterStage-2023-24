@@ -80,7 +80,6 @@ public class Lift {
             slideLeft.setPower(power * speed);
             slideRight.setPower(power * speed);
         } else if (power > 0) {
-            if (height > 2220) power = 0;
             slideLeft.setPower(power * speed);
             slideRight.setPower(power * speed);
         }
@@ -132,6 +131,7 @@ public class Lift {
         } else {
             setPower(calculate(getEncoderValue()));
         }
+        Data.liftPosition = getEncoderValue();
     }
 
     public int getEncoderValue() {
@@ -143,6 +143,10 @@ public class Lift {
 
     public boolean getManual() {
         return manual;
+    }
+
+    public void loadPosition() {
+        liftOffset -= Data.liftPosition;
     }
 
     //endregion
