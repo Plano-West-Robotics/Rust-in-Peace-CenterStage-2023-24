@@ -21,13 +21,14 @@ public class RobotCentricTeleOp extends OpMode {
     OuttakeController control;
 
     double intakeArmTrigger;
-    boolean outtakeArmDirectionDown = false;
+    double speed;
 
     @Override
     public void init() {
         drive = new Drive(hardwareMap, telemetry, false);
         lift = new Lift(hardwareMap, telemetry);
         intake = new Intake(hardwareMap, telemetry);
+
         control = new OuttakeController(hardwareMap, telemetry, lift);
 
         intakeArmTrigger = 0;
@@ -35,16 +36,15 @@ public class RobotCentricTeleOp extends OpMode {
         // Bypass lift check to prevent swinging
         control.arm.goTo(OuttakeArm.Position.DOWN);
 
+        speed = 0.75;
+
         lift.loadPosition();
     }
 
     @Override
     public void loop() {
-
-        // test bottom lift limit, dpad up/down auto combos
-
         // Lift
-        if (Math.abs(gamepad2.left_stick_y) > 0) lift.update(-gamepad2.left_stick_y);
+        if (Math.abs(gamepad2.left_stick_y) > 0) lift.update(-gamepad2.left_stick_y * 0.6);
         else lift.update(0.1);
 
         // Auto release combos --
@@ -61,43 +61,33 @@ public class RobotCentricTeleOp extends OpMode {
             intake.spinForward();
             lift.setPower(-0.1, true);
             control.spinBoxIn();
-        } else if (gamepad2.left_trigger > 0) {
+        } else if (gamepad2.right_bumper) {
             intake.spinBackwards();
-            lift.setPower(-0.1, true);
-            control.spinBoxOut();
         } else {
             intake.stopSpin();
         }
+
+
         // Intake - Arm
-        if (gamepad2.right_trigger < intakeArmTrigger) {
-            if (intakeArmTrigger > 0 && intakeArmTrigger < 0.7) intake.setTargetPositionPreset(Intake.Position.MIDDLE);
-        } else if (gamepad2.right_trigger > intakeArmTrigger) {
-            intakeArmTrigger = gamepad2.right_trigger;
-        }
 
-        if (gamepad2.right_trigger < 0.1){
-            intakeArmTrigger = 0;
-        }
-
-        if (gamepad2.right_bumper) {
-            intake.setTargetPositionPreset(Intake.Position.TOP);
-        } else if (gamepad2.right_trigger > 0.9) {
+        if (gamepad2.right_trigger > 0) {
             intake.setTargetPositionPreset(Intake.Position.DOWN);
+        } else if (gamepad2.left_trigger > 0) {
+            intake.setTargetPositionPreset(Intake.Position.TOP);
         }
 
         intake.update();
 
         // Outtake Arm
-        if(gamepad2.dpad_left) {
-            control.armUp();
-        } else if (gamepad2.dpad_right) {
-            control.armDown();
+        if(Math.abs(gamepad2.right_stick_y) > 0){
+            control.arm.goTo(gamepad2.right_stick_y < 0 ? OuttakeArm.Position.DOWN : OuttakeArm.Position.UP);
+
         }
 
         // Outtake Box
-        if (gamepad2.b) {
+        if (gamepad2.x) {
             control.spinBoxIn();
-        } else if (gamepad2.x) {
+        } else if (gamepad2.b) {
             control.spinBoxOut();
         } else if (gamepad2.y){
             control.stopBox();
@@ -105,6 +95,16 @@ public class RobotCentricTeleOp extends OpMode {
 
         // Reset Lift Encoder
         if (gamepad2.back) lift.resetEncoder();
+
+        drive.setSpeed(1- gamepad1.right_trigger);
+        if (gamepad1.back) drive.resetHeading();
+
+        if (gamepad2.dpad_down) lift.setPower(-0.2, true);
+
+        // Reset field yaw
+        if (gamepad1.back) {
+            drive.resetHeading();
+        }
 
         // Chassis
         drive.update(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);

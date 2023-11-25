@@ -19,10 +19,10 @@ public class FieldCentricTeleOp extends OpMode {
     Intake intake;
 
     OuttakeController control;
-    double intakeArmTrigger;
-    boolean outtakeArmDirectionDown = false;
 
+    double intakeArmTrigger;
     double speed;
+
     @Override
     public void init() {
         drive = new Drive(hardwareMap, telemetry, false);
@@ -52,17 +52,6 @@ public class FieldCentricTeleOp extends OpMode {
             lift.setManual(false);
             lift.setTargetPositionPreset(Lift.Position.MEDIUM);
         }
-//        else if (gamepad2.dpad_down) {
-//            control.armDown();
-//            outtakeArmDirectionDown = true;
-//        }
-
-//        // Ensures the arm is fully down before moving lift down
-//        if (outtakeArmDirectionDown && control.arm.leftArm.getPosition() < 0.1) {
-//            lift.setManual(false);
-//            lift.setTargetPositionPreset(Lift.Position.BOTTOM);
-//            outtakeArmDirectionDown = false;
-//        }
 
         if (!lift.getManual() && control.liftIsUp() && !control.getArmUp()) control.armUp();
         else if (!lift.getManual() && control.liftIsUp() && control.getArmUp()) control.armDown();
@@ -107,33 +96,15 @@ public class FieldCentricTeleOp extends OpMode {
         // Reset Lift Encoder
         if (gamepad2.back) lift.resetEncoder();
 
-        /*
-        //Chassis Speed
-        if(gamepad1.right_bumper){
-            speed += .25;
-            if(speed > 1) speed = 1;
-
-            drive.setSpeed(speed);
-        }
-        else if(gamepad1.left_bumper){
-            speed -= .25;
-            if(speed < .1) speed = .1;
-            drive.setSpeed(speed);
-
-        }
-
-        */
-
         drive.setSpeed(1- gamepad1.right_trigger);
         if (gamepad1.back) drive.resetHeading();
 
         if (gamepad2.dpad_down) lift.setPower(-0.2, true);
 
-        // reset field yaw
+        // Reset field yaw
         if (gamepad1.back) {
             drive.resetHeading();
         }
-
 
         // Chassis
         drive.update(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
