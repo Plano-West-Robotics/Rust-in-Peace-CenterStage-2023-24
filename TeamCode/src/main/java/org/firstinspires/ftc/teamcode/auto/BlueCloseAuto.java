@@ -61,6 +61,7 @@ public class BlueCloseAuto extends LinearOpMode {
     @Override
     public void runOpMode() {
         propDetector = new PropDetectionProcessor();
+        propDetector.propColor = PropDetectionProcessor.Prop.BLUE;
         visionPortal = VisionPortal.easyCreateWithDefaults(
                 hardwareMap.get(WebcamName.class, "CAM"), propDetector);
 
@@ -77,6 +78,7 @@ public class BlueCloseAuto extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         while (!isStarted() && !isStopRequested()) {
             telemetry.addData("Chassis Motors (FL-FR-BL-BR)", Arrays.toString(drive.getEncoderValues()));
+            telemetry.addLine(String.valueOf(propDetector.getLocation()));
             telemetry.update();
         }
         runtime.reset();
