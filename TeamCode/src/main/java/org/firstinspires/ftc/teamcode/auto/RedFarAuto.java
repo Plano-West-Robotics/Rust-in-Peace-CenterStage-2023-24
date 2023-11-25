@@ -47,7 +47,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 
 import java.util.Arrays;
 
-@Autonomous(name="Red Far-Side Auto", group="Auto")
+@Autonomous(name="Red Audience-Side Auto", group="Auto")
 public class RedFarAuto extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
