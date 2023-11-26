@@ -15,7 +15,10 @@ public class Intake {
     private double targetPosition;
     public enum Position {
         TOP,
-        MIDDLE,
+        P5,
+        P4,
+        P3,
+        P2,
         DOWN
     }
     public Intake(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -36,7 +39,10 @@ public class Intake {
     public void setTargetPositionPreset(Position targetPosition) {
         switch (targetPosition) {
             case TOP: setTargetPosition(1); break;
-            case MIDDLE: setTargetPosition(0.5); break;
+            case P5: setTargetPosition(0.55); break;
+            case P4: setTargetPosition(0.45); break;
+            case P3: setTargetPosition(0.35); break;
+            case P2: setTargetPosition(0.25); break;
             case DOWN: setTargetPosition(0); break;
         }
     }
