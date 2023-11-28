@@ -23,7 +23,7 @@ public class Drive {
     private final Telemetry telemetry;
     private final Imu imu;
 
-    private final int TICKS_PER_DEGREES = 20;
+    private final int TICKS_PER_DEGREES = 11;
 
     // This is a constructor
     public Drive(HardwareMap hardwareMap, Telemetry telemetry, boolean auto) {
