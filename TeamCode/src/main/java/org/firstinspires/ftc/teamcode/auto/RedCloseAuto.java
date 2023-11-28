@@ -43,6 +43,9 @@ import org.firstinspires.ftc.teamcode.vision.PropDetectionProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.TreeMap;
 
 @Autonomous(name="Red Backboard-Side Auto", group="Auto")
 public class RedCloseAuto extends LinearOpMode {
@@ -57,6 +60,8 @@ public class RedCloseAuto extends LinearOpMode {
     Lift lift;
     Intake intake;
     OuttakeController control;
+
+    PropDetectionProcessor.Location location;
 
     @Override
     public void runOpMode() {
@@ -80,6 +85,8 @@ public class RedCloseAuto extends LinearOpMode {
             telemetry.addData("Chassis Motors (FL-FR-BL-BR)", Arrays.toString(drive.getEncoderValues()));
             telemetry.addLine(String.valueOf(propDetector.getLocation()));
             telemetry.update();
+
+            location = propDetector.getLocation();
         }
         runtime.reset();
 
@@ -89,18 +96,27 @@ public class RedCloseAuto extends LinearOpMode {
         visionPortal.getProcessorEnabled(propDetector);
 
         // Raise lift to prevent drag when moving
+        drive.moveBackward(250);
+        drive.turnLeft(90);
         lift.setPower(0.7, true);
         sleep(500);
         lift.setPower(0.1, true);
         control.armUp();
         control.armDown();
-//
-//        drive.moveBackward(1100);
 
-        drive.setSpeed(0.7);
-        drive.strafeLeft(50);
+        drive.setSpeed(1);
+
         drive.moveForward(1000);
-        drive.strafeLeft(1400);
+
+        // LEFT
+//        drive.strafeLeft(1400);
+
+        // CENTER
+        drive.strafeLeft(1200);
+
+        // RIGHT
+//        drive.strafeLeft(900);
+
         lift.setPower(0.5);
         sleep(1000);
         lift.setPower(0.1);
@@ -112,8 +128,19 @@ public class RedCloseAuto extends LinearOpMode {
         sleep(5000);
         control.stopBox();
         control.armDown();
-        sleep(1000);
-        drive.strafeRight(1200);
+        sleep(500);
+
+        // LEFT
+//        drive.moveBackward(1700);
+
+        // CENTER
+        drive.moveBackward(1200);
+        drive.strafeLeft(600);
+
+        // RIGHT
+//        drive.moveBackward(800);
+//        drive.strafeLeft(600);
+
 
         telemetry.addLine(String.valueOf(propDetector.getLocation()));
         telemetry.update();
