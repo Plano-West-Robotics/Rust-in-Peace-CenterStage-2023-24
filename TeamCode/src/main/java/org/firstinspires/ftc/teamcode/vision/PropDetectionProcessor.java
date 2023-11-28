@@ -36,14 +36,14 @@ public class PropDetectionProcessor implements VisionProcessor {
     // Rects define the areas that the prop must be on to be considered left, right, or center
     // remove the multipliers when building on robot. x multipliers -3, y multipliers -2.25
     static final Rect LEFT_ROI = new Rect(
-            new Point(30, 35),
+            new Point(5, 5),
             new Point(210, 445));
     static final Rect RIGHT_ROI = new Rect(
-            new Point(420, 35),
-            new Point(610,445));
+            new Point(420, 5),
+            new Point(635,445));
 
     static final Rect CENTER_ROI = new Rect(
-            new Point(230, 35),
+            new Point(230, 5),
             new Point(400,445));
 
     // Sets how much percent of the rect an object must take up to be considered to be on the corresponding location
