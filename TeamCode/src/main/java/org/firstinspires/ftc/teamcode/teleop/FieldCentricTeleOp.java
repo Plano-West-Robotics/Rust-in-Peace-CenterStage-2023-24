@@ -107,7 +107,7 @@ public class FieldCentricTeleOp extends OpMode {
         }
 
         // Chassis
-        drive.update(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
+        drive.updateFieldCentric(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
 
         telemetry.addData("Chassis Motors (FL-FR-BL-BR)", Arrays.toString(drive.getEncoderValues()));
         telemetry.addData("Slide Motor (SR-Cloned to left)", lift.getEncoderValue());
