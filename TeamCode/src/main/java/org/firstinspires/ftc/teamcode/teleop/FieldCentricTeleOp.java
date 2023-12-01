@@ -36,7 +36,7 @@ public class FieldCentricTeleOp extends OpMode {
         // Bypass lift check to prevent swinging
         control.arm.goTo(OuttakeArm.Position.DOWN);
 
-        speed = 0.75;
+        drive.setSpeed(1);
 
         lift.loadPosition();
     }
@@ -96,7 +96,6 @@ public class FieldCentricTeleOp extends OpMode {
         // Reset Lift Encoder
         if (gamepad2.back) lift.resetEncoder();
 
-        drive.setSpeed(1- gamepad1.right_trigger);
         if (gamepad1.back) drive.resetHeading();
 
         if (gamepad2.dpad_down) lift.setPower(-0.2, true);
@@ -107,7 +106,7 @@ public class FieldCentricTeleOp extends OpMode {
         }
 
         // Chassis
-        drive.updateFieldCentric(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
+        drive.updateFieldCentric(-gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
 
         telemetry.addData("Chassis Motors (FL-FR-BL-BR)", Arrays.toString(drive.getEncoderValues()));
         telemetry.addData("Slide Motor (SR-Cloned to left)", lift.getEncoderValue());
