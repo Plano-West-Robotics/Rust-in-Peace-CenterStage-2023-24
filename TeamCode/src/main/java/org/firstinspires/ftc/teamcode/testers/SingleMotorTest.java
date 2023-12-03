@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.testers;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+@Disabled
 @TeleOp(name="Single Motor Test", group="Testers")
 public class SingleMotorTest extends OpMode
 {
