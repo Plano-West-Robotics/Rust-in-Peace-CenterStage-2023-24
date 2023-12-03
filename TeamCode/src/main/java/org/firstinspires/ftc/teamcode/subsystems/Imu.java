@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class Imu {
 
-    IMU imu;
+    public IMU imu;
 
     Telemetry telemetry;
 
