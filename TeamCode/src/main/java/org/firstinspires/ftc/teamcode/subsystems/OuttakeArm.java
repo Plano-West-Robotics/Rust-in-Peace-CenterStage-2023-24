@@ -19,7 +19,7 @@ public class OuttakeArm {
         this.telemetry = telemetry;
         leftArm = hardwareMap.get(Servo.class,"LAservo");
 
-        leftArm.scaleRange(0.1, 0.5);
+        leftArm.scaleRange(0, 0.6);
 
         leftPos = leftArm.getPosition();
     }
@@ -30,7 +30,7 @@ public class OuttakeArm {
 
     public void goTo(Position targetPosition) {
         if (targetPosition == Position.UP) {
-            goTo(0.9);
+            goTo(0.8);
         } else if (targetPosition == Position.DOWN) {
             goTo(0.1);
         }

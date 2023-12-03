@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @Config
 public class OuttakeBox {
     private final Telemetry telemetry;
-    private final CRServo box;
+    public final CRServo box;
 
     public OuttakeBox(HardwareMap hardwareMap, Telemetry telemetry) {
 

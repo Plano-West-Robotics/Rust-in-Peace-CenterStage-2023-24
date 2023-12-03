@@ -113,7 +113,7 @@ public class RobotCentricTeleOp extends OpMode {
         telemetry.addData("Slide Motor (SR-Cloned to left)", lift.getEncoderValue());
         telemetry.addData("Intake Arm (ARM)", intake.getCurrentPosition());
         telemetry.addData("Outtake Arm (LA-Cloned to right)", control.getArmUp() ? "UP" : "DOWN");
-        telemetry.addData("Outtake Arm Position (L-R)", control.arm.leftArm.getPosition() + " " + control.arm.rightArm.getPosition());
+        telemetry.addData("Outtake Arm Position (LA)", control.arm.leftArm.getPosition());
         telemetry.addData("Outtake Box Direction (BOX)", control.box.getPower() == 0 ? "STOP" : control.box.getPower() == 1 ? "OUT" : "IN");
     }
 }

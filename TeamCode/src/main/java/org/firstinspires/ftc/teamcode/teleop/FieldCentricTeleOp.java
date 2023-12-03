@@ -44,7 +44,7 @@ public class FieldCentricTeleOp extends OpMode {
     @Override
     public void loop() {
         // Lift
-        if (Math.abs(gamepad2.left_stick_y) > 0) lift.update(-gamepad2.left_stick_y * 0.6);
+        if (Math.abs(gamepad2.left_stick_y) > 0) lift.update(-gamepad2.left_stick_y * 0.7);
         else lift.update(0.1);
 
         // Auto release combos --
@@ -79,9 +79,10 @@ public class FieldCentricTeleOp extends OpMode {
         intake.update();
 
         // Outtake Arm
-        if(Math.abs(gamepad2.right_stick_y) > 0){
-            control.arm.goTo(gamepad2.right_stick_y < 0 ? OuttakeArm.Position.DOWN : OuttakeArm.Position.UP);
-
+        if (-gamepad2.right_stick_y > 0) {
+            control.armUp();
+        } else if (-gamepad2.right_stick_y < 0) {
+            control.armDown();
         }
 
         // Outtake Box
@@ -89,7 +90,7 @@ public class FieldCentricTeleOp extends OpMode {
             control.spinBoxIn();
         } else if (gamepad2.b) {
             control.spinBoxOut();
-        } else if (gamepad2.y){
+        } else if (gamepad2.a){
             control.stopBox();
         }
 
