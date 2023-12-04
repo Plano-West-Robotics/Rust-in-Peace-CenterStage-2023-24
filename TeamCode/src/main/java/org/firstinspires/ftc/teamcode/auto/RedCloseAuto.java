@@ -47,7 +47,7 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.TreeMap;
 
-@Autonomous(name="Red Backboard-Side Auto", group="Auto")
+@Autonomous(name="Red Backdrop-Side Auto", group="Auto")
 public class RedCloseAuto extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();

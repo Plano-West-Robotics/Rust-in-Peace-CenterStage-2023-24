@@ -44,7 +44,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 
 import java.util.Arrays;
 
-@Autonomous(name="Blue Backboard-Side Auto", group="Auto")
+@Autonomous(name="Blue Backdrop-Side Auto", group="Auto")
 public class BlueCloseAuto extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
