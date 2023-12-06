@@ -19,7 +19,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import java.util.ArrayList;
 import java.util.List;
 
-@Autonomous(name="Roadrunner Red Backdrop-Side Auto", group="Auto")
+@Autonomous(name="Roadrunner Blue Audience-Side Auto", group="Auto")
 public class RoadrunnerBlueFarAuto extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();

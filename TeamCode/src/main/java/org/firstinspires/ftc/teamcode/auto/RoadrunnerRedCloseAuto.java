@@ -54,10 +54,6 @@ public class RoadrunnerRedCloseAuto extends LinearOpMode {
 
         // ----- TRAJECTORIES ----- //
 
-        Trajectory simpleTrajectory = drive.trajectoryBuilder(new Pose2d())
-                .forward(10)
-                .build();
-
         Pose2d startPose = new Pose2d(12, -60, 0);
         drive.setPoseEstimate(startPose);
 
@@ -82,44 +78,42 @@ public class RoadrunnerRedCloseAuto extends LinearOpMode {
 
         // ----- RUNNING OP-MODE ----- //
 
-        if (location == PropDetectionProcessor.Location.Left) {
+//        if (location == PropDetectionProcessor.Location.Left) {
             path.add(allTrajectories.get(0));
             path.add(allTrajectories.get(1));
             path.add(allTrajectories.get(2));
-        } else if (location == PropDetectionProcessor.Location.Center) {
-            path.add(allTrajectories.get(3));
-            path.add(allTrajectories.get(4));
-            path.add(allTrajectories.get(5));
-        } else {
-            path.add(allTrajectories.get(6));
-            path.add(allTrajectories.get(7));
-            path.add(allTrajectories.get(8));
-        }
+//        } else if (location == PropDetectionProcessor.Location.Center) {
+//            path.add(allTrajectories.get(3));
+//            path.add(allTrajectories.get(4));
+//            path.add(allTrajectories.get(5));
+//        } else {
+//            path.add(allTrajectories.get(6));
+//            path.add(allTrajectories.get(7));
+//            path.add(allTrajectories.get(8));
+//        }
 
         // prepare for movement (set arm to down, lift slide)
-        control.armDown();
         lift.setPower(0.7, true);
         sleep(500);
         lift.setPower(0.1, true);
+        control.armDown();
 
-        drive.followTrajectory(simpleTrajectory);
+        drive.followTrajectory(path.get(0));
 
-        //drive.followTrajectory(path.get(0));
+        // drop yellow pixel
+        control.spinBoxOut();
+        sleep(3000);
+        control.stopBox();
 
-        //// drop yellow pixel
-        //control.spinBoxOut();
-        //sleep(3000);
-        //control.stopBox();
+        drive.followTrajectory(path.get(1));
 
-        //drive.followTrajectory(path.get(1));
-
-        //// drop purple pixel
-        //intake.setSpeed(0.2);
-        //intake.spinForward();
-        //sleep(500);
-        //intake.stopSpin();
-
-        //drive.followTrajectory(path.get(2));
+//        // drop purple pixel
+//        intake.setSpeed(0.2);
+//        intake.spinForward();
+//        sleep(500);
+//        intake.stopSpin();
+//
+//        drive.followTrajectory(path.get(2));
 
         Data.liftPosition = lift.getEncoderValue();
         visionPortal.close();
@@ -135,14 +129,14 @@ public class RoadrunnerRedCloseAuto extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(20, -54), 0)
                 .addDisplacementMarker(() -> {
                     // lift slide to prep for scoring
-                    lift.setPower(0.5, true);
+                    lift.setPower(0.9, true);
                 })
-                .addTemporalMarker(2, () -> {
+                .addTemporalMarker(5, () -> {
                     // stall slide, arm up
                     lift.setPower(0.1, true);
                     control.armUp();
                 })
-                .splineTo(new Vector2d(48, -30), 0)
+                .splineToConstantHeading(new Vector2d(48, -30), 0)
                 .build();
 
         trajectoryToSpikeMark = drive.trajectoryBuilder(trajectoryToBackdrop.end(), true)
