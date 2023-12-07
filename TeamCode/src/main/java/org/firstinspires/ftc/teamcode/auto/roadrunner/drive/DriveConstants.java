@@ -90,8 +90,8 @@ public class DriveConstants {
 
      */
     // TODO: raise and test max vel and max accel values
-    public static double MAX_VEL = 20;
-    public static double MAX_ACCEL = 20;
+    public static double MAX_VEL = 30;
+    public static double MAX_ACCEL = 30;
     public static double MAX_ANG_VEL = Math.toRadians(80);
     public static double MAX_ANG_ACCEL = Math.toRadians(80);
 

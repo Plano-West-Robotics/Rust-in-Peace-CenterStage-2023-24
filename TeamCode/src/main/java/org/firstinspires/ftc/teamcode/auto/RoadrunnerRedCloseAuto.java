@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.auto;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.auto.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Data;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
+import org.firstinspires.ftc.teamcode.subsystems.OuttakeArm;
 import org.firstinspires.ftc.teamcode.subsystems.OuttakeController;
 import org.firstinspires.ftc.teamcode.vision.PropDetectionProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -54,12 +56,19 @@ public class RoadrunnerRedCloseAuto extends LinearOpMode {
 
         // ----- TRAJECTORIES ----- //
 
-        Pose2d startPose = new Pose2d(12, -60, 0);
+        Pose2d startPose = new Pose2d(12, -60, 270);
         drive.setPoseEstimate(startPose);
 
+        Trajectory moveBack = drive.trajectoryBuilder(startPose)
+                .back(5)
+                .build();
+
+        startPose = new Pose2d(12, -60, 0);
 
         List<Trajectory> allTrajectories = getTrajectories(drive, startPose);
         List<Trajectory> path = new ArrayList<>();
+
+        control.arm.goTo(OuttakeArm.Position.DOWN);
 
         // ----- WAIT FOR START ----- //
 
@@ -93,27 +102,31 @@ public class RoadrunnerRedCloseAuto extends LinearOpMode {
 //        }
 
         // prepare for movement (set arm to down, lift slide)
-        lift.setPower(0.7, true);
+        lift.setPower(0.6, true);
         sleep(500);
         lift.setPower(0.1, true);
-        control.armDown();
 
+        drive.followTrajectory(moveBack);
+        drive.turn(Math.toRadians(95));
+
+        drive.setPoseEstimate(startPose);
         drive.followTrajectory(path.get(0));
 
         // drop yellow pixel
         control.spinBoxOut();
-        sleep(3000);
+        sleep(1000);
         control.stopBox();
+        control.armDown();
 
         drive.followTrajectory(path.get(1));
 
-//        // drop purple pixel
-//        intake.setSpeed(0.2);
-//        intake.spinForward();
-//        sleep(500);
-//        intake.stopSpin();
-//
-//        drive.followTrajectory(path.get(2));
+        // drop purple pixel
+        intake.setSpeed(0.35);
+        intake.spinBackwards();
+        sleep(2000);
+        intake.stopSpin();
+
+        drive.followTrajectory(path.get(2));
 
         Data.liftPosition = lift.getEncoderValue();
         visionPortal.close();
@@ -126,12 +139,12 @@ public class RoadrunnerRedCloseAuto extends LinearOpMode {
 
         // Location.Left
         trajectoryToBackdrop = drive.trajectoryBuilder(startPose)
-                .splineToConstantHeading(new Vector2d(20, -54), 0)
                 .addDisplacementMarker(() -> {
                     // lift slide to prep for scoring
-                    lift.setPower(0.9, true);
+                    lift.setPower(1, true);
+                    control.armDown();
                 })
-                .addTemporalMarker(5, () -> {
+                .addTemporalMarker(0.5, () -> {
                     // stall slide, arm up
                     lift.setPower(0.1, true);
                     control.armUp();
@@ -140,16 +153,11 @@ public class RoadrunnerRedCloseAuto extends LinearOpMode {
                 .build();
 
         trajectoryToSpikeMark = drive.trajectoryBuilder(trajectoryToBackdrop.end(), true)
-                .addTemporalMarker(0.5, () -> {
-                    // move arm down after leaving the board
-                    control.armDown();
-                })
-                .splineTo(new Vector2d(15, -30), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(8.5, -31), Math.toRadians(180))
                 .build();
 
-        trajectoryToPark = drive.trajectoryBuilder(trajectoryToSpikeMark.end(), true)
-                .splineTo(new Vector2d(25, -40), Math.toRadians(0))
-                .splineTo(new Vector2d(46, -52), Math.toRadians(270))
+        trajectoryToPark = drive.trajectoryBuilder(trajectoryToSpikeMark.end())
+                .splineToLinearHeading(new Pose2d(46, -52, Math.toRadians(90)), Math.toRadians(0))
                 .build();
 
         path.add(trajectoryToBackdrop);
