@@ -16,19 +16,22 @@ public class MeepMeepTesting {
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(12, -60, Math.toRadians(270)))
                                 .back(5)
+                                .turn(Math.toRadians(90))
                                 .addDisplacementMarker(() -> {
                                     // lift slide to prep for scoring
 //                                    lift.setPower(1, true);
+//                                    control.armDown();
+                                })
+                                .addTemporalMarker(0.5, () -> {
+                                    // stall slide, arm up
+//                                    lift.setPower(0.1, true);
 //                                    control.armUp();
                                 })
-                                .turn(Math.toRadians(90))
-                                .addTemporalMarker(5, () -> {
+                                .splineToConstantHeading(new Vector2d(48, -42), 0)
 
-                                })
-                                .splineToConstantHeading(new Vector2d(48, -30), 0)
-                                .splineToConstantHeading(new Vector2d(8.5, -31), Math.toRadians(180))
-
+                                .splineToConstantHeading(new Vector2d(33, -32), Math.toRadians(180))
                                 .splineToLinearHeading(new Pose2d(46, -52, Math.toRadians(90)), Math.toRadians(0))
+
                                 .build()
                 );
 
