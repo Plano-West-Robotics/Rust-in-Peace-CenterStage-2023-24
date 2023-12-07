@@ -87,19 +87,19 @@ public class RoadrunnerRedCloseAuto extends LinearOpMode {
 
         // ----- RUNNING OP-MODE ----- //
 
-//        if (location == PropDetectionProcessor.Location.Left) {
-//            path.add(allTrajectories.get(0));
-//            path.add(allTrajectories.get(1));
-//            path.add(allTrajectories.get(2));
-//        } else if (location == PropDetectionProcessor.Location.Center) {
+        if (location == PropDetectionProcessor.Location.Left) {
+            path.add(allTrajectories.get(0));
+            path.add(allTrajectories.get(1));
+            path.add(allTrajectories.get(2));
+        } else if (location == PropDetectionProcessor.Location.Center) {
             path.add(allTrajectories.get(3));
             path.add(allTrajectories.get(4));
             path.add(allTrajectories.get(5));
-//        } else {
-//            path.add(allTrajectories.get(6));
-//            path.add(allTrajectories.get(7));
-//            path.add(allTrajectories.get(8));
-//        }
+        } else {
+            path.add(allTrajectories.get(6));
+            path.add(allTrajectories.get(7));
+            path.add(allTrajectories.get(8));
+        }
 
         // prepare for movement (set arm to down, lift slide)
         lift.setPower(0.6, true);
