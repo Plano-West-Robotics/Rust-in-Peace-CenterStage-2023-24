@@ -21,7 +21,6 @@ public class RobotCentricTeleOp extends OpMode {
     OuttakeController control;
 
     double intakeArmTrigger;
-    double speed;
 
     @Override
     public void init() {
@@ -36,7 +35,7 @@ public class RobotCentricTeleOp extends OpMode {
         // Bypass lift check to prevent swinging
         control.arm.goTo(OuttakeArm.Position.DOWN);
 
-        speed = 0.75;
+        drive.setSpeed(1);
 
         lift.loadPosition();
     }
@@ -44,7 +43,7 @@ public class RobotCentricTeleOp extends OpMode {
     @Override
     public void loop() {
         // Lift
-        if (Math.abs(gamepad2.left_stick_y) > 0) lift.update(-gamepad2.left_stick_y * 0.6);
+        if (Math.abs(gamepad2.left_stick_y) > 0) lift.update(-gamepad2.left_stick_y * 0.7);
         else lift.update(0.1);
 
         // Auto release combos --
@@ -67,9 +66,7 @@ public class RobotCentricTeleOp extends OpMode {
             intake.stopSpin();
         }
 
-
         // Intake - Arm
-
         if (gamepad2.right_trigger > 0) {
             intake.setTargetPositionPreset(Intake.Position.DOWN);
         } else if (gamepad2.left_trigger > 0) {
@@ -79,9 +76,10 @@ public class RobotCentricTeleOp extends OpMode {
         intake.update();
 
         // Outtake Arm
-        if(Math.abs(gamepad2.right_stick_y) > 0){
-            control.arm.goTo(gamepad2.right_stick_y < 0 ? OuttakeArm.Position.DOWN : OuttakeArm.Position.UP);
-
+        if (-gamepad2.right_stick_y > 0) {
+            control.armUp();
+        } else if (-gamepad2.right_stick_y < 0) {
+            control.armDown();
         }
 
         // Outtake Box
@@ -96,10 +94,9 @@ public class RobotCentricTeleOp extends OpMode {
         // Reset Lift Encoder
         if (gamepad2.back) lift.resetEncoder();
 
-        drive.setSpeed(1- gamepad1.right_trigger);
         if (gamepad1.back) drive.resetHeading();
 
-        if (gamepad2.dpad_down) lift.setPower(-0.2, true);
+        if (gamepad2.dpad_down) lift.setPower(-0.3, true);
 
         // Reset field yaw
         if (gamepad1.back) {
