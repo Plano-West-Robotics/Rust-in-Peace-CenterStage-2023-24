@@ -90,7 +90,7 @@ public class FieldCentricTeleOp extends OpMode {
             control.spinBoxIn();
         } else if (gamepad2.b) {
             control.spinBoxOut();
-        } else if (gamepad2.a){
+        } else if (gamepad2.y){
             control.stopBox();
         }
 
@@ -99,7 +99,7 @@ public class FieldCentricTeleOp extends OpMode {
 
         if (gamepad1.back) drive.resetHeading();
 
-        if (gamepad2.dpad_down) lift.setPower(-0.2, true);
+        if (gamepad2.dpad_down) lift.setPower(-0.3, true);
 
         // Reset field yaw
         if (gamepad1.back) {
