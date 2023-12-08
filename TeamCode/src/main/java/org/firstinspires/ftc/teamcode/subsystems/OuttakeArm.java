@@ -32,7 +32,7 @@ public class OuttakeArm {
         if (targetPosition == Position.UP) {
             goTo(0.8);
         } else if (targetPosition == Position.DOWN) {
-            goTo(0.03);
+            goTo(0.12);
         }
     }
 }
