@@ -26,8 +26,7 @@ public class Intake {
         this.telemetry = telemetry;
 
         arm = hardwareMap.get(Servo.class,"ARMservo");
-        arm.setDirection(Servo.Direction.REVERSE);
-        arm.scaleRange(0, 0.5);
+        arm.scaleRange(0.4, 0.9);
 
         intake = hardwareMap.get(DcMotor.class, "INmotor");
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

@@ -5,34 +5,34 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class OuttakeArm {
+public class DroneLauncher {
     private final Telemetry telemetry;
-    public final Servo leftArm;
-
-    final double leftPos;
+    private final Servo droneArm;
+    private final Servo droneShoot;
 
     public enum Position {
         UP,
         DOWN
     }
-    public OuttakeArm(HardwareMap hardwareMap, Telemetry telemetry) {
+    public DroneLauncher(HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
-        leftArm = hardwareMap.get(Servo.class,"LAservo");
-
-        leftArm.scaleRange(0, 0.6);
-
-        leftPos = leftArm.getPosition();
+        droneArm = hardwareMap.get(Servo.class,"DAservo");
+        droneShoot = hardwareMap.get(Servo.class,"DSservo");
     }
 
     public void goTo(double targetPosition) {
-        leftArm.setPosition(targetPosition);
+        droneArm.setPosition(targetPosition);
     }
 
     public void goTo(Position targetPosition) {
         if (targetPosition == Position.UP) {
-            goTo(0.8);
+            goTo(0.6);
         } else if (targetPosition == Position.DOWN) {
-            goTo(0.15);
+            goTo(0);
         }
+    }
+
+    public void shoot() {
+        droneShoot.setPosition(0.5);
     }
 }

@@ -55,14 +55,14 @@ public class RoadrunnerBlueCloseAuto extends LinearOpMode {
 
         // ----- TRAJECTORIES ----- //
 
-        Pose2d startPose = new Pose2d(12, 60, 90);
+        Pose2d startPose = new Pose2d(8, 60, 90);
         drive.setPoseEstimate(startPose);
 
         Trajectory moveBack = drive.trajectoryBuilder(startPose)
                 .back(5)
                 .build();
 
-        startPose = new Pose2d(12, 60, 0);
+        startPose = new Pose2d(8, 60, 0);
 
         List<Trajectory> allTrajectories = getTrajectories(drive, startPose);
         List<Trajectory> path = new ArrayList<>();
@@ -100,13 +100,14 @@ public class RoadrunnerBlueCloseAuto extends LinearOpMode {
             path.add(allTrajectories.get(8));
         }
 
+        drive.followTrajectory(moveBack);
+
         // prepare for movement (set arm to down, lift slide)
         lift.setPower(0.6, true);
         sleep(500);
         lift.setPower(0.1, true);
 
-        drive.followTrajectory(moveBack);
-        drive.turn(Math.toRadians(-90));
+        drive.turn(Math.toRadians(-95));
 
         drive.setPoseEstimate(startPose);
         drive.followTrajectory(path.get(0));
@@ -116,6 +117,13 @@ public class RoadrunnerBlueCloseAuto extends LinearOpMode {
         sleep(1000);
         control.stopBox();
         control.armDown();
+
+        lift.setPower(0.4, true);
+        sleep(300);
+        lift.setPower(0.1, true);
+
+        intake.setTargetPositionPreset(Intake.Position.P3);
+        intake.update();
 
         drive.followTrajectory(path.get(1));
 
@@ -140,19 +148,19 @@ public class RoadrunnerBlueCloseAuto extends LinearOpMode {
         trajectoryToBackboard = drive.trajectoryBuilder(startPose)
                 .addDisplacementMarker(() -> {
                     // lift slide to prep for scoring
-                    lift.setPower(1, true);
+                    lift.setPower(0.85, true);
                     control.armDown();
                 })
-                .addTemporalMarker(0.5, () -> {
+                .addTemporalMarker(0.43, () -> {
                     // stall slide, arm up
                     lift.setPower(0.1, true);
                     control.armUp();
                 })
-                .splineToConstantHeading(new Vector2d(48, 42), 0)
+                .splineToConstantHeading(new Vector2d(47, 42), 0)
                 .build();
 
         trajectoryToSpikeMark = drive.trajectoryBuilder(trajectoryToBackboard.end(), true)
-                .splineToConstantHeading(new Vector2d(33, 32), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(30, 32), Math.toRadians(180))
                 .build();
 
         trajectoryToPark = drive.trajectoryBuilder(trajectoryToSpikeMark.end())
@@ -167,19 +175,19 @@ public class RoadrunnerBlueCloseAuto extends LinearOpMode {
         trajectoryToBackboard = drive.trajectoryBuilder(startPose)
                 .addDisplacementMarker(() -> {
                     // lift slide to prep for scoring
-                    lift.setPower(1, true);
+                    lift.setPower(0.8, true);
                     control.armDown();
                 })
-                .addTemporalMarker(0.5, () -> {
+                .addTemporalMarker(0.4, () -> {
                     // stall slide, arm up
                     lift.setPower(0.1, true);
                     control.armUp();
                 })
-                .splineToConstantHeading(new Vector2d(48, 36), 0)
+                .splineToConstantHeading(new Vector2d(47, 37), 0)
                 .build();
 
         trajectoryToSpikeMark = drive.trajectoryBuilder(trajectoryToBackboard.end(), true)
-                .splineToConstantHeading(new Vector2d(27, 24), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(22, 26), Math.toRadians(180))
                 .build();
 
         trajectoryToPark = drive.trajectoryBuilder(trajectoryToSpikeMark.end())
@@ -194,7 +202,7 @@ public class RoadrunnerBlueCloseAuto extends LinearOpMode {
         trajectoryToBackboard = drive.trajectoryBuilder(startPose)
                 .addDisplacementMarker(() -> {
                     // lift slide to prep for scoring
-                    lift.setPower(1, true);
+                    lift.setPower(0.85, true);
                     control.armDown();
                 })
                 .addTemporalMarker(0.5, () -> {
@@ -202,11 +210,11 @@ public class RoadrunnerBlueCloseAuto extends LinearOpMode {
                     lift.setPower(0.1, true);
                     control.armUp();
                 })
-                .splineToConstantHeading(new Vector2d(48, 30), 0)
+                .splineToConstantHeading(new Vector2d(47, 30), 0)
                 .build();
 
         trajectoryToSpikeMark = drive.trajectoryBuilder(trajectoryToBackboard.end(), true)
-                .splineToConstantHeading(new Vector2d(8.5, 32), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(9, 31), Math.toRadians(180))
                 .build();
 
         trajectoryToPark = drive.trajectoryBuilder(trajectoryToSpikeMark.end())

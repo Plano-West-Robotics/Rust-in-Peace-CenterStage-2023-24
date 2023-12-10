@@ -47,6 +47,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 
 import java.util.Arrays;
 
+@Disabled
 @Autonomous(name="Blue Audience-Side Auto", group="Auto")
 public class BlueFarAuto extends LinearOpMode {
 

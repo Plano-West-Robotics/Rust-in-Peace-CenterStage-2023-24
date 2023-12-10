@@ -47,6 +47,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 
 import java.util.Arrays;
 
+@Disabled
 @Autonomous(name="Red Audience-Side Auto", group="Auto")
 public class RedFarAuto extends LinearOpMode {
 

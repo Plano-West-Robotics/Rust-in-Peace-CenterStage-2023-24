@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.subsystems.Drive;
+import org.firstinspires.ftc.teamcode.subsystems.DroneLauncher;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.subsystems.OuttakeArm;
@@ -17,16 +18,20 @@ public class RobotCentricTeleOp extends OpMode {
     Drive drive;
     Lift lift;
     Intake intake;
+    DroneLauncher droneLauncher;
 
     OuttakeController control;
 
     double intakeArmTrigger;
+    double driveSpeedMult = 0.8;
+    double liftSpeedMult = 1;
 
     @Override
     public void init() {
         drive = new Drive(hardwareMap, telemetry, false);
         lift = new Lift(hardwareMap, telemetry);
         intake = new Intake(hardwareMap, telemetry);
+        droneLauncher = new DroneLauncher(hardwareMap, telemetry);
 
         control = new OuttakeController(hardwareMap, telemetry, lift);
 
@@ -43,7 +48,7 @@ public class RobotCentricTeleOp extends OpMode {
     @Override
     public void loop() {
         // Lift
-        if (Math.abs(gamepad2.left_stick_y) > 0) lift.update(-gamepad2.left_stick_y * 0.7);
+        if (Math.abs(gamepad2.left_stick_y) > 0) lift.update(-gamepad2.left_stick_y * liftSpeedMult);
         else lift.update(0.1);
 
         // Auto release combos --
@@ -94,16 +99,20 @@ public class RobotCentricTeleOp extends OpMode {
         // Reset Lift Encoder
         if (gamepad2.back) lift.resetEncoder();
 
-        if (gamepad1.back) drive.resetHeading();
-
         if (gamepad2.dpad_down) lift.setPower(-0.3, true);
 
-        // Reset field yaw
-        if (gamepad1.back) {
-            drive.resetHeading();
-        }
+        // Drone
+        if (gamepad1.y) droneLauncher.shoot();
+
+        if (gamepad1.x) droneLauncher.goTo(DroneLauncher.Position.DOWN);
+        else if (gamepad1.b) droneLauncher.goTo(DroneLauncher.Position.UP);
 
         // Chassis
+        if (gamepad1.left_bumper) driveSpeedMult -= (driveSpeedMult - 0.1 < 0 ? 0 : 0.1);
+        else if (gamepad1.right_bumper) driveSpeedMult += (driveSpeedMult + 0.1 > 1 ? 0 : 0.1);
+
+        if (gamepad1.back) drive.resetHeading();
+
         drive.update(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
 
         telemetry.addData("Chassis Motors (FL-FR-BL-BR)", Arrays.toString(drive.getEncoderValues()));
@@ -112,5 +121,8 @@ public class RobotCentricTeleOp extends OpMode {
         telemetry.addData("Outtake Arm (LA-Cloned to right)", control.getArmUp() ? "UP" : "DOWN");
         telemetry.addData("Outtake Arm Position (LA)", control.arm.leftArm.getPosition());
         telemetry.addData("Outtake Box Direction (BOX)", control.box.getPower() == 0 ? "STOP" : control.box.getPower() == 1 ? "OUT" : "IN");
+        telemetry.addData("IMU Orientation", drive.getHeading());
+        telemetry.addData("\nDrive Speed", driveSpeedMult);
+        telemetry.addData("Lift Speed", liftSpeedMult);
     }
 }

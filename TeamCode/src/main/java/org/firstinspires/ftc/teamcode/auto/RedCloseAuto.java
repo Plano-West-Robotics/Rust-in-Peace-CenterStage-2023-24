@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -47,6 +48,7 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.TreeMap;
 
+@Disabled
 @Autonomous(name="Red Backdrop-Side Auto", group="Auto")
 public class RedCloseAuto extends LinearOpMode {
 

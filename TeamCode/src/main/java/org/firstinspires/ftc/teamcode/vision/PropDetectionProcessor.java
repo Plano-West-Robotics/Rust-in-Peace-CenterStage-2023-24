@@ -59,8 +59,8 @@ public class PropDetectionProcessor implements VisionProcessor {
         Imgproc.cvtColor(frame, frame, Imgproc.COLOR_RGB2HSV); // Converts image to HSV color
 
         if (propColor == Prop.RED) {
-            lowHSV = new Scalar(144.5, 99.2, 0);
-            highHSV = new Scalar(196.9, 255, 255);
+            lowHSV = new Scalar(0, 138.8, 94.9);
+            highHSV = new Scalar(18.4, 255, 255);
         } else {
             lowHSV = new Scalar(107.7, 120, 116.2);
             highHSV = new Scalar(255, 255, 255);
