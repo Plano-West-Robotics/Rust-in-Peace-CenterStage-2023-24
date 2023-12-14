@@ -16,10 +16,10 @@ public class OuttakeDifferential {
 
     private final Telemetry telemetry;
     public enum State{
-        down,
-        up,
-        left,
-        right
+        DOWN,
+        UP,
+        LEFT,
+        RIGHT
     };
 
     public OuttakeDifferential(HardwareMap hardwareMap, Telemetry telemetry, State state) {
@@ -38,26 +38,26 @@ public class OuttakeDifferential {
      */
     public void goTo(State st){
 
-       if(st == State.up){
+       if(st == State.UP){
             //set servo values to up
-           this.state = State.up;
+           this.state = State.UP;
        }
-       else if(st == State.down){
+       else if(st == State.DOWN){
 
            //if state isnt left and state isnt right then set to down
-           if(!((state == State.left) || (state == State.right))){
+           if(!((state == State.LEFT) || (state == State.RIGHT))){
                //setServo values to down
            }
 
        }
-       else if(st == State.left){
-            if(state == State.down){
-                goTo(State.up);
+       else if(st == State.LEFT){
+            if(state == State.DOWN){
+                goTo(State.UP);
             }
             //Set servo values to left
-       }else if(st == State.right){
-           if(state == State.down){
-               goTo(State.up);
+       }else if(st == State.RIGHT){
+           if(state == State.DOWN){
+               goTo(State.UP);
            }
            //Set servo values to right
        }
