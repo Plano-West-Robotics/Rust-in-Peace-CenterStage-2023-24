@@ -46,17 +46,15 @@ import org.firstinspires.ftc.vision.VisionPortal;
 
 import java.util.Arrays;
 
-@Autonomous(name="Intake Spin Tester", group="Auto")
-public class IntakeSpinTesterAuto extends LinearOpMode {
+@Autonomous(name="Intake Arm Tester", group="Auto")
+public class IntakeArmTesterAuto extends LinearOpMode {
 
     Intake intake;
-    OuttakeBox box;
 
     @Override
     public void runOpMode() {
         intake = new Intake(hardwareMap, telemetry);
-        box = new OuttakeBox(hardwareMap, telemetry);
-        intake.setSpeed(0.8);
+        intake.setSpeed(0.7);
 
         // Wait for the game to start (driver presses PLAY)
         while (!isStarted() && !isStopRequested()) {
@@ -65,10 +63,23 @@ public class IntakeSpinTesterAuto extends LinearOpMode {
         }
         // run until the end of the match (driver presses STOP)
 
-        intake.spinForward();
-//        box.intake();
-        sleep(30*1000);
-        intake.stopSpin();
-        box.stopSpinning();
+        intake.setTargetPosition(0);
+        intake.update();
+        sleep(1000);
+        intake.setTargetPosition(0.2);
+        intake.update();
+        sleep(1000);
+        intake.setTargetPosition(0.4);
+        intake.update();
+        sleep(1000);
+        intake.setTargetPosition(0.6);
+        intake.update();
+        sleep(1000);
+        intake.setTargetPosition(0.8);
+        intake.update();
+        sleep(1000);
+        intake.setTargetPosition(1);
+        intake.update();
+        sleep(1000);
     }
 }

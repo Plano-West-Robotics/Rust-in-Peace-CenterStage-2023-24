@@ -17,8 +17,8 @@ public class Imu {
     public Imu(HardwareMap hardwareMap, Telemetry telemetry) {
         this.imu = hardwareMap.get(IMU.class, "imuE");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
-                RevHubOrientationOnRobot.UsbFacingDirection.UP));
+                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
         imu.initialize(parameters);
 
         this.telemetry = telemetry;

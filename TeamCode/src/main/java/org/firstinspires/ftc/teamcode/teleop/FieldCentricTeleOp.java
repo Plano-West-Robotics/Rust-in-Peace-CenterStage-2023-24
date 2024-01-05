@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.subsystems.OuttakeArm;
 import org.firstinspires.ftc.teamcode.subsystems.OuttakeController;
+import org.firstinspires.ftc.teamcode.subsystems.OuttakeDifferential;
 
 import java.util.Arrays;
 
@@ -20,7 +21,7 @@ public class FieldCentricTeleOp extends OpMode {
     Intake intake;
     DroneLauncher droneLauncher;
 
-    OuttakeController control;
+    OuttakeDifferential outtake;
 
     double intakeArmTrigger;
     double driveSpeedMult = 0.8;
@@ -33,99 +34,96 @@ public class FieldCentricTeleOp extends OpMode {
         intake = new Intake(hardwareMap, telemetry);
         droneLauncher = new DroneLauncher(hardwareMap, telemetry);
 
-        control = new OuttakeController(hardwareMap, telemetry, lift);
-
-        intakeArmTrigger = 0;
-
-        // Bypass lift check to prevent swinging
-        control.arm.goTo(OuttakeArm.Position.DOWN);
+        outtake = new OuttakeDifferential(hardwareMap, telemetry, OuttakeDifferential.State.DOWN);
 
         drive.setSpeed(1);
-
         lift.loadPosition();
+        lift.setManual(true);
     }
 
     @Override
     public void loop() {
-        // Lift
-        if (Math.abs(gamepad2.left_stick_y) > 0) lift.update(-gamepad2.left_stick_y * liftSpeedMult);
-        else lift.update(0.1);
+        try {
+            // Lift
+            if (Math.abs(gamepad2.left_stick_y) > 0)
+                lift.update(-gamepad2.left_stick_y * liftSpeedMult);
+            else lift.update(0.1);
 
-        // Auto release combos --
-        if (gamepad2.dpad_up) {
-            lift.setManual(false);
-            lift.setTargetPositionPreset(Lift.Position.MEDIUM);
-        }
+            // Intake - Spin
+            if (gamepad2.left_bumper) {
+                intake.spinForward();
+                lift.setPower(-0.1, true);
+                outtake.box.stopSpinning();
+                outtake.box.intake();
+            } else if (gamepad2.right_bumper) {
+                intake.spinBackwards();
+            } else {
+                intake.stopSpin();
+            }
 
-        if (!lift.getManual() && control.liftIsUp() && !control.getArmUp()) control.armUp();
-        else if (!lift.getManual() && control.liftIsUp() && control.getArmUp()) control.armDown();
+            // Intake - Arm
+//        if (gamepad2.right_trigger > 0) {
+//            intake.setTargetPositionPreset(Intake.Position.DOWN);
+//        } else if (gamepad2.left_trigger > 0) {
+//            intake.setTargetPositionPreset(Intake.Position.TOP);
+//        }
+//
+//        intake.update();
 
-        // Intake - Spin
-        if (gamepad2.left_bumper) {
-            intake.spinForward();
-            lift.setPower(-0.1, true);
-            control.spinBoxIn();
-        } else if (gamepad2.right_bumper) {
-            intake.spinBackwards();
-        } else {
-            intake.stopSpin();
-        }
+            // Outtake Arm
+            if (-gamepad2.right_stick_y > 0.8) {
+                outtake.goTo(OuttakeDifferential.State.UP);
+            } else if (-gamepad2.right_stick_y < -0.8) {
+                outtake.goTo(OuttakeDifferential.State.DOWN);
+            }
 
-        // Intake - Arm
-        if (gamepad2.right_trigger > 0) {
-            intake.setTargetPositionPreset(Intake.Position.DOWN);
-        } else if (gamepad2.left_trigger > 0) {
-            intake.setTargetPositionPreset(Intake.Position.TOP);
-        }
+            if (gamepad2.right_stick_x > 0.8) {
+                outtake.setWrist(OuttakeDifferential.WristState.MANUAL);
+            } else if (gamepad2.right_stick_x < -0.8) {
+                outtake.setWrist(OuttakeDifferential.WristState.PASSIVE);
+            }
 
-        intake.update();
+            // Outtake Box
+            if (gamepad2.x) {
+                outtake.box.intake();
+            } else if (gamepad2.b) {
+                outtake.box.outtake();
+            } else if (gamepad2.y) {
+                outtake.box.stopSpinning();
+            }
 
-        // Outtake Arm
-        if (-gamepad2.right_stick_y > 0) {
-            control.armUp();
-        } else if (-gamepad2.right_stick_y < 0) {
-            control.armDown();
-        }
+            // Reset Lift Encoder
+            if (gamepad2.back) lift.resetEncoder();
 
-        // Outtake Box
-        if (gamepad2.x) {
-            control.spinBoxIn();
-        } else if (gamepad2.b) {
-            control.spinBoxOut();
-        } else if (gamepad2.y){
-            control.stopBox();
-        }
+            if (gamepad2.dpad_down) lift.setPower(-0.3, true);
 
-        // Reset Lift Encoder
-        if (gamepad2.back) lift.resetEncoder();
+            // Drone
+            if (gamepad1.y) {
+                droneLauncher.shoot();
+            }
 
-        if (gamepad2.dpad_down) lift.setPower(-0.3, true);
+            if (gamepad1.x) droneLauncher.goTo(DroneLauncher.Position.DOWN);
+            else if (gamepad1.b) droneLauncher.goTo(DroneLauncher.Position.UP);
 
-        // Drone
-        if (gamepad1.y) droneLauncher.shoot();
+            // Chassis
+            if (gamepad1.left_bumper) driveSpeedMult -= (driveSpeedMult - 0.1 < 0 ? 0 : 0.1);
+            else if (gamepad1.right_bumper) driveSpeedMult += (driveSpeedMult + 0.1 > 1 ? 0 : 0.1);
 
-        if (gamepad1.x) droneLauncher.goTo(DroneLauncher.Position.DOWN);
-        else if (gamepad1.b) droneLauncher.goTo(DroneLauncher.Position.UP);
+            if (gamepad1.back) drive.resetHeading();
 
-        // Chassis
-        if (gamepad1.left_bumper) driveSpeedMult -= (driveSpeedMult - 0.1 < 0 ? 0 : 0.1);
-        else if (gamepad1.right_bumper) driveSpeedMult += (driveSpeedMult + 0.1 > 1 ? 0 : 0.1);
+            drive.setSpeed(driveSpeedMult);
 
-        if (gamepad1.back) drive.resetHeading();
+            drive.updateFieldCentric(-gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
 
-        drive.setSpeed(driveSpeedMult);
-
-        drive.updateFieldCentric(-gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
-
-        telemetry.addData("Chassis Motors (FL-FR-BL-BR)", Arrays.toString(drive.getEncoderValues()));
-        telemetry.addData("Slide Motor (SR-Cloned to left)", lift.getEncoderValue());
-        telemetry.addData("Intake Arm (ARM)", intake.getCurrentPosition());
-        telemetry.addData("Outtake Arm (LA-Cloned to right)", control.getArmUp() ? "UP" : "DOWN");
-        telemetry.addData("Outtake Arm Position (LA)", control.arm.leftArm.getPosition());
-        telemetry.addData("Outtake Box Direction (BOX)", control.box.getPower() == 0 ? "STOP" : control.box.getPower() == 1 ? "OUT" : "IN");
-        telemetry.addData("IMU Orientation", drive.getHeading());
-        telemetry.addData("\nDrive Speed", driveSpeedMult);
-        telemetry.addData("Lift Speed", liftSpeedMult);
+            telemetry.addData("Chassis Motors (FL-FR-BL-BR)", Arrays.toString(drive.getEncoderValues()));
+            telemetry.addData("Slide Motor (SR-Cloned to left)", lift.getEncoderValue());
+            telemetry.addData("Intake Arm (ARM)", intake.getCurrentPosition());
+            telemetry.addData("Outtake Arm", outtake.state);
+            telemetry.addData("Outtake Box Direction (BOX)", outtake.box.getPower() == 0 ? "STOP" : outtake.box.getPower() == 1 ? "OUT" : "IN");
+            telemetry.addData("IMU Orientation", drive.getHeading());
+            telemetry.addData("\nDrive Speed", driveSpeedMult);
+            telemetry.addData("Lift Speed", liftSpeedMult);
+        } catch (Exception ignored) {}
     }
 }
 

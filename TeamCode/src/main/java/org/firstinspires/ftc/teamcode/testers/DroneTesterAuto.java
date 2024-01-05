@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.subsystems.Data;
 import org.firstinspires.ftc.teamcode.subsystems.Drive;
+import org.firstinspires.ftc.teamcode.subsystems.DroneLauncher;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.subsystems.OuttakeBox;
@@ -46,17 +47,14 @@ import org.firstinspires.ftc.vision.VisionPortal;
 
 import java.util.Arrays;
 
-@Autonomous(name="Intake Spin Tester", group="Auto")
-public class IntakeSpinTesterAuto extends LinearOpMode {
+@Autonomous(name="Drone Tester", group="Auto")
+public class DroneTesterAuto extends LinearOpMode {
 
-    Intake intake;
-    OuttakeBox box;
+    DroneLauncher drone;
 
     @Override
     public void runOpMode() {
-        intake = new Intake(hardwareMap, telemetry);
-        box = new OuttakeBox(hardwareMap, telemetry);
-        intake.setSpeed(0.8);
+        drone = new DroneLauncher(hardwareMap, telemetry);
 
         // Wait for the game to start (driver presses PLAY)
         while (!isStarted() && !isStopRequested()) {
@@ -65,10 +63,9 @@ public class IntakeSpinTesterAuto extends LinearOpMode {
         }
         // run until the end of the match (driver presses STOP)
 
-        intake.spinForward();
-//        box.intake();
-        sleep(30*1000);
-        intake.stopSpin();
-        box.stopSpinning();
+        drone.droneArm.setPosition(0.65); // up
+        sleep(7000);
+        drone.droneArm.setPosition(0.9); // down
+        sleep(2000);
     }
 }

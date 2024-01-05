@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -13,6 +14,14 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class OuttakeBox {
     private final Telemetry telemetry;
     public final CRServo box;
+    public final Servo wrist;
+
+    public enum State {
+        P1,
+        P2,
+        P3,
+        P4
+    }
 
     public OuttakeBox(HardwareMap hardwareMap, Telemetry telemetry) {
 
@@ -20,6 +29,8 @@ public class OuttakeBox {
 
         box = hardwareMap.get(CRServo.class,"BOXservo");
         box.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        wrist = hardwareMap.get(Servo.class, "WRservo");
     }
 
     public void intake() {
@@ -36,5 +47,24 @@ public class OuttakeBox {
 
     public double getPower() {
         return box.getPower();
+    }
+
+    public void setWristPosition(State state) throws InterruptedException {
+        if (state == State.P1) {
+            // manual
+            wrist.setPosition(0);
+        } else if (state == State.P2) {
+
+        } else if (state == State.P3) {
+            // passive
+            wrist.setPosition(0.71);
+        } else if (state == State.P4) {
+
+        }
+        sleep(500);
+    }
+
+    public double getWristPosition() {
+        return wrist.getPosition();
     }
 }
