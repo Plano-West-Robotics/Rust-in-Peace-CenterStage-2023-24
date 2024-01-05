@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.subsystems.OuttakeArm;
 import org.firstinspires.ftc.teamcode.subsystems.OuttakeController;
+import org.firstinspires.ftc.teamcode.subsystems.OuttakeDifferential;
 
 import java.util.Arrays;
 
@@ -20,7 +21,7 @@ public class RobotCentricTeleOp extends OpMode {
     Intake intake;
     DroneLauncher droneLauncher;
 
-    OuttakeController control;
+    OuttakeDifferential outtake;
 
     double intakeArmTrigger;
     double driveSpeedMult = 0.8;
@@ -33,16 +34,11 @@ public class RobotCentricTeleOp extends OpMode {
         intake = new Intake(hardwareMap, telemetry);
         droneLauncher = new DroneLauncher(hardwareMap, telemetry);
 
-        control = new OuttakeController(hardwareMap, telemetry, lift);
-
-        intakeArmTrigger = 0;
-
-        // Bypass lift check to prevent swinging
-        control.arm.goTo(OuttakeArm.Position.DOWN);
+        outtake = new OuttakeDifferential(hardwareMap, telemetry, OuttakeDifferential.State.DOWN);
 
         drive.setSpeed(1);
-
         lift.loadPosition();
+        lift.setManual(true);
     }
 
     @Override
@@ -53,21 +49,12 @@ public class RobotCentricTeleOp extends OpMode {
                 lift.update(-gamepad2.left_stick_y * liftSpeedMult);
             else lift.update(0.1);
 
-            // Auto release combos --
-            if (gamepad2.dpad_up) {
-                lift.setManual(false);
-                lift.setTargetPositionPreset(Lift.Position.MEDIUM);
-            }
-
-            if (!lift.getManual() && control.liftIsUp() && !control.getArmUp()) control.armUp();
-            else if (!lift.getManual() && control.liftIsUp() && control.getArmUp())
-                control.armDown();
-
             // Intake - Spin
             if (gamepad2.left_bumper) {
                 intake.spinForward();
                 lift.setPower(-0.1, true);
-                control.spinBoxIn();
+                outtake.box.stopSpinning();
+                outtake.box.intake();
             } else if (gamepad2.right_bumper) {
                 intake.spinBackwards();
             } else {
@@ -75,28 +62,34 @@ public class RobotCentricTeleOp extends OpMode {
             }
 
             // Intake - Arm
-            if (gamepad2.right_trigger > 0) {
-                intake.setTargetPositionPreset(Intake.Position.DOWN);
-            } else if (gamepad2.left_trigger > 0) {
-                intake.setTargetPositionPreset(Intake.Position.TOP);
-            }
-
-            intake.update();
+//        if (gamepad2.right_trigger > 0) {
+//            intake.setTargetPositionPreset(Intake.Position.DOWN);
+//        } else if (gamepad2.left_trigger > 0) {
+//            intake.setTargetPositionPreset(Intake.Position.TOP);
+//        }
+//
+//        intake.update();
 
             // Outtake Arm
-            if (-gamepad2.right_stick_y > 0) {
-                control.armUp();
-            } else if (-gamepad2.right_stick_y < 0) {
-                control.armDown();
+            if (-gamepad2.right_stick_y > 0.8) {
+                outtake.goTo(OuttakeDifferential.State.UP);
+            } else if (-gamepad2.right_stick_y < -0.8) {
+                outtake.goTo(OuttakeDifferential.State.DOWN);
+            }
+
+            if (gamepad2.right_stick_x > 0.8) {
+                outtake.setWrist(OuttakeDifferential.WristState.MANUAL);
+            } else if (gamepad2.right_stick_x < -0.8) {
+                outtake.setWrist(OuttakeDifferential.WristState.PASSIVE);
             }
 
             // Outtake Box
             if (gamepad2.x) {
-                control.spinBoxIn();
+                outtake.box.intake();
             } else if (gamepad2.b) {
-                control.spinBoxOut();
+                outtake.box.outtake();
             } else if (gamepad2.y) {
-                control.stopBox();
+                outtake.box.stopSpinning();
             }
 
             // Reset Lift Encoder
@@ -105,7 +98,9 @@ public class RobotCentricTeleOp extends OpMode {
             if (gamepad2.dpad_down) lift.setPower(-0.3, true);
 
             // Drone
-            if (gamepad1.y) droneLauncher.shoot();
+            if (gamepad1.y) {
+                droneLauncher.shoot();
+            }
 
             if (gamepad1.x) droneLauncher.goTo(DroneLauncher.Position.DOWN);
             else if (gamepad1.b) droneLauncher.goTo(DroneLauncher.Position.UP);
@@ -116,14 +111,16 @@ public class RobotCentricTeleOp extends OpMode {
 
             if (gamepad1.back) drive.resetHeading();
 
+            drive.setSpeed(driveSpeedMult);
+
             drive.update(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
 
             telemetry.addData("Chassis Motors (FL-FR-BL-BR)", Arrays.toString(drive.getEncoderValues()));
             telemetry.addData("Slide Motor (SR-Cloned to left)", lift.getEncoderValue());
             telemetry.addData("Intake Arm (ARM)", intake.getCurrentPosition());
-            telemetry.addData("Outtake Arm (LA-Cloned to right)", control.getArmUp() ? "UP" : "DOWN");
-            telemetry.addData("Outtake Arm Position (LA)", control.arm.leftArm.getPosition());
-            telemetry.addData("Outtake Box Direction (BOX)", control.box.getPower() == 0 ? "STOP" : control.box.getPower() == 1 ? "OUT" : "IN");
+            telemetry.addData("Outtake Arm", outtake.state);
+            telemetry.addData("Wrist Outtake Direction", outtake.wristState);
+            telemetry.addData("Outtake Box Direction (BOX)", outtake.box.getPower() == 0 ? "STOP" : outtake.box.getPower() == 1 ? "OUT" : "IN");
             telemetry.addData("IMU Orientation", drive.getHeading());
             telemetry.addData("\nDrive Speed", driveSpeedMult);
             telemetry.addData("Lift Speed", liftSpeedMult);

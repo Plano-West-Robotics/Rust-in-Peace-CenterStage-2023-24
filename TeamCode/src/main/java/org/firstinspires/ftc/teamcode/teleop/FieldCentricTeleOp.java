@@ -119,6 +119,7 @@ public class FieldCentricTeleOp extends OpMode {
             telemetry.addData("Slide Motor (SR-Cloned to left)", lift.getEncoderValue());
             telemetry.addData("Intake Arm (ARM)", intake.getCurrentPosition());
             telemetry.addData("Outtake Arm", outtake.state);
+            telemetry.addData("Wrist Outtake Direction", outtake.wristState);
             telemetry.addData("Outtake Box Direction (BOX)", outtake.box.getPower() == 0 ? "STOP" : outtake.box.getPower() == 1 ? "OUT" : "IN");
             telemetry.addData("IMU Orientation", drive.getHeading());
             telemetry.addData("\nDrive Speed", driveSpeedMult);
