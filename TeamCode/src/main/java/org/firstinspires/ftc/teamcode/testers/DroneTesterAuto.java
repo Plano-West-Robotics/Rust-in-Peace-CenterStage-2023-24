@@ -47,6 +47,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 
 import java.util.Arrays;
 
+@Disabled
 @Autonomous(name="Drone Tester", group="Auto")
 public class DroneTesterAuto extends LinearOpMode {
 

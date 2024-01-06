@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+//@Disabled
 @TeleOp(name="Single Motor Test", group="Testers")
 public class SingleMotorTest extends OpMode
 {
@@ -20,10 +21,7 @@ public class SingleMotorTest extends OpMode
     public void init() {
         telemetry.addData("Status", "Powered On");
 
-        testMotor = hardwareMap.get(DcMotor.class, "SLmotor");
-        testMotor2 = hardwareMap.get(DcMotor.class, "SRmotor");
-
-        testMotor2.setDirection(DcMotorSimple.Direction.REVERSE);
+        testMotor = hardwareMap.get(DcMotor.class, "FLmotor");
 
         telemetry.addData("Status", "Initialized");
     }
@@ -40,7 +38,6 @@ public class SingleMotorTest extends OpMode
     @Override
     public void loop() {
         testMotor.setPower(testMotorPower);
-        testMotor2.setPower(testMotorPower);
 
         telemetry.addData("Motor Power", "%.2f", testMotorPower);
         telemetry.addData("Status", "Run Time: " + runtime.toString());

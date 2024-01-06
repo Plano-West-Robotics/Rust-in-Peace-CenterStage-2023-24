@@ -56,10 +56,10 @@ import java.util.List;
  */
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(5.3, 1.7, 0.5);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(6, 1.7, 0.5);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(3.5, 1.2, 0.5);
 
-    public static double LATERAL_MULTIPLIER = 1.5;
+    public static double LATERAL_MULTIPLIER = 0.9375;
 
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
@@ -297,7 +297,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     @Override
     public Double getExternalHeadingVelocity() {
-        return (double) imu.getRobotAngularVelocity(AngleUnit.RADIANS).xRotationRate;
+        return (double) imu.getRobotAngularVelocity(AngleUnit.RADIANS).zRotationRate;
     }
 
     public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {

@@ -14,13 +14,14 @@ import org.firstinspires.ftc.teamcode.subsystems.Data;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.subsystems.OuttakeController;
+import org.firstinspires.ftc.teamcode.subsystems.OuttakeDifferential;
 import org.firstinspires.ftc.teamcode.vision.PropDetectionProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Disabled
+//@Disabled
 @Autonomous(name="Roadrunner Blue Audience-Side Auto", group="Auto")
 public class RoadrunnerBlueFarAuto extends LinearOpMode {
 
@@ -32,7 +33,7 @@ public class RoadrunnerBlueFarAuto extends LinearOpMode {
 
     Lift lift;
     Intake intake;
-    OuttakeController control;
+    OuttakeDifferential outtake;
 
     PropDetectionProcessor.Location location;
 
@@ -50,13 +51,13 @@ public class RoadrunnerBlueFarAuto extends LinearOpMode {
 
         lift = new Lift(hardwareMap, telemetry);
         intake = new Intake(hardwareMap, telemetry);
-        control = new OuttakeController(hardwareMap, telemetry, lift);
+        outtake = new OuttakeDifferential(hardwareMap, telemetry, OuttakeDifferential.State.DOWN);
 
         lift.setManual(false);
 
         // ----- TRAJECTORIES ----- //
 
-        Pose2d startPose = new Pose2d(-36, 60, 0);
+        Pose2d startPose = new Pose2d(-36, 60, Math.toRadians(90));
         drive.setPoseEstimate(startPose);
 
         List<Trajectory> allTrajectories = getTrajectories(drive, startPose);
@@ -94,29 +95,24 @@ public class RoadrunnerBlueFarAuto extends LinearOpMode {
         }
 
         // prepare for movement (set arm to down, lift slide)
-        control.armDown();
-        lift.setPower(0.7, true);
-        sleep(500);
-        lift.setPower(0.1, true);
-
         drive.followTrajectory(path.get(0));
 
         // drop purple pixel
-        intake.setSpeed(0.2);
-        intake.spinForward();
-        sleep(500);
+        intake.setSpeed(0.5);
+        intake.spinBackwards();
+        sleep(2000);
         intake.stopSpin();
 
-        drive.followTrajectory(path.get(1));
-
-        // drop yellow pixel
-        control.spinBoxOut();
-        sleep(3000);
-        control.stopBox();
-
-        drive.followTrajectory(path.get(2));
-        drive.turn(Math.toRadians(-90));
-
+//        drive.followTrajectory(path.get(1));
+//
+//        // drop yellow pixel
+//        control.spinBoxOut();
+//        sleep(3000);
+//        control.stopBox();
+//
+//        drive.followTrajectory(path.get(2));
+//        drive.turn(Math.toRadians(-90));
+//
         Data.liftPosition = lift.getEncoderValue();
         visionPortal.close();
     }
@@ -128,32 +124,19 @@ public class RoadrunnerBlueFarAuto extends LinearOpMode {
 
         // Location.Left
         trajectoryToSpikeMark = drive.trajectoryBuilder(startPose)
-                .splineToSplineHeading(new Pose2d(-40, 48, Math.toRadians(180)), Math.toRadians(270))
-                .splineToConstantHeading(new Vector2d(-36, 32), Math.toRadians(270))
+                .splineToConstantHeading(new Vector2d(-31, 38), Math.toRadians(270))
+//                .splineToConstantHeading(new Vector2d(-36, 32), Math.toRadians(270))
                 .build();
 
         trajectoryToBackdrop = drive.trajectoryBuilder(trajectoryToSpikeMark.end())
                 .splineToConstantHeading(new Vector2d(-48, 16), Math.toRadians(0))
                 .splineToSplineHeading(new Pose2d(-32, 8, Math.toRadians(0)), Math.toRadians(0))
                 .splineToSplineHeading(new Pose2d(16, 8, Math.toRadians(0)), Math.toRadians(0))
-                .addDisplacementMarker(() -> {
-                    // lift slide to prep for scoring
-                    lift.setPower(0.5, true);
-                })
-                .splineToConstantHeading(new Vector2d(38, 14), Math.toRadians(0))
-                .addTemporalMarker(6, () -> {
-                    // stall slide, arm up
-                    lift.setPower(0.1, true);
-                    control.armUp();
-                })
                 .splineToConstantHeading(new Vector2d(48, 42), Math.toRadians(0))
                 .build();
 
         trajectoryToPark = drive.trajectoryBuilder(trajectoryToBackdrop.end())
                 .strafeRight(30)
-                .addDisplacementMarker(() -> {
-                    control.armDown();
-                })
                 .build();
 
         path.add(trajectoryToSpikeMark);
@@ -162,31 +145,18 @@ public class RoadrunnerBlueFarAuto extends LinearOpMode {
 
         // Location.Center
         trajectoryToSpikeMark = drive.trajectoryBuilder(startPose)
-                .splineToConstantHeading(new Vector2d(-44, 40), Math.toRadians(270))
-                .splineToSplineHeading(new Pose2d(-32, 12, Math.toRadians(270)), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(-36, 32.5), Math.toRadians(270))
+//                .splineToSplineHeading(new Pose2d(-32, 12, Math.toRadians(270)), Math.toRadians(0))
                 .build();
 
         trajectoryToBackdrop = drive.trajectoryBuilder(trajectoryToSpikeMark.end())
                 .splineToSplineHeading(new Pose2d(-12, 6, Math.toRadians(0)), Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(0))
-                .addDisplacementMarker(() -> {
-                    // lift slide to prep for scoring
-                    lift.setPower(0.5, true);
-                })
-                .splineToConstantHeading(new Vector2d(36, 18), Math.toRadians(0))
-                .addDisplacementMarker(() -> {
-                    // stall slide, arm up
-                    lift.setPower(0.1, true);
-                    control.armUp();
-                })
                 .splineToConstantHeading(new Vector2d(48, 36), Math.toRadians(0))
                 .build();
 
         trajectoryToPark = drive.trajectoryBuilder(trajectoryToBackdrop.end())
                 .strafeRight(24)
-                .addDisplacementMarker(() -> {
-                    control.armDown();
-                })
                 .build();
 
         path.add(trajectoryToSpikeMark);
@@ -195,31 +165,18 @@ public class RoadrunnerBlueFarAuto extends LinearOpMode {
 
         // Location.Right
         trajectoryToSpikeMark = drive.trajectoryBuilder(startPose)
-                .splineToConstantHeading(new Vector2d(-40, 54), Math.toRadians(270))
-                .splineToConstantHeading(new Vector2d(-34, 34), Math.toRadians(270))
+                .splineToConstantHeading(new Vector2d(-41, 38), Math.toRadians(270))
+//                .splineToConstantHeading(new Vector2d(-34, 34), Math.toRadians(270))
                 .build();
 
         trajectoryToBackdrop = drive.trajectoryBuilder(trajectoryToSpikeMark.end())
                 .splineToConstantHeading(new Vector2d(-34, 12), Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(0))
-                .addDisplacementMarker(() -> {
-                    // lift slide to prep for scoring
-                    lift.setPower(0.5, true);
-                })
-                .splineToConstantHeading(new Vector2d(36, 24), Math.toRadians(0))
-                .addDisplacementMarker(() -> {
-                    // stall slide, arm up
-                    lift.setPower(0.1, true);
-                    control.armUp();
-                })
                 .splineToConstantHeading(new Vector2d(48, 30), Math.toRadians(0))
                 .build();
 
         trajectoryToPark = drive.trajectoryBuilder(trajectoryToBackdrop.end())
                 .strafeRight(18)
-                .addDisplacementMarker(() -> {
-                    control.armDown();
-                })
                 .build();
 
         path.add(trajectoryToSpikeMark);

@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.testers;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.subsystems.OuttakeBox;
 
+@Disabled
 @Autonomous(name="Outtake Wrist Tester")
 public class OuttakeWristTester extends LinearOpMode {
 

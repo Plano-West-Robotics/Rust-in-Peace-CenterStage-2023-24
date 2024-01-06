@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DeviceManager;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+@Disabled
 @TeleOp(name = "MotorTesterInator")
 public class MotorTesterInator extends OpMode {
     private double speed;

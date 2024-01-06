@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class DroneLauncher {
     private final Telemetry telemetry;
     public final Servo droneArm;
-    private final Servo droneShoot;
+    public final Servo droneShoot;
     private final Lift lift;
 
     public enum Position {
@@ -33,16 +33,17 @@ public class DroneLauncher {
         if (targetPosition == Position.UP) {
             goTo(0.65);
         } else if (targetPosition == Position.DOWN) {
-            goTo(0.9);
+            goTo(1);
         }
     }
 
     public void shoot() throws InterruptedException {
-        lift.update(0.8);
-        sleep(400);
-        lift.update(0.1);
-        goTo(Position.UP);
-        sleep(500);
-        droneShoot.setPosition(0.5);
+        new Thread(() -> {
+            goTo(Position.UP);
+            try {
+                sleep(500);
+            } catch (Exception ignored) {}
+            droneShoot.setPosition(0.5);
+        }).start();
     }
 }

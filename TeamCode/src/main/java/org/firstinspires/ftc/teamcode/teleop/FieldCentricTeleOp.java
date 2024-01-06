@@ -100,10 +100,9 @@ public class FieldCentricTeleOp extends OpMode {
             // Drone
             if (gamepad1.y) {
                 droneLauncher.shoot();
+            } else if (gamepad1.x) {
+                droneLauncher.goTo(DroneLauncher.Position.DOWN);
             }
-
-            if (gamepad1.x) droneLauncher.goTo(DroneLauncher.Position.DOWN);
-            else if (gamepad1.b) droneLauncher.goTo(DroneLauncher.Position.UP);
 
             // Chassis
             if (gamepad1.left_bumper) driveSpeedMult -= (driveSpeedMult - 0.1 < 0 ? 0 : 0.1);
@@ -118,9 +117,13 @@ public class FieldCentricTeleOp extends OpMode {
             telemetry.addData("Chassis Motors (FL-FR-BL-BR)", Arrays.toString(drive.getEncoderValues()));
             telemetry.addData("Slide Motor (SR-Cloned to left)", lift.getEncoderValue());
             telemetry.addData("Intake Arm (ARM)", intake.getCurrentPosition());
+            telemetry.addLine();
+
             telemetry.addData("Outtake Arm", outtake.state);
             telemetry.addData("Wrist Outtake Direction", outtake.wristState);
             telemetry.addData("Outtake Box Direction (BOX)", outtake.box.getPower() == 0 ? "STOP" : outtake.box.getPower() == 1 ? "OUT" : "IN");
+            telemetry.addLine();
+
             telemetry.addData("IMU Orientation", drive.getHeading());
             telemetry.addData("\nDrive Speed", driveSpeedMult);
             telemetry.addData("Lift Speed", liftSpeedMult);

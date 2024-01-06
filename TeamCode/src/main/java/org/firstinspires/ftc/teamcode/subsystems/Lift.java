@@ -56,11 +56,11 @@ public class Lift {
                 slideLeft.setPower(power * speed);
                 slideRight.setPower(power * speed);
             } else if (power < 0) {
-                if (height < 45) power = 0;
+                if (height < 10) power = 0;
                 slideLeft.setPower(power * speed);
                 slideRight.setPower(power * speed);
             } else if (power > 0) {
-                if (height > 2100) power = 0;
+                if (height > 2100) power = 0.12;
                 slideLeft.setPower(power * speed);
                 slideRight.setPower(power * speed);
             }
