@@ -87,9 +87,9 @@ public class OuttakeDifferential {
                         goTo(State.UP);
                     }
                 } else if (st == State.RIGHT) {
-//                    if (state == State.DOWN) {
-//                        goTo(State.UP);
-//                    }
+                    if (state == State.DOWN) {
+                        goTo(State.UP);
+                    }
                     servoL.setPosition(0.3);
                     servoR.setPosition(1);
                     sleep(1000);
@@ -102,7 +102,7 @@ public class OuttakeDifferential {
 
     public void setWrist(WristState st) {
         new Thread(() -> {
-            if (st == WristState.PASSIVE && wristState != WristState.PASSIVE) {
+            if (st == WristState.PASSIVE && wristState != WristState.PASSIVE) {  //you don't need to check if the wriststate is passive or not
                 if (state == State.UP || state == State.DOWN) {
                     try {
                         box.setWristPosition(OuttakeBox.State.P3);
