@@ -46,7 +46,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 
 import java.util.Arrays;
 
-@Disabled
+//@Disabled
 @Autonomous(name="Intake Arm Tester", group="Auto")
 public class IntakeArmTesterAuto extends LinearOpMode {
 
@@ -66,21 +66,9 @@ public class IntakeArmTesterAuto extends LinearOpMode {
 
         intake.setTargetPosition(0);
         intake.update();
-        sleep(1000);
-        intake.setTargetPosition(0.2);
-        intake.update();
-        sleep(1000);
-        intake.setTargetPosition(0.4);
-        intake.update();
-        sleep(1000);
-        intake.setTargetPosition(0.6);
-        intake.update();
-        sleep(1000);
-        intake.setTargetPosition(0.8);
-        intake.update();
-        sleep(1000);
+        sleep(3000);
         intake.setTargetPosition(1);
         intake.update();
-        sleep(1000);
+        sleep(3000);
     }
 }
