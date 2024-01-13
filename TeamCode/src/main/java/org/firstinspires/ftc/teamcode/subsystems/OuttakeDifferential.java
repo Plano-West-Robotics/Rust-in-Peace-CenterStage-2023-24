@@ -45,7 +45,7 @@ public class OuttakeDifferential {
         servoR.setDirection(Servo.Direction.REVERSE);
 
         this.state = state;
-        wristState = WristState.MANUAL;
+        wristState = WristState.PASSIVE;
     }
 
 
@@ -59,29 +59,31 @@ public class OuttakeDifferential {
                     box.stopSpinning();
                     drone.droneShoot.setPosition(1);
                     drone.goTo(DroneLauncher.Position.DOWN);
-                    box.wrist.setPosition(0.62);
+                    box.setWristPosition(OuttakeBox.State.P3);
 
                     servoL.getController().pwmEnable();
                     servoR.getController().pwmEnable();
                 }
 
                 if (st == State.UP) {
-                    servoL.setPosition(0.6);
-                    servoR.setPosition(0.7);
-                    sleep(1000);
+                    servoL.setPosition(0.58);
+                    servoR.setPosition(0.56);
+                    sleep(500);
                     this.state = State.UP;
+                    setWrist(WristState.MANUAL);
+                    sleep(500);
                 } else if (st == State.DOWN) {
                     //if state is left or right set to up first
                     if ((state == State.LEFT) || (state == State.RIGHT)) {
                         goTo(State.UP);
                     }
+                    this.state = State.DOWN;
                     setWrist(WristState.PASSIVE);
-                    servoL.setPosition(0);
-                    servoR.setPosition(0.07);
+                    servoL.setPosition(0.04);
+                    servoR.setPosition(0);
                     sleep(750);
                     servoL.getController().pwmDisable();
                     servoR.getController().pwmDisable();
-                    this.state = State.DOWN;
                 } else if (st == State.LEFT) {
                     if (state == State.DOWN) {
                         goTo(State.UP);
@@ -134,6 +136,10 @@ public class OuttakeDifferential {
                 wristState = WristState.MANUAL;
             }
         }).start();
+    }
+
+    public boolean boxIsFull() {
+        return box.boxIsFull();
     }
 
 }

@@ -13,14 +13,9 @@ import org.firstinspires.ftc.teamcode.auto.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Data;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
-import org.firstinspires.ftc.teamcode.subsystems.OuttakeArm;
-import org.firstinspires.ftc.teamcode.subsystems.OuttakeController;
 import org.firstinspires.ftc.teamcode.subsystems.OuttakeDifferential;
 import org.firstinspires.ftc.teamcode.vision.PropDetectionProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Autonomous(name="Roadrunner Blue Backdrop-Side Auto", group="Auto")
 public class RoadrunnerBlueCloseAuto extends LinearOpMode {

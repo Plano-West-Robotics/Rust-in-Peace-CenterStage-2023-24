@@ -29,7 +29,8 @@ public class OuttakeArmTester extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         arm.goTo(OuttakeDifferential.State.UP);
-        drone.droneShoot.setPosition(1);
+        sleep(3000);
+        arm.goTo(OuttakeDifferential.State.DOWN);
         sleep(3000);
     }
 }
