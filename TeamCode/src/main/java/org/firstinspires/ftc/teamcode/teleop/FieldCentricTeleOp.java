@@ -145,7 +145,7 @@ public class FieldCentricTeleOp extends OpMode {
             telemetry.addData("Outtake Box Direction (BOX)", outtake.box.getPower() == 0 ? "STOP" : outtake.box.getPower() == 1 ? "OUT" : "IN");
             telemetry.addLine();
 
-            telemetry.addData("IMU Orientation", drive.getHeading());
+            telemetry.addData("IMU Orientation", Math.toDegrees(drive.getHeading()));
             telemetry.addData("\nDrive Speed", driveSpeedMult);
             telemetry.addData("Lift Speed", liftSpeedMult);
             telemetry.addLine();

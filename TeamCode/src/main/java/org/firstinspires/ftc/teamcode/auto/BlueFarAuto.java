@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 //@Disabled
-@Autonomous(name="Roadrunner Blue Audience-Side Auto", group="Auto")
-public class RoadrunnerBlueFarAuto extends LinearOpMode {
+@Autonomous(name="Blue Audience-Side Auto", group="Auto")
+public class BlueFarAuto extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
 

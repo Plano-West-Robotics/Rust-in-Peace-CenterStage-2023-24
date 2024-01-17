@@ -93,4 +93,13 @@ public class OuttakeBox {
             return false;
         }
     }
+
+    public boolean boxIsEmpty() {
+        if ((frontSense.red() < THRESHOLD || frontSense.green() < THRESHOLD || frontSense.blue() < THRESHOLD) &&
+                (backSense.red() < THRESHOLD || backSense.green() < THRESHOLD || backSense.blue() < THRESHOLD)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

@@ -54,10 +54,16 @@ public class IntakeSpinTesterAuto extends LinearOpMode {
         }
         // run until the end of the match (driver presses STOP)
 
+        intake.setTargetPositionPreset(Intake.Position.P5);
+        intake.update();
+        sleep(500);
         intake.spinForward();
-//        box.intake();
-        sleep(30*1000);
-        intake.stopSpin();
+        box.intake();
+        while (!box.boxIsFull()) {
+            intake.spinForward();
+            box.intake();
+        }
+        intake.spinBackwards();
         box.stopSpinning();
     }
 }

@@ -17,8 +17,8 @@ import org.firstinspires.ftc.teamcode.subsystems.OuttakeDifferential;
 import org.firstinspires.ftc.teamcode.vision.PropDetectionProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
 
-@Autonomous(name="Roadrunner Red Backdrop-Side Auto", group="Auto")
-public class RoadrunnerRedCloseAuto extends LinearOpMode {
+@Autonomous(name="Blue Backdrop-Side Auto", group="Auto")
+public class BlueCloseAuto extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -40,7 +40,7 @@ public class RoadrunnerRedCloseAuto extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         propDetector = new PropDetectionProcessor();
-        propDetector.propColor = PropDetectionProcessor.Prop.RED;
+        propDetector.propColor = PropDetectionProcessor.Prop.BLUE;
         visionPortal = VisionPortal.easyCreateWithDefaults(
                 hardwareMap.get(WebcamName.class, "CAM"), propDetector);
 
@@ -52,66 +52,55 @@ public class RoadrunnerRedCloseAuto extends LinearOpMode {
 
         // ----- TRAJECTORIES ----- //
 
-        Pose2d startPose = new Pose2d(12, -60, 270);
+        Pose2d startPose = new Pose2d(13, 64, Math.toRadians(90));
         drive.setPoseEstimate(startPose);
-
-        Trajectory moveBack = drive.trajectoryBuilder(startPose)
-                .back(5)
-                .build();
-
-        startPose = new Pose2d(12, -60, 0);
 
         // LEFT ------------------- //
 
-        Trajectory toBackdropLeft = drive.trajectoryBuilder(startPose)
-                .splineToConstantHeading(new Vector2d(48, -34), 0)
-                .splineToConstantHeading(new Vector2d(52, -34), 0,
-                        SampleMecanumDrive.getVelocityConstraint(6, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+        Trajectory toSpikeMarkLeft = drive.trajectoryBuilder(startPose, true)
+                .splineToConstantHeading(new Vector2d(27, 38), Math.toRadians(270),
+                        SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
-        Trajectory toSpikeMarkLeft = drive.trajectoryBuilder(toBackdropLeft.end(), true)
-                .splineToConstantHeading(new Vector2d(7, -29), Math.toRadians(180))
+        Trajectory toBackdropLeft = drive.trajectoryBuilder(toSpikeMarkLeft.end())
+                .splineToLinearHeading(new Pose2d(56.5, 41, Math.toRadians(0)), Math.toRadians(-20))
                 .build();
 
-        Trajectory toParkLeft = drive.trajectoryBuilder(toSpikeMarkLeft.end())
-                .splineToLinearHeading(new Pose2d(45, -60, Math.toRadians(90)), Math.toRadians(0))
+        Trajectory toParkLeft = drive.trajectoryBuilder(toBackdropLeft.end(), true)
+                .splineToLinearHeading(new Pose2d(56, 60, Math.toRadians(270)), Math.toRadians(0))
                 .build();
 
         // CENTER ------------------- //
-
-        Trajectory toBackdropCenter = drive.trajectoryBuilder(startPose)
-                .splineToConstantHeading(new Vector2d(48, -39), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(52, -39), Math.toRadians(0),
-                        SampleMecanumDrive.getVelocityConstraint(6, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+        Trajectory toSpikeMarkCenter = drive.trajectoryBuilder(startPose, true)
+                .splineToConstantHeading(new Vector2d(22, 32), Math.toRadians(270),
+                        SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
-
-
-        Trajectory toSpikeMarkCenter = drive.trajectoryBuilder(toBackdropCenter.end(), true)
-                .splineToConstantHeading(new Vector2d(14, -30), Math.toRadians(180))
+        Trajectory toBackdropCenter = drive.trajectoryBuilder(toSpikeMarkCenter.end())
+                .splineToLinearHeading(new Pose2d(58, 36, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
-        Trajectory toParkCenter = drive.trajectoryBuilder(toSpikeMarkCenter.end())
-                .splineToLinearHeading(new Pose2d(45, -60, Math.toRadians(90)), Math.toRadians(0))
+        Trajectory toParkCenter = drive.trajectoryBuilder(toBackdropCenter.end(), true)
+                .splineToLinearHeading(new Pose2d(56, 60, Math.toRadians(270)), Math.toRadians(0))
                 .build();
 
         // RIGHT ------------------- //
 
-        Trajectory toBackdropRight = drive.trajectoryBuilder(startPose)
-                .splineToConstantHeading(new Vector2d(48, -43), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(52, -43), Math.toRadians(0),
-                        SampleMecanumDrive.getVelocityConstraint(8, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+        Trajectory toSpikeMarkRight = drive.trajectoryBuilder(startPose, true)
+                .splineTo(new Vector2d(16, 48), Math.toRadians(300))
+                .splineToSplineHeading(new Pose2d(11, 36, Math.toRadians(50)), Math.toRadians(200),
+                        SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
-        Trajectory toSpikeMarkRight = drive.trajectoryBuilder(toBackdropRight.end(), true)
-                .splineToConstantHeading(new Vector2d(27, -29), Math.toRadians(180))
+        Trajectory toBackdropRight = drive.trajectoryBuilder(toSpikeMarkRight.end())
+                .splineToLinearHeading(new Pose2d(59, 31, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
-        Trajectory toParkRight = drive.trajectoryBuilder(toSpikeMarkRight.end())
-                .splineToLinearHeading(new Pose2d(45, -60, Math.toRadians(90)), Math.toRadians(0))
+        Trajectory toParkRight = drive.trajectoryBuilder(toBackdropRight.end(), true)
+                .splineToLinearHeading(new Pose2d(56, 60, Math.toRadians(270)), Math.toRadians(0))
                 .build();
 
         // ----- WAIT FOR START ----- //
@@ -133,68 +122,50 @@ public class RoadrunnerRedCloseAuto extends LinearOpMode {
 
         if (location == PropDetectionProcessor.Location.Left) {
             // Location.Left
-            drive.followTrajectory(moveBack);
-            drive.turn(Math.toRadians(95));
-
-            outtake.goTo(OuttakeDifferential.State.UP);
-
             drive.setPoseEstimate(startPose);
-            drive.followTrajectory(toBackdropLeft);
-
-            // drop yellow pixel
-            outtake.goTo(OuttakeDifferential.State.DOWN);
-
             drive.followTrajectory(toSpikeMarkLeft);
 
             // drop purple pixel
-            intake.setSpeed(0.35);
-            intake.spinBackwards();
-            sleep(2000);
-            intake.stopSpin();
+            intake.setTargetPositionPreset(Intake.Position.TOP);
+            intake.update();
+            sleep(1500);
+
+            // drop yellow pixel
+            outtake.goTo(OuttakeDifferential.State.UP, true);
+            drive.followTrajectory(toBackdropLeft);
+            outtake.goTo(OuttakeDifferential.State.DOWN, true);
 
             drive.followTrajectory(toParkLeft);
         } else if (location == PropDetectionProcessor.Location.Center) {
             // Location.Center
-            drive.followTrajectory(moveBack);
-            drive.turn(Math.toRadians(95));
-
-            outtake.goTo(OuttakeDifferential.State.UP);
-
             drive.setPoseEstimate(startPose);
-            drive.followTrajectory(toBackdropCenter);
-
-            // drop yellow pixel
-            outtake.goTo(OuttakeDifferential.State.DOWN);
-
             drive.followTrajectory(toSpikeMarkCenter);
 
             // drop purple pixel
-            intake.setSpeed(0.35);
-            intake.spinBackwards();
-            sleep(2000);
-            intake.stopSpin();
+            intake.setTargetPositionPreset(Intake.Position.TOP);
+            intake.update();
+            sleep(1500);
+
+            // drop yellow pixel
+            outtake.goTo(OuttakeDifferential.State.UP, true);
+            drive.followTrajectory(toBackdropCenter);
+            outtake.goTo(OuttakeDifferential.State.DOWN, true);
 
             drive.followTrajectory(toParkCenter);
         } else {
             // Location.Right
-            drive.followTrajectory(moveBack);
-            drive.turn(Math.toRadians(95));
-
-            outtake.goTo(OuttakeDifferential.State.UP);
-
             drive.setPoseEstimate(startPose);
-            drive.followTrajectory(toBackdropRight);
-
-            // drop yellow pixel
-            outtake.goTo(OuttakeDifferential.State.DOWN);
-
             drive.followTrajectory(toSpikeMarkRight);
 
             // drop purple pixel
-            intake.setSpeed(0.35);
-            intake.spinBackwards();
-            sleep(2000);
-            intake.stopSpin();
+            intake.setTargetPositionPreset(Intake.Position.TOP);
+            intake.update();
+            sleep(1500);
+
+            // drop yellow pixel
+            outtake.goTo(OuttakeDifferential.State.UP, true);
+            drive.followTrajectory(toBackdropRight);
+            outtake.goTo(OuttakeDifferential.State.DOWN, true);
 
             drive.followTrajectory(toParkRight);
         }

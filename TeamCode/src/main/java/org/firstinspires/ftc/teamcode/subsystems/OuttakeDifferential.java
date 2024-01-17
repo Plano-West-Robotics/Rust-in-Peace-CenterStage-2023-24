@@ -58,7 +58,6 @@ public class OuttakeDifferential {
                 if (state == State.DOWN && st != State.DOWN) {
                     box.stopSpinning();
                     drone.droneShoot.setPosition(1);
-                    drone.goTo(DroneLauncher.Position.DOWN);
                     box.setWristPosition(OuttakeBox.State.P3);
 
                     servoL.getController().pwmEnable();
@@ -102,6 +101,51 @@ public class OuttakeDifferential {
         }).start();
     }
 
+    public void goTo(State st, boolean auto) {
+        try {
+            if (state == State.DOWN && st != State.DOWN) {
+                box.stopSpinning();
+                drone.droneShoot.setPosition(1);
+                box.setWristPosition(OuttakeBox.State.P3);
+
+                servoL.getController().pwmEnable();
+                servoR.getController().pwmEnable();
+            }
+
+            if (st == State.UP) {
+                servoL.setPosition(0.58);
+                servoR.setPosition(0.56);
+                sleep(500);
+                this.state = State.UP;
+                sleep(500);
+            } else if (st == State.DOWN) {
+                //if state is left or right set to up first
+                if ((state == State.LEFT) || (state == State.RIGHT)) {
+                    goTo(State.UP);
+                }
+                this.state = State.DOWN;
+                servoL.setPosition(0.04);
+                servoR.setPosition(0);
+                sleep(750);
+                servoL.getController().pwmDisable();
+                servoR.getController().pwmDisable();
+            } else if (st == State.LEFT) {
+                if (state == State.DOWN) {
+                    goTo(State.UP);
+                }
+            } else if (st == State.RIGHT) {
+                if (state == State.DOWN) {
+                    goTo(State.UP);
+                }
+                servoL.setPosition(0.3);
+                servoR.setPosition(1);
+                sleep(1000);
+                this.state = State.RIGHT;
+                setWrist(wristState);
+            }
+        } catch (Exception ignored) {}
+    }
+
     public void setWrist(WristState st) {
         new Thread(() -> {
             if (st == WristState.PASSIVE && wristState != WristState.PASSIVE) {  //you don't need to check if the wriststate is passive or not
@@ -140,6 +184,10 @@ public class OuttakeDifferential {
 
     public boolean boxIsFull() {
         return box.boxIsFull();
+    }
+
+    public boolean boxIsEmpty() {
+        return box.boxIsEmpty();
     }
 
 }

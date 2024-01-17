@@ -38,15 +38,14 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     public static double WHEEL_RADIUS = 0.6889764; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
-    // TODO: SET THE ODO WHEEL POSITIONS
     public static double PARALLEL_X = -1.75; // X is the up and down direction
     public static double PARALLEL_Y = 4; // Y is the strafe direction
 
     public static double PERPENDICULAR_X = 5;
     public static double PERPENDICULAR_Y = 0.375;
 
-    public static double X_MULTIPLIER = 1.012697; // Multiplier in the X direction
-    public static double Y_MULTIPLIER = 1.01763908;//1.0252786; // Multiplier in the Y direction
+    public static double X_MULTIPLIER = 1.05414066; // Multiplier in the X direction
+    public static double Y_MULTIPLIER = 1.02354145; // Multiplier in the Y direction
 
     // Parallel/Perpendicular to the forward axis
     // Parallel wheel is parallel to the forward axis

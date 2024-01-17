@@ -15,13 +15,13 @@ public class SingleMotorTest extends OpMode
     private DcMotor testMotor;
     private DcMotor testMotor2;
 
-    private static final double testMotorPower = 0.5;
+    private static final double testMotorPower = 1;
 
     @Override
     public void init() {
         telemetry.addData("Status", "Powered On");
 
-        testMotor = hardwareMap.get(DcMotor.class, "FLmotor");
+        testMotor = hardwareMap.get(DcMotor.class, "BRmotor");
 
         telemetry.addData("Status", "Initialized");
     }

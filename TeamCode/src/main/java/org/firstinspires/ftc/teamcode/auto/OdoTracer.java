@@ -6,6 +6,9 @@ import com.acmerobotics.roadrunner.localization.TwoTrackingWheelLocalizer;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -24,45 +27,22 @@ import org.firstinspires.ftc.teamcode.subsystems.OuttakeDifferential;
 import java.util.Arrays;
 import java.util.List;
 
-@Autonomous(name="OdoTracer", group="Auto")
-public class OdoTracer extends LinearOpMode{
-    private final Telemetry telemetry;
-    private final TwoWheelTrackingLocalizer twoWheelOdo;
-
-    public OdoTracer(HardwareMap hardwareMap, SampleMecanumDrive drive, Telemetry telemetry){
-        this.telemetry = telemetry;
-        twoWheelOdo = new TwoWheelTrackingLocalizer(hardwareMap,drive);
-    }
-
-
+@TeleOp(name="OdoTracer", group="Auto")
+public class OdoTracer extends OpMode {
+    private TwoWheelTrackingLocalizer twoWheelOdo;
+    private SampleMecanumDrive drive;
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void init() {
+        drive = new SampleMecanumDrive(hardwareMap);
+        twoWheelOdo = new TwoWheelTrackingLocalizer(hardwareMap, drive);
+    }
 
-        while (!isStarted() && !isStopRequested()) {
-            telemetry.addData("Initialized", "True");
-            telemetry.addData("Position: ", twoWheelOdo.getWheelPositions());
-            telemetry.update();
-        }
-
-
-        // ----- START PRESSED ----- //
-
-
-
-        // ----- RUNNING OP-MODE ----- //
-
-        while(!isStopRequested()){
-            telemetry.addLine(listIterator(twoWheelOdo.getWheelPositions()));
-            telemetry.update();
-        }
-
-
-
-
-
-
-
+    @Override
+    public void loop() {
+        telemetry.addData("Initialized", "True");
+        telemetry.addData("Position: ", twoWheelOdo.getWheelPositions());
+        telemetry.update();
     }
 
     //I'm only doing this cuz idk if the List toString prints out the array.

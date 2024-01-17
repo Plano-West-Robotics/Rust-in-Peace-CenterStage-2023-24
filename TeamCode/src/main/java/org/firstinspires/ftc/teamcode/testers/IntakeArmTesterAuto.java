@@ -30,11 +30,12 @@
 package org.firstinspires.ftc.teamcode.testers;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 
-//@Disabled
+@Disabled
 @Autonomous(name="Intake Arm Tester", group="Auto")
 public class IntakeArmTesterAuto extends LinearOpMode {
 

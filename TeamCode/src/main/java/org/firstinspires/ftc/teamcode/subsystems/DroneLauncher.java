@@ -37,7 +37,7 @@ public class DroneLauncher {
         }
     }
 
-    public void shoot() throws InterruptedException {
+    public void shoot() {
         new Thread(() -> {
             goTo(Position.UP);
             try {
