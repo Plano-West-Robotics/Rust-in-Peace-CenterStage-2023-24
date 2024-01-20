@@ -78,9 +78,10 @@ public class OuttakeDifferential {
                     }
                     this.state = State.DOWN;
                     setWrist(WristState.PASSIVE);
+                    sleep(200);
                     servoL.setPosition(0.04);
                     servoR.setPosition(0);
-                    sleep(750);
+                    sleep(700);
                     servoL.getController().pwmDisable();
                     servoR.getController().pwmDisable();
                 } else if (st == State.LEFT) {

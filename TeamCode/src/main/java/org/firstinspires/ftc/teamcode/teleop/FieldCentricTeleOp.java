@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import static java.lang.Thread.sleep;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -7,6 +9,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Drive;
 import org.firstinspires.ftc.teamcode.subsystems.DroneLauncher;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
+import org.firstinspires.ftc.teamcode.subsystems.OuttakeBox;
 import org.firstinspires.ftc.teamcode.subsystems.OuttakeDifferential;
 
 import java.util.Arrays;
@@ -21,11 +24,8 @@ public class FieldCentricTeleOp extends OpMode {
 
     OuttakeDifferential outtake;
 
-    double driveSpeedMult = 0.75;
-    double liftSpeedMult = 1;
-
-    boolean speedSlow = false;
-    boolean speedFast = false;
+    boolean driveSpeedMult = true; // true fast, false slow
+    double liftSpeedMult = 0.85;
 
     @Override
     public void init() {
@@ -110,28 +110,30 @@ public class FieldCentricTeleOp extends OpMode {
                 droneLauncher.goTo(DroneLauncher.Position.DOWN);
             }
 
-            // Chassis
-            if (gamepad1.left_bumper) {
-                if (!speedSlow) {
-                    driveSpeedMult -= (driveSpeedMult - 0.25 < 0 ? 0 : 0.25);
-                    speedSlow = true;
-                }
-            } else {
-                speedSlow = false;
+            // Hanging
+            if (gamepad2.dpad_up) {
+                new Thread(() -> {
+                    try {
+                    while (lift.getEncoderValue() < 500) {
+                        lift.setPower(0.7);
+                    }
+                    lift.setPower(0.1);
+                    outtake.box.setWristPosition(OuttakeBox.State.P4);
+                    sleep(500);
+                    } catch (Exception ignored) {}
+                }).start();
             }
 
-            if (gamepad1.right_bumper) {
-                if (!speedFast) {
-                    driveSpeedMult += (driveSpeedMult + 0.25 > 1 ? 0 : 0.25);
-                    speedFast = true;
-                }
-            } else {
-                speedFast = false;
+            // Chassis
+            if (gamepad1.left_bumper) {
+                driveSpeedMult = false;
+            } else if (gamepad1.right_bumper) {
+                driveSpeedMult = true;
             }
 
             if (gamepad1.back) drive.resetHeading();
 
-            drive.setSpeed(driveSpeedMult);
+            drive.setSpeed(driveSpeedMult ? 1 : 0.25);
 
             drive.updateFieldCentric(-gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
 
@@ -146,7 +148,7 @@ public class FieldCentricTeleOp extends OpMode {
             telemetry.addLine();
 
             telemetry.addData("IMU Orientation", Math.toDegrees(drive.getHeading()));
-            telemetry.addData("\nDrive Speed", driveSpeedMult);
+            telemetry.addData("\nDrive Speed", driveSpeedMult ? 1 : 0.25);
             telemetry.addData("Lift Speed", liftSpeedMult);
             telemetry.addLine();
 

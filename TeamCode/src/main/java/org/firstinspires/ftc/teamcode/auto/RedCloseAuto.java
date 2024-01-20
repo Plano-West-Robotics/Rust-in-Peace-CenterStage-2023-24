@@ -132,6 +132,15 @@ public class RedCloseAuto extends LinearOpMode {
             // drop yellow pixel
             outtake.goTo(OuttakeDifferential.State.UP, true);
             drive.followTrajectory(toBackdropLeft);
+
+            drive.setMotorPowers(0.3, 0.3, 0.3, 0.3);
+            long curr = System.currentTimeMillis();
+            while (System.currentTimeMillis() - curr < 2500 && opModeIsActive()) {
+                if (outtake.boxIsEmpty()) break;
+            }
+            sleep(1000);
+            drive.setMotorPowers(0, 0, 0, 0);
+
             outtake.goTo(OuttakeDifferential.State.DOWN, true);
 
             drive.followTrajectory(toParkLeft);
@@ -148,6 +157,15 @@ public class RedCloseAuto extends LinearOpMode {
             // drop yellow pixel
             outtake.goTo(OuttakeDifferential.State.UP, true);
             drive.followTrajectory(toBackdropCenter);
+
+            drive.setMotorPowers(0.3, 0.3, 0.3, 0.3);
+            long curr = System.currentTimeMillis();
+            while (System.currentTimeMillis() - curr < 2500 && opModeIsActive()) {
+                if (outtake.boxIsEmpty()) break;
+            }
+            sleep(1000);
+            drive.setMotorPowers(0, 0, 0, 0);
+
             outtake.goTo(OuttakeDifferential.State.DOWN, true);
 
             drive.followTrajectory(toParkCenter);
@@ -164,6 +182,15 @@ public class RedCloseAuto extends LinearOpMode {
             // drop yellow pixel
             outtake.goTo(OuttakeDifferential.State.UP, true);
             drive.followTrajectory(toBackdropRight);
+
+            drive.setMotorPowers(0.3, 0.3, 0.3, 0.3);
+            long curr = System.currentTimeMillis();
+            while (System.currentTimeMillis() - curr < 2500 && opModeIsActive()) {
+                if (outtake.boxIsEmpty()) break;
+            }
+            sleep(1000);
+            drive.setMotorPowers(0, 0, 0, 0);
+
             outtake.goTo(OuttakeDifferential.State.DOWN, true);
 
             drive.followTrajectory(toParkRight);

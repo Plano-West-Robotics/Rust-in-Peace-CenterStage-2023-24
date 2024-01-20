@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.subsystems.OuttakeDifferential;
 
 import java.util.Arrays;
 
+@Disabled
 @TeleOp(name="Robot-Centric TeleOp")
 public class RobotCentricTeleOp extends OpMode {
 

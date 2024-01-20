@@ -51,17 +51,17 @@ public class RedFarAuto extends LinearOpMode {
         outtake = new OuttakeDifferential(hardwareMap, telemetry, OuttakeDifferential.State.DOWN);
 
         lift.setManual(false);
-        intake.setSpeed(1);
+        intake.setSpeed(0.8);
 
         // ----- TRAJECTORIES ----- //
 
-        Pose2d startPose = new Pose2d(-37, -62, Math.toRadians(270));
+        Pose2d startPose = new Pose2d(-37, -63, Math.toRadians(270));
         drive.setPoseEstimate(startPose);
 
         // LEFT ------------------- //
 
         Trajectory toSpikeMarkLeft = drive.trajectoryBuilder(startPose, true)
-                .splineToLinearHeading(new Pose2d(-46, -34, Math.toRadians(320)), Math.toRadians(140),
+                .splineToLinearHeading(new Pose2d(-47, -34, Math.toRadians(320)), Math.toRadians(140),
                         SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
@@ -71,24 +71,24 @@ public class RedFarAuto extends LinearOpMode {
                 .build();
 
         Trajectory toStackLeft = drive.trajectoryBuilder(toBackToStackLeft.end(), true)
-                .splineToLinearHeading(new Pose2d(-61.6, -36, Math.toRadians(0)), Math.toRadians(200),
+                .splineToLinearHeading(new Pose2d(-61.2, -36, Math.toRadians(0)), Math.toRadians(200),
                         SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         Trajectory toBackdropLeft = drive.trajectoryBuilder(toStackLeft.end())
-                .splineToConstantHeading(new Vector2d(-54, -57), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(10, -57), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(-54, -54), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(10, -54), Math.toRadians(0))
                 .build();
 
         Trajectory toScoreLeft = drive.trajectoryBuilder(toBackdropLeft.end())
-                .splineToConstantHeading(new Vector2d(45, -31.5), Math.toRadians(0),
+                .splineToConstantHeading(new Vector2d(45, -28), Math.toRadians(0),
                         SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         Trajectory toParkLeft = drive.trajectoryBuilder(toScoreLeft.end(), true)
-                .splineToLinearHeading(new Pose2d(42, -58, Math.toRadians(90)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(42, -55, Math.toRadians(90)), Math.toRadians(0))
                 .build();
 
         // CENTER ------------------- //
@@ -103,7 +103,7 @@ public class RedFarAuto extends LinearOpMode {
                 .build();
 
         Trajectory toStackCenter = drive.trajectoryBuilder(toBackToStackCenter.end(), true)
-                .splineToLinearHeading(new Pose2d(-59, -34.5, Math.toRadians(0)), Math.toRadians(180),
+                .splineToLinearHeading(new Pose2d(-60, -34.5, Math.toRadians(0)), Math.toRadians(180),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
@@ -114,30 +114,49 @@ public class RedFarAuto extends LinearOpMode {
                 .build();
 
         Trajectory toScoreCenter = drive.trajectoryBuilder(toBackdropCenter.end())
-                .splineToConstantHeading(new Vector2d(43, -35), Math.toRadians(0),
+                .splineToConstantHeading(new Vector2d(43, -32), Math.toRadians(0),
                         SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         Trajectory toParkCenter = drive.trajectoryBuilder(toScoreCenter.end(), true)
-                .splineToLinearHeading(new Pose2d(45, -56, Math.toRadians(90)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(45, -52, Math.toRadians(90)), Math.toRadians(0))
                 .build();
 
         // RIGHT ------------------- //
 
         Trajectory toSpikeMarkRight = drive.trajectoryBuilder(startPose, true)
-                .splineToConstantHeading(new Vector2d(17, -38), Math.toRadians(90),
+                .splineTo(new Vector2d(-47, -48), Math.toRadians(120))
+                .splineToSplineHeading(new Pose2d(-34, -36, Math.toRadians(230)), Math.toRadians(20),
                         SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
-        Trajectory toBackdropRight = drive.trajectoryBuilder(toSpikeMarkRight.end())
-                .splineToConstantHeading(new Vector2d(52, -41), Math.toRadians(0))
+        Trajectory toBackToStackRight = drive.trajectoryBuilder(toSpikeMarkRight.end())
+                .forward(9)
                 .build();
 
-        Trajectory toParkRight = drive.trajectoryBuilder(toBackdropRight.end(), true)
-                .splineToLinearHeading(new Pose2d(50, -58, Math.toRadians(90)), Math.toRadians(0))
+        Trajectory toStackRight = drive.trajectoryBuilder(toBackToStackRight.end(), true)
+                .splineToLinearHeading(new Pose2d(-59.5, -34.5, Math.toRadians(0)), Math.toRadians(180),
+                        SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
+
+        Trajectory toBackdropRight = drive.trajectoryBuilder(toStackRight.end())
+                .splineToConstantHeading(new Vector2d(-54, -54), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(10, -54), Math.toRadians(0))
+                .build();
+
+        Trajectory toScoreRight = drive.trajectoryBuilder(toBackdropRight.end())
+                .splineToConstantHeading(new Vector2d(43, -38), Math.toRadians(0),
+                        SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .build();
+
+        Trajectory toParkRight = drive.trajectoryBuilder(toScoreRight.end(), true)
+                .splineToLinearHeading(new Pose2d(45, -52, Math.toRadians(90)), Math.toRadians(0))
+                .build();
+
 
         // ----- WAIT FOR START ----- //
 
@@ -274,14 +293,54 @@ public class RedFarAuto extends LinearOpMode {
             drive.followTrajectory(toSpikeMarkRight);
 
             // drop purple pixel
-            intake.setTargetPositionPreset(Intake.Position.TOP);
+            intake.setTargetPositionPreset(Intake.Position.P5);
             intake.update();
             sleep(1500);
 
+            // get white pixel
+            drive.followTrajectory(toBackToStackRight);
+            intake.spinForward();
+            outtake.box.intake();
+            drive.followTrajectory(toStackRight);
+            drive.setMotorPowers(-0.1, -0.1, -0.1, -0.1);
+            sleep(500);
+            drive.setMotorPowers(0, 0, 0, 0);
+            long curr = System.currentTimeMillis();
+            while(System.currentTimeMillis() - curr < 1000*STACK_TIME && opModeIsActive()) {
+                if (outtake.boxIsFull()) break;
+            }
+            intake.spinBackwards();
+            sleep(1500);
+            intake.stopSpin();
+            outtake.box.stopSpinning();
+
             // drop yellow pixel
-            outtake.goTo(OuttakeDifferential.State.UP, true);
             drive.followTrajectory(toBackdropRight);
-            outtake.goTo(OuttakeDifferential.State.DOWN, true);
+            new Thread(() -> {
+                outtake.goTo(OuttakeDifferential.State.UP, true);
+                while(lift.getEncoderValue() < 150 && opModeIsActive()) {
+                    lift.setPower(0.8);
+                }
+                lift.setPower(0.1);
+            }).start();
+            drive.followTrajectory(toScoreRight);
+            drive.setMotorPowers(0.3, 0.3, 0.3, 0.3);
+            curr = System.currentTimeMillis();
+            while(System.currentTimeMillis() - curr < 2500 && opModeIsActive()) {
+                if (outtake.boxIsEmpty()) break;
+            }
+            sleep(1000);
+            drive.setMotorPowers(0, 0, 0, 0);
+
+            new Thread(() -> {
+                sleep(200);
+                while(lift.getEncoderValue() > 10 && opModeIsActive()) {
+                    lift.setPower(-0.5);
+                }
+                lift.setPower(0);
+                outtake.goTo(OuttakeDifferential.State.DOWN, true);
+                sleep(2000);
+            }).start();
 
             drive.followTrajectory(toParkRight);
         }

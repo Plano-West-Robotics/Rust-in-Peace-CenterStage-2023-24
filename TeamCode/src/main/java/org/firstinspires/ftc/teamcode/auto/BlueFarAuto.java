@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.auto.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.auto.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Data;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
@@ -35,6 +36,8 @@ public class BlueFarAuto extends LinearOpMode {
 
     PropDetectionProcessor.Location location;
 
+    final int STACK_TIME = 3; // seconds
+
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -52,14 +55,112 @@ public class BlueFarAuto extends LinearOpMode {
         outtake = new OuttakeDifferential(hardwareMap, telemetry, OuttakeDifferential.State.DOWN);
 
         lift.setManual(false);
+        intake.setSpeed(0.8);
 
         // ----- TRAJECTORIES ----- //
 
-        Pose2d startPose = new Pose2d(-36, 60, Math.toRadians(90));
+        Pose2d startPose = new Pose2d(-40, 63, Math.toRadians(90));
         drive.setPoseEstimate(startPose);
 
-        List<Trajectory> allTrajectories = getTrajectories(drive, startPose);
-        List<Trajectory> path = new ArrayList<>();
+        // LEFT ------------------- //
+
+        Trajectory toSpikeMarkLeft = drive.trajectoryBuilder(startPose, true)
+                .splineTo(new Vector2d(-47, 48), Math.toRadians(240))
+                .splineToSplineHeading(new Pose2d(-32, 36, Math.toRadians(130)), Math.toRadians(315),
+                        SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .build();
+
+        Trajectory toBackToStackLeft = drive.trajectoryBuilder(toSpikeMarkLeft.end())
+                .forward(9)
+                .build();
+
+        Trajectory toStackLeft = drive.trajectoryBuilder(toBackToStackLeft.end(), true)
+                .splineToLinearHeading(new Pose2d(-61.2, 36, Math.toRadians(0)), Math.toRadians(180),
+                        SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .build();
+
+        Trajectory toBackdropLeft = drive.trajectoryBuilder(toStackLeft.end())
+                .splineToConstantHeading(new Vector2d(-54, 54), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(10, 54), Math.toRadians(0))
+                .build();
+
+        Trajectory toScoreLeft = drive.trajectoryBuilder(toBackdropLeft.end())
+                .splineToConstantHeading(new Vector2d(45, 38), Math.toRadians(0),
+                        SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .build();
+
+        Trajectory toParkLeft = drive.trajectoryBuilder(toScoreLeft.end(), true)
+                .splineToLinearHeading(new Pose2d(42, 55, Math.toRadians(270)), Math.toRadians(0))
+                .build();
+
+        // CENTER ------------------- //
+        Trajectory toSpikeMarkCenter = drive.trajectoryBuilder(startPose, true)
+                .splineToConstantHeading(new Vector2d(-43, 32), Math.toRadians(90),
+                        SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .build();
+
+        Trajectory toBackToStackCenter = drive.trajectoryBuilder(toSpikeMarkCenter.end())
+                .lineToConstantHeading(new Vector2d(-38, 44))
+                .build();
+
+        Trajectory toStackCenter = drive.trajectoryBuilder(toBackToStackCenter.end(), true)
+                .splineToLinearHeading(new Pose2d(-60, 34.5, Math.toRadians(0)), Math.toRadians(180),
+                        SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .build();
+
+        Trajectory toBackdropCenter = drive.trajectoryBuilder(toStackCenter.end())
+                .splineToConstantHeading(new Vector2d(-54, 54), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(10, 54), Math.toRadians(0))
+                .build();
+
+        Trajectory toScoreCenter = drive.trajectoryBuilder(toBackdropCenter.end())
+                .splineToConstantHeading(new Vector2d(43, 32), Math.toRadians(0),
+                        SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .build();
+
+        Trajectory toParkCenter = drive.trajectoryBuilder(toScoreCenter.end(), true)
+                .splineToLinearHeading(new Pose2d(45, 52, Math.toRadians(270)), Math.toRadians(0))
+                .build();
+
+        // RIGHT ------------------- //
+
+        Trajectory toSpikeMarkRight = drive.trajectoryBuilder(startPose, true)
+                .splineToLinearHeading(new Pose2d(-45, 34, Math.toRadians(50)), Math.toRadians(200),
+                        SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .build();
+
+        Trajectory toBackToStackRight = drive.trajectoryBuilder(toSpikeMarkRight.end())
+                .lineToConstantHeading(new Vector2d(-38, 44))
+                .build();
+
+        Trajectory toStackRight = drive.trajectoryBuilder(toBackToStackRight.end(), true)
+                .splineToLinearHeading(new Pose2d(-59.5, 34.5, Math.toRadians(0)), Math.toRadians(180),
+                        SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .build();
+
+        Trajectory toBackdropRight = drive.trajectoryBuilder(toStackRight.end())
+                .splineToConstantHeading(new Vector2d(-54, 54), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(10, 54), Math.toRadians(0))
+                .build();
+
+        Trajectory toScoreRight = drive.trajectoryBuilder(toBackdropRight.end())
+                .splineToConstantHeading(new Vector2d(43, 28), Math.toRadians(0),
+                        SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .build();
+
+        Trajectory toParkRight = drive.trajectoryBuilder(toScoreRight.end(), true)
+                .splineToLinearHeading(new Pose2d(45, 52, Math.toRadians(270)), Math.toRadians(0))
+                .build();
+
 
         // ----- WAIT FOR START ----- //
 
@@ -74,113 +175,184 @@ public class BlueFarAuto extends LinearOpMode {
 
         runtime.reset();
 
-        if(isStopRequested()) return;
+        if (isStopRequested()) return;
 
         // ----- RUNNING OP-MODE ----- //
 
         if (location == PropDetectionProcessor.Location.Left) {
-            path.add(allTrajectories.get(0));
-            path.add(allTrajectories.get(1));
-            path.add(allTrajectories.get(2));
+            // Location.Left
+            drive.setPoseEstimate(startPose);
+            drive.followTrajectory(toSpikeMarkLeft);
+
+            // drop purple pixel
+            intake.setTargetPositionPreset(Intake.Position.P5);
+            intake.update();
+            sleep(1500);
+
+            // get white pixel
+            drive.followTrajectory(toBackToStackLeft);
+            intake.spinForward();
+            outtake.box.intake();
+            drive.followTrajectory(toStackLeft);
+            drive.setMotorPowers(-0.1, -0.1, -0.1, -0.1);
+            sleep(600);
+            drive.setMotorPowers(0, 0, 0, 0);
+            long curr = System.currentTimeMillis();
+            while (System.currentTimeMillis() - curr < 1000 * STACK_TIME && opModeIsActive()) {
+                if (outtake.boxIsFull()) break;
+            }
+            intake.spinBackwards();
+            sleep(1500);
+            intake.stopSpin();
+            outtake.box.stopSpinning();
+
+            // drop yellow pixel
+            drive.followTrajectory(toBackdropLeft);
+            new Thread(() -> {
+                outtake.goTo(OuttakeDifferential.State.UP, true);
+                while (lift.getEncoderValue() < 150 && opModeIsActive()) {
+                    lift.setPower(0.8);
+                }
+                lift.setPower(0.1);
+            }).start();
+            drive.followTrajectory(toScoreLeft);
+            drive.setMotorPowers(0.3, 0.3, 0.3, 0.3);
+            curr = System.currentTimeMillis();
+            while (System.currentTimeMillis() - curr < 2500 && opModeIsActive()) {
+                if (outtake.boxIsEmpty()) break;
+            }
+            sleep(1000);
+            drive.setMotorPowers(0, 0, 0, 0);
+
+            new Thread(() -> {
+                sleep(200);
+                while (lift.getEncoderValue() > 10 && opModeIsActive()) {
+                    lift.setPower(-0.5);
+                }
+                lift.setPower(0);
+                outtake.goTo(OuttakeDifferential.State.DOWN, true);
+                sleep(2000);
+            }).start();
+
+            drive.followTrajectory(toParkLeft);
         } else if (location == PropDetectionProcessor.Location.Center) {
-            path.add(allTrajectories.get(3));
-            path.add(allTrajectories.get(4));
-            path.add(allTrajectories.get(5));
+            // Location.Center
+            drive.setPoseEstimate(startPose);
+            drive.followTrajectory(toSpikeMarkCenter);
+
+            // drop purple pixel
+            intake.setTargetPositionPreset(Intake.Position.P5);
+            intake.update();
+            sleep(1500);
+
+            // get white pixel
+            drive.followTrajectory(toBackToStackCenter);
+            intake.spinForward();
+            outtake.box.intake();
+            drive.followTrajectory(toStackCenter);
+            drive.setMotorPowers(-0.1, -0.1, -0.1, -0.1);
+            sleep(500);
+            drive.setMotorPowers(0, 0, 0, 0);
+            long curr = System.currentTimeMillis();
+            while (System.currentTimeMillis() - curr < 1000 * STACK_TIME && opModeIsActive()) {
+                if (outtake.boxIsFull()) break;
+            }
+            intake.spinBackwards();
+            sleep(1500);
+            intake.stopSpin();
+            outtake.box.stopSpinning();
+
+            // drop yellow pixel
+            drive.followTrajectory(toBackdropCenter);
+            new Thread(() -> {
+                outtake.goTo(OuttakeDifferential.State.UP, true);
+                while (lift.getEncoderValue() < 150 && opModeIsActive()) {
+                    lift.setPower(0.8);
+                }
+                lift.setPower(0.1);
+            }).start();
+            drive.followTrajectory(toScoreCenter);
+            drive.setMotorPowers(0.3, 0.3, 0.3, 0.3);
+            curr = System.currentTimeMillis();
+            while (System.currentTimeMillis() - curr < 2500 && opModeIsActive()) {
+                if (outtake.boxIsEmpty()) break;
+            }
+            sleep(1000);
+            drive.setMotorPowers(0, 0, 0, 0);
+
+            new Thread(() -> {
+                sleep(200);
+                while (lift.getEncoderValue() > 10 && opModeIsActive()) {
+                    lift.setPower(-0.5);
+                }
+                lift.setPower(0);
+                outtake.goTo(OuttakeDifferential.State.DOWN, true);
+                sleep(2000);
+            }).start();
+
+            drive.followTrajectory(toParkCenter);
         } else {
-            path.add(allTrajectories.get(6));
-            path.add(allTrajectories.get(7));
-            path.add(allTrajectories.get(8));
+            // Location.Right
+            drive.setPoseEstimate(startPose);
+            drive.followTrajectory(toSpikeMarkRight);
+
+            // drop purple pixel
+            intake.setTargetPositionPreset(Intake.Position.P5);
+            intake.update();
+            sleep(1500);
+
+            // get white pixel
+            drive.followTrajectory(toBackToStackRight);
+            intake.spinForward();
+            outtake.box.intake();
+            drive.followTrajectory(toStackRight);
+            drive.setMotorPowers(-0.1, -0.1, -0.1, -0.1);
+            sleep(500);
+            drive.setMotorPowers(0, 0, 0, 0);
+            long curr = System.currentTimeMillis();
+            while (System.currentTimeMillis() - curr < 1000 * STACK_TIME && opModeIsActive()) {
+                if (outtake.boxIsFull()) break;
+            }
+            intake.spinBackwards();
+            sleep(1500);
+            intake.stopSpin();
+            outtake.box.stopSpinning();
+
+            // drop yellow pixel
+            drive.followTrajectory(toBackdropRight);
+            new Thread(() -> {
+                outtake.goTo(OuttakeDifferential.State.UP, true);
+                while (lift.getEncoderValue() < 150 && opModeIsActive()) {
+                    lift.setPower(0.8);
+                }
+                lift.setPower(0.1);
+            }).start();
+            drive.followTrajectory(toScoreRight);
+            drive.setMotorPowers(0.3, 0.3, 0.3, 0.3);
+            curr = System.currentTimeMillis();
+            while (System.currentTimeMillis() - curr < 2500 && opModeIsActive()) {
+                if (outtake.boxIsEmpty()) break;
+            }
+            sleep(1000);
+            drive.setMotorPowers(0, 0, 0, 0);
+
+            new Thread(() -> {
+                sleep(200);
+                while (lift.getEncoderValue() > 10 && opModeIsActive()) {
+                    lift.setPower(-0.5);
+                }
+                lift.setPower(0);
+                outtake.goTo(OuttakeDifferential.State.DOWN, true);
+                sleep(2000);
+            }).start();
+
+            drive.followTrajectory(toParkRight);
         }
 
-        // prepare for movement (set arm to down, lift slide)
-        drive.followTrajectory(path.get(0));
-
-        // drop purple pixel
-        intake.setSpeed(0.5);
-        intake.spinBackwards();
-        sleep(2000);
-        intake.stopSpin();
-
-//        drive.followTrajectory(path.get(1));
-//
-//        // drop yellow pixel
-//        control.spinBoxOut();
-//        sleep(3000);
-//        control.stopBox();
-//
-//        drive.followTrajectory(path.get(2));
-//        drive.turn(Math.toRadians(-90));
-//
         Data.liftPosition = lift.getEncoderValue();
         visionPortal.close();
-    }
 
-    private List<Trajectory> getTrajectories(SampleMecanumDrive drive, Pose2d startPose) {
-        List<Trajectory> path = new ArrayList<>();
-
-        Trajectory trajectoryToSpikeMark, trajectoryToBackdrop, trajectoryToPark;
-
-        // Location.Left
-        trajectoryToSpikeMark = drive.trajectoryBuilder(startPose)
-                .splineToConstantHeading(new Vector2d(-31, 38), Math.toRadians(270))
-//                .splineToConstantHeading(new Vector2d(-36, 32), Math.toRadians(270))
-                .build();
-
-        trajectoryToBackdrop = drive.trajectoryBuilder(trajectoryToSpikeMark.end())
-                .splineToConstantHeading(new Vector2d(-48, 16), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(-32, 8, Math.toRadians(0)), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(16, 8, Math.toRadians(0)), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(48, 42), Math.toRadians(0))
-                .build();
-
-        trajectoryToPark = drive.trajectoryBuilder(trajectoryToBackdrop.end())
-                .strafeRight(30)
-                .build();
-
-        path.add(trajectoryToSpikeMark);
-        path.add(trajectoryToBackdrop);
-        path.add(trajectoryToPark);
-
-        // Location.Center
-        trajectoryToSpikeMark = drive.trajectoryBuilder(startPose)
-                .splineToConstantHeading(new Vector2d(-36, 32.5), Math.toRadians(270))
-//                .splineToSplineHeading(new Pose2d(-32, 12, Math.toRadians(270)), Math.toRadians(0))
-                .build();
-
-        trajectoryToBackdrop = drive.trajectoryBuilder(trajectoryToSpikeMark.end())
-                .splineToSplineHeading(new Pose2d(-12, 6, Math.toRadians(0)), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(48, 36), Math.toRadians(0))
-                .build();
-
-        trajectoryToPark = drive.trajectoryBuilder(trajectoryToBackdrop.end())
-                .strafeRight(24)
-                .build();
-
-        path.add(trajectoryToSpikeMark);
-        path.add(trajectoryToBackdrop);
-        path.add(trajectoryToPark);
-
-        // Location.Right
-        trajectoryToSpikeMark = drive.trajectoryBuilder(startPose)
-                .splineToConstantHeading(new Vector2d(-41, 38), Math.toRadians(270))
-//                .splineToConstantHeading(new Vector2d(-34, 34), Math.toRadians(270))
-                .build();
-
-        trajectoryToBackdrop = drive.trajectoryBuilder(trajectoryToSpikeMark.end())
-                .splineToConstantHeading(new Vector2d(-34, 12), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(48, 30), Math.toRadians(0))
-                .build();
-
-        trajectoryToPark = drive.trajectoryBuilder(trajectoryToBackdrop.end())
-                .strafeRight(18)
-                .build();
-
-        path.add(trajectoryToSpikeMark);
-        path.add(trajectoryToBackdrop);
-        path.add(trajectoryToPark);
-
-        return path;
+        while (opModeIsActive()) {
+        }
     }
 }
