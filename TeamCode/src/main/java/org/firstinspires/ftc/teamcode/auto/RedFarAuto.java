@@ -174,6 +174,9 @@ public class RedFarAuto extends LinearOpMode {
         if(isStopRequested()) return;
 
         // ----- RUNNING OP-MODE ----- //
+        intake.setTargetPositionPreset(Intake.Position.DOWN);
+        intake.update();
+        sleep(1500);
 
         if (location == PropDetectionProcessor.Location.Left) {
             // Location.Left
@@ -212,9 +215,9 @@ public class RedFarAuto extends LinearOpMode {
                 lift.setPower(0.1);
             }).start();
             drive.followTrajectory(toScoreLeft);
-            drive.setMotorPowers(0.3, 0.3, 0.3, 0.3);
+            drive.setMotorPowers(0.2, 0.2, 0.2, 0.2);
             curr = System.currentTimeMillis();
-            while(System.currentTimeMillis() - curr < 2500 && opModeIsActive()) {
+            while(System.currentTimeMillis() - curr < 3500 && opModeIsActive()) {
                 if (outtake.boxIsEmpty()) break;
             }
             sleep(500);
@@ -268,9 +271,9 @@ public class RedFarAuto extends LinearOpMode {
                 lift.setPower(0.1);
             }).start();
             drive.followTrajectory(toScoreCenter);
-            drive.setMotorPowers(0.3, 0.3, 0.3, 0.3);
+            drive.setMotorPowers(0.2, 0.2, 0.2, 0.2);
             curr = System.currentTimeMillis();
-            while(System.currentTimeMillis() - curr < 2500 && opModeIsActive()) {
+            while(System.currentTimeMillis() - curr < 3500 && opModeIsActive()) {
                 if (outtake.boxIsEmpty()) break;
             }
             sleep(500);
@@ -324,9 +327,9 @@ public class RedFarAuto extends LinearOpMode {
                 lift.setPower(0.1);
             }).start();
             drive.followTrajectory(toScoreRight);
-            drive.setMotorPowers(0.3, 0.3, 0.3, 0.3);
+            drive.setMotorPowers(0.2, 0.2, 0.2, 0.2);
             curr = System.currentTimeMillis();
-            while(System.currentTimeMillis() - curr < 2500 && opModeIsActive()) {
+            while(System.currentTimeMillis() - curr < 3500 && opModeIsActive()) {
                 if (outtake.boxIsEmpty()) break;
             }
             sleep(1000);

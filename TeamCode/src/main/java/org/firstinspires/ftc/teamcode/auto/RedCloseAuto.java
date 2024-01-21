@@ -118,6 +118,9 @@ public class RedCloseAuto extends LinearOpMode {
         if(isStopRequested()) return;
 
         // ----- RUNNING OP-MODE ----- //
+        intake.setTargetPositionPreset(Intake.Position.DOWN);
+        intake.update();
+        sleep(1500);
 
         if (location == PropDetectionProcessor.Location.Left) {
             // Location.Left

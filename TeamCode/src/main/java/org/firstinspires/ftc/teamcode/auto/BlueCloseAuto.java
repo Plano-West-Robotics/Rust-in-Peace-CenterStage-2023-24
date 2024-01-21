@@ -119,6 +119,9 @@ public class BlueCloseAuto extends LinearOpMode {
         if(isStopRequested()) return;
 
         // ----- RUNNING OP-MODE ----- //
+        intake.setTargetPositionPreset(Intake.Position.DOWN);
+        intake.update();
+        sleep(1500);
 
         if (location == PropDetectionProcessor.Location.Left) {
             // Location.Left
@@ -131,18 +134,19 @@ public class BlueCloseAuto extends LinearOpMode {
             sleep(1500);
 
             // drop yellow pixel
-            outtake.goTo(OuttakeDifferential.State.UP, true);
+            outtake.goTo(OuttakeDifferential.State.UP);
             drive.followTrajectory(toBackdropLeft);
 
             drive.setMotorPowers(0.3, 0.3, 0.3, 0.3);
             long curr = System.currentTimeMillis();
             while (System.currentTimeMillis() - curr < 2500 && opModeIsActive()) {
-                if (outtake.boxIsEmpty()) break;
+                if (System.currentTimeMillis() - curr > 2000) outtake.box.outtake();
             }
             sleep(1000);
             drive.setMotorPowers(0, 0, 0, 0);
+            outtake.box.stopSpinning();
 
-            outtake.goTo(OuttakeDifferential.State.DOWN, true);
+            outtake.goTo(OuttakeDifferential.State.DOWN);
 
             drive.followTrajectory(toParkLeft);
         } else if (location == PropDetectionProcessor.Location.Center) {
@@ -162,10 +166,11 @@ public class BlueCloseAuto extends LinearOpMode {
             drive.setMotorPowers(0.3, 0.3, 0.3, 0.3);
             long curr = System.currentTimeMillis();
             while (System.currentTimeMillis() - curr < 2500 && opModeIsActive()) {
-                if (outtake.boxIsEmpty()) break;
+                if (System.currentTimeMillis() - curr > 2000) outtake.box.outtake();
             }
             sleep(1000);
             drive.setMotorPowers(0, 0, 0, 0);
+            outtake.box.stopSpinning();
 
             outtake.goTo(OuttakeDifferential.State.DOWN, true);
 
@@ -186,6 +191,15 @@ public class BlueCloseAuto extends LinearOpMode {
 
             drive.setMotorPowers(0.3, 0.3, 0.3, 0.3);
             long curr = System.currentTimeMillis();
+            while (System.currentTimeMillis() - curr < 2500 && opModeIsActive()) {
+                if (System.currentTimeMillis() - curr > 2000) outtake.box.outtake();
+            }
+            sleep(1000);
+            drive.setMotorPowers(0, 0, 0, 0);
+            outtake.box.stopSpinning();
+
+            drive.setMotorPowers(0.3, 0.3, 0.3, 0.3);
+            curr = System.currentTimeMillis();
             while (System.currentTimeMillis() - curr < 2500 && opModeIsActive()) {
                 if (outtake.boxIsEmpty()) break;
             }

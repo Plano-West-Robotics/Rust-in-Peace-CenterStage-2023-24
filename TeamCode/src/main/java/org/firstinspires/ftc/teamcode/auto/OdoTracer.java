@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
+import org.firstinspires.ftc.teamcode.subsystems.Drive;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.auto.roadrunner.drive.DriveConstants;
@@ -30,16 +30,25 @@ import java.util.List;
 @TeleOp(name="OdoTracer", group="Auto")
 public class OdoTracer extends OpMode {
     private TwoWheelTrackingLocalizer twoWheelOdo;
-    private SampleMecanumDrive drive;
-
+    private SampleMecanumDrive dr;
+    private Drive drive;
     @Override
     public void init() {
-        drive = new SampleMecanumDrive(hardwareMap);
-        twoWheelOdo = new TwoWheelTrackingLocalizer(hardwareMap, drive);
+        drive = new Drive(hardwareMap,telemetry,false);
+        twoWheelOdo = new TwoWheelTrackingLocalizer(hardwareMap, dr);
     }
 
     @Override
     public void loop() {
+
+            drive.setSpeed(.8);
+
+            drive.update(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
+
+            telemetry.addData("Chassis Motors (FL-FR-BL-BR)", Arrays.toString(drive.getEncoderValues()));
+            telemetry.addData("IMU Orientation", drive.getHeading());
+            telemetry.addData("\nDrive Speed", .8);
+
         telemetry.addData("Initialized", "True");
         telemetry.addData("Position: ", twoWheelOdo.getWheelPositions());
         telemetry.update();

@@ -24,6 +24,10 @@ public class FieldCentricTeleOp extends OpMode {
 
     OuttakeDifferential outtake;
 
+    boolean intakeRunning = false;
+
+
+
     boolean driveSpeedMult = true; // true fast, false slow
     double liftSpeedMult = 0.85;
 
@@ -39,6 +43,8 @@ public class FieldCentricTeleOp extends OpMode {
         drive.setSpeed(0.75);
         lift.loadPosition();
         lift.setManual(true);
+
+        intake.setSpeed(0.7);
     }
 
     @Override
@@ -51,18 +57,23 @@ public class FieldCentricTeleOp extends OpMode {
 
             // Intake - Spin
             if (gamepad2.left_bumper) {
-                if (!outtake.boxIsFull()) {
-                    intake.spinForward();
-                } else {
-                    intake.spinBackwards();
+                if (!intakeRunning) {
+                    if (!outtake.boxIsFull()) {
+                        intake.spinForward();
+                    } else {
+                        intake.spinBackwards();
+                    }
+                    lift.setPower(-0.1, true);
+                    outtake.box.stopSpinning();
+                    outtake.box.intake();
+                    intakeRunning = true;
                 }
-                lift.setPower(-0.1, true);
-                outtake.box.stopSpinning();
-                outtake.box.intake();
             } else if (gamepad2.right_bumper) {
                 intake.spinBackwards();
+                intakeRunning = false;
             } else {
                 intake.stopSpin();
+                intakeRunning = false;
             }
 
             // Intake - Arm

@@ -65,8 +65,7 @@ public class BlueFarAuto extends LinearOpMode {
         // LEFT ------------------- //
 
         Trajectory toSpikeMarkLeft = drive.trajectoryBuilder(startPose, true)
-                .splineTo(new Vector2d(-47, 48), Math.toRadians(240))
-                .splineToSplineHeading(new Pose2d(-32, 36, Math.toRadians(130)), Math.toRadians(315),
+                .splineToLinearHeading(new Pose2d(-27, 37, Math.toRadians(130)), Math.toRadians(315),
                         SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
@@ -76,7 +75,7 @@ public class BlueFarAuto extends LinearOpMode {
                 .build();
 
         Trajectory toStackLeft = drive.trajectoryBuilder(toBackToStackLeft.end(), true)
-                .splineToLinearHeading(new Pose2d(-61.2, 36, Math.toRadians(0)), Math.toRadians(180),
+                .splineToLinearHeading(new Pose2d(-57.8, 35, Math.toRadians(0)), Math.toRadians(180),
                         SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
@@ -87,28 +86,28 @@ public class BlueFarAuto extends LinearOpMode {
                 .build();
 
         Trajectory toScoreLeft = drive.trajectoryBuilder(toBackdropLeft.end())
-                .splineToConstantHeading(new Vector2d(45, 38), Math.toRadians(0),
+                .splineToConstantHeading(new Vector2d(45, 39), Math.toRadians(0),
                         SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         Trajectory toParkLeft = drive.trajectoryBuilder(toScoreLeft.end(), true)
-                .splineToLinearHeading(new Pose2d(42, 55, Math.toRadians(270)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(45, 40, Math.toRadians(90)), Math.toRadians(0))
                 .build();
 
         // CENTER ------------------- //
         Trajectory toSpikeMarkCenter = drive.trajectoryBuilder(startPose, true)
-                .splineToConstantHeading(new Vector2d(-43, 32), Math.toRadians(90),
+                .splineToConstantHeading(new Vector2d(-40, 30), Math.toRadians(90),
                         SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         Trajectory toBackToStackCenter = drive.trajectoryBuilder(toSpikeMarkCenter.end())
-                .lineToConstantHeading(new Vector2d(-38, 44))
+                .forward(8)
                 .build();
 
         Trajectory toStackCenter = drive.trajectoryBuilder(toBackToStackCenter.end(), true)
-                .splineToLinearHeading(new Pose2d(-60, 34.5, Math.toRadians(0)), Math.toRadians(180),
+                .splineToLinearHeading(new Pose2d(-58, 34.5, Math.toRadians(0)), Math.toRadians(180),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
@@ -119,46 +118,46 @@ public class BlueFarAuto extends LinearOpMode {
                 .build();
 
         Trajectory toScoreCenter = drive.trajectoryBuilder(toBackdropCenter.end())
-                .splineToConstantHeading(new Vector2d(43, 32), Math.toRadians(0),
+                .splineToConstantHeading(new Vector2d(43, 34), Math.toRadians(0),
                         SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         Trajectory toParkCenter = drive.trajectoryBuilder(toScoreCenter.end(), true)
-                .splineToLinearHeading(new Pose2d(45, 52, Math.toRadians(270)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(45, 40, Math.toRadians(90)), Math.toRadians(0))
                 .build();
 
         // RIGHT ------------------- //
 
         Trajectory toSpikeMarkRight = drive.trajectoryBuilder(startPose, true)
-                .splineToLinearHeading(new Pose2d(-45, 34, Math.toRadians(50)), Math.toRadians(200),
+                .splineToLinearHeading(new Pose2d(-42.5, 31, Math.toRadians(50)), Math.toRadians(200),
                         SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         Trajectory toBackToStackRight = drive.trajectoryBuilder(toSpikeMarkRight.end())
-                .lineToConstantHeading(new Vector2d(-38, 44))
+                .lineToConstantHeading(new Vector2d(-37, 48))
                 .build();
 
         Trajectory toStackRight = drive.trajectoryBuilder(toBackToStackRight.end(), true)
-                .splineToLinearHeading(new Pose2d(-59.5, 34.5, Math.toRadians(0)), Math.toRadians(180),
+                .splineToLinearHeading(new Pose2d(-59.5, 35, Math.toRadians(0)), Math.toRadians(180),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         Trajectory toBackdropRight = drive.trajectoryBuilder(toStackRight.end())
-                .splineToConstantHeading(new Vector2d(-54, 54), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(10, 54), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(-54, 55), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(10, 55), Math.toRadians(0))
                 .build();
 
         Trajectory toScoreRight = drive.trajectoryBuilder(toBackdropRight.end())
-                .splineToConstantHeading(new Vector2d(43, 28), Math.toRadians(0),
+                .splineToConstantHeading(new Vector2d(43, 33), Math.toRadians(0),
                         SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         Trajectory toParkRight = drive.trajectoryBuilder(toScoreRight.end(), true)
-                .splineToLinearHeading(new Pose2d(45, 52, Math.toRadians(270)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(45, 40, Math.toRadians(90)), Math.toRadians(0))
                 .build();
 
 
@@ -178,6 +177,9 @@ public class BlueFarAuto extends LinearOpMode {
         if (isStopRequested()) return;
 
         // ----- RUNNING OP-MODE ----- //
+        intake.setTargetPositionPreset(Intake.Position.DOWN);
+        intake.update();
+        sleep(1500);
 
         if (location == PropDetectionProcessor.Location.Left) {
             // Location.Left
@@ -187,7 +189,7 @@ public class BlueFarAuto extends LinearOpMode {
             // drop purple pixel
             intake.setTargetPositionPreset(Intake.Position.P5);
             intake.update();
-            sleep(1500);
+            sleep(30000);
 
             // get white pixel
             drive.followTrajectory(toBackToStackLeft);
@@ -216,9 +218,9 @@ public class BlueFarAuto extends LinearOpMode {
                 lift.setPower(0.1);
             }).start();
             drive.followTrajectory(toScoreLeft);
-            drive.setMotorPowers(0.3, 0.3, 0.3, 0.3);
+            drive.setMotorPowers(0.25, 0.25, 0.25, 0.25);
             curr = System.currentTimeMillis();
-            while (System.currentTimeMillis() - curr < 2500 && opModeIsActive()) {
+            while (System.currentTimeMillis() - curr < 3500 && opModeIsActive()) {
                 if (outtake.boxIsEmpty()) break;
             }
             sleep(1000);
@@ -243,7 +245,7 @@ public class BlueFarAuto extends LinearOpMode {
             // drop purple pixel
             intake.setTargetPositionPreset(Intake.Position.P5);
             intake.update();
-            sleep(1500);
+            sleep(30000);
 
             // get white pixel
             drive.followTrajectory(toBackToStackCenter);
@@ -272,9 +274,9 @@ public class BlueFarAuto extends LinearOpMode {
                 lift.setPower(0.1);
             }).start();
             drive.followTrajectory(toScoreCenter);
-            drive.setMotorPowers(0.3, 0.3, 0.3, 0.3);
+            drive.setMotorPowers(0.25, 0.25, 0.25, 0.25);
             curr = System.currentTimeMillis();
-            while (System.currentTimeMillis() - curr < 2500 && opModeIsActive()) {
+            while (System.currentTimeMillis() - curr < 3500 && opModeIsActive()) {
                 if (outtake.boxIsEmpty()) break;
             }
             sleep(1000);
@@ -299,7 +301,7 @@ public class BlueFarAuto extends LinearOpMode {
             // drop purple pixel
             intake.setTargetPositionPreset(Intake.Position.P5);
             intake.update();
-            sleep(1500);
+            sleep(30000);
 
             // get white pixel
             drive.followTrajectory(toBackToStackRight);
@@ -314,7 +316,7 @@ public class BlueFarAuto extends LinearOpMode {
                 if (outtake.boxIsFull()) break;
             }
             intake.spinBackwards();
-            sleep(1500);
+            sleep(30000);
             intake.stopSpin();
             outtake.box.stopSpinning();
 
@@ -328,9 +330,9 @@ public class BlueFarAuto extends LinearOpMode {
                 lift.setPower(0.1);
             }).start();
             drive.followTrajectory(toScoreRight);
-            drive.setMotorPowers(0.3, 0.3, 0.3, 0.3);
+            drive.setMotorPowers(0.25, 0.25, 0.25, 0.25);
             curr = System.currentTimeMillis();
-            while (System.currentTimeMillis() - curr < 2500 && opModeIsActive()) {
+            while (System.currentTimeMillis() - curr < 3500 && opModeIsActive()) {
                 if (outtake.boxIsEmpty()) break;
             }
             sleep(1000);
