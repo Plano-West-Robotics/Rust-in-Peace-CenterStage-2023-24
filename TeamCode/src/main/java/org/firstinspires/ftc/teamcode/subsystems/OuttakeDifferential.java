@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.hardware.ServoControllerEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.R;
 
 public class OuttakeDifferential {
     //tracks current state of arm
@@ -89,14 +88,16 @@ public class OuttakeDifferential {
                         goTo(State.UP);
                     }
                 } else if (st == State.RIGHT) {
-                    if (state == State.DOWN) {
-                        goTo(State.UP);
-                    }
+//                    if (state == State.DOWN) {
+//                        goTo(State.UP);
+//                    }
+                    sleep(1500);
                     servoL.setPosition(0.3);
                     servoR.setPosition(1);
                     sleep(1000);
                     this.state = State.RIGHT;
                     setWrist(wristState);
+                    sleep(500);
                 }
             } catch (Exception ignored) {}
         }).start();

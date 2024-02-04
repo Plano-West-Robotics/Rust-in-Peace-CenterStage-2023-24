@@ -45,7 +45,7 @@ public class IntakeSpinTesterAuto extends LinearOpMode {
     public void runOpMode() {
         intake = new Intake(hardwareMap, telemetry);
         box = new OuttakeBox(hardwareMap, telemetry);
-        intake.setSpeed(0.8);
+        intake.setSpeed(1);
 
         // Wait for the game to start (driver presses PLAY)
         while (!isStarted() && !isStopRequested()) {
@@ -54,16 +54,12 @@ public class IntakeSpinTesterAuto extends LinearOpMode {
         }
         // run until the end of the match (driver presses STOP)
 
-        intake.setTargetPositionPreset(Intake.Position.P5);
-        intake.update();
-        sleep(500);
         intake.spinForward();
         box.intake();
-        while (!box.boxIsFull()) {
-            intake.spinForward();
-            box.intake();
+        while(!box.boxIsFull()) {
         }
         intake.spinBackwards();
         box.stopSpinning();
+        sleep(1000);
     }
 }
