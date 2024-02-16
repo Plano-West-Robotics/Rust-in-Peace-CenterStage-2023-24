@@ -52,9 +52,9 @@ public class DroneTesterAuto extends LinearOpMode {
         }
         // run until the end of the match (driver presses STOP)
 
-        drone.droneArm.setPosition(0.65); // up
+        //drone.droneArm.setPosition(0.65); // up
         sleep(7000);
-        drone.droneArm.setPosition(0.9); // down
+        //drone.droneArm.setPosition(0.9); // down
         sleep(2000);
     }
 }

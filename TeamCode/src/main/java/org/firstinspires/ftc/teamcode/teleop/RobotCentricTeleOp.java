@@ -102,9 +102,6 @@ public class RobotCentricTeleOp extends OpMode {
                 droneLauncher.shoot();
             }
 
-            if (gamepad1.x) droneLauncher.goTo(DroneLauncher.Position.DOWN);
-            else if (gamepad1.b) droneLauncher.goTo(DroneLauncher.Position.UP);
-
             // Chassis
             if (gamepad1.left_bumper) driveSpeedMult -= (driveSpeedMult - 0.1 < 0 ? 0 : 0.1);
             else if (gamepad1.right_bumper) driveSpeedMult += (driveSpeedMult + 0.1 > 1 ? 0 : 0.1);
