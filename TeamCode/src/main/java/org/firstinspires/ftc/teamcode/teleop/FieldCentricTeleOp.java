@@ -40,7 +40,7 @@ public class FieldCentricTeleOp extends OpMode {
 
         outtake = new OuttakeDifferential(hardwareMap, telemetry, OuttakeDifferential.State.DOWN);
 
-        drive.setSpeed(0.75);
+        drive.setSpeed(1);
         lift.loadPosition();
         lift.setManual(true);
 

@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -26,7 +25,7 @@ public class Intake {
         this.telemetry = telemetry;
 
         arm = hardwareMap.get(Servo.class,"ARMservo");
-        arm.scaleRange(0.27, 0.8);
+        arm.scaleRange(0.57, 1);
         arm.setDirection(Servo.Direction.REVERSE);
 
         intake = hardwareMap.get(DcMotor.class, "INmotor");

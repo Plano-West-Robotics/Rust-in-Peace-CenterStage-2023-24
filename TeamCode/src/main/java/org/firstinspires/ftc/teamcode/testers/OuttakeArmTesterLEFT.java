@@ -8,8 +8,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.OuttakeBox;
 import org.firstinspires.ftc.teamcode.subsystems.OuttakeDifferential;
 
-@Autonomous(name="Outtake Arm Tester RIGHT")
-public class OuttakeArmTesterSide extends LinearOpMode {
+@Autonomous(name="Outtake Arm Tester LEFT")
+public class OuttakeArmTesterLEFT extends LinearOpMode {
 
     OuttakeDifferential arm;
     DroneLauncher drone;
@@ -30,9 +30,9 @@ public class OuttakeArmTesterSide extends LinearOpMode {
         }
 
         // run until the end of the match (driver presses STOP)
-        arm.goTo(OuttakeDifferential.State.RIGHT);
+        arm.goTo(OuttakeDifferential.State.LEFT);
         sleep(6000);
-        box.setWristPositionManual(0.33);
+        box.setWristPositionManual(1);
         sleep(1000);
         box.setWristPositionManual(0.69);
         arm.goTo(OuttakeDifferential.State.DOWN);

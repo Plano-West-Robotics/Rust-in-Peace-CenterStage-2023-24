@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import static java.lang.Thread.sleep;
 
-import android.graphics.Color;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -11,7 +9,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.SensorColor;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @Config
@@ -78,6 +75,12 @@ public class OuttakeBox {
                 }
                 sleep(1500);
             } catch (Exception ignored) {}
+        }).start();
+    }
+
+    public void setWristPositionManual(double position) {
+        new Thread(() -> {
+            wrist.setPosition(position);
         }).start();
     }
 

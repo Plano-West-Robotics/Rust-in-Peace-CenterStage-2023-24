@@ -5,8 +5,6 @@ import static java.lang.Thread.sleep;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoController;
-import com.qualcomm.robotcore.hardware.ServoControllerEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -24,7 +22,9 @@ public class OuttakeDifferential {
         DOWN,
         UP,
         LEFT,
-        RIGHT
+        RIGHT,
+        RIGHT2,
+        LEFT2
     };
 
     public enum WristState {
@@ -38,10 +38,9 @@ public class OuttakeDifferential {
         servoL = hardwareMap.get(Servo.class, "ALservo");
         servoR = hardwareMap.get(Servo.class,"ARservo");
 
+        servoR.setDirection(Servo.Direction.REVERSE);
         box = new OuttakeBox(hardwareMap, telemetry);
         drone = new DroneLauncher(hardwareMap, telemetry);
-
-        servoR.setDirection(Servo.Direction.REVERSE);
 
         this.state = state;
         wristState = WristState.PASSIVE;
@@ -64,8 +63,8 @@ public class OuttakeDifferential {
                 }
 
                 if (st == State.UP) {
-                    servoL.setPosition(0.58);
-                    servoR.setPosition(0.56);
+                    servoR.setPosition(0.58);
+                    servoL.setPosition(0.52);
                     sleep(500);
                     this.state = State.UP;
                     setWrist(WristState.MANUAL);
@@ -77,20 +76,49 @@ public class OuttakeDifferential {
                     }
                     this.state = State.DOWN;
                     setWrist(WristState.PASSIVE);
-                    sleep(200);
-                    servoL.setPosition(0.04);
-                    servoR.setPosition(0);
+                    sleep(900);
+                    servoL.setPosition(0.02);
+                    servoR.setPosition(0.02);
                     sleep(700);
                     servoL.getController().pwmDisable();
                     servoR.getController().pwmDisable();
+                } else if (st == State.LEFT2) {
+                    if (state == State.DOWN) {
+                        goTo(State.UP);
+                   }
+                    sleep(1500);
+                    servoL.setPosition(1);
+                    servoR.setPosition(0.35);
+                    sleep(300);
+                    this.state = State.LEFT;
+                    setWrist(wristState);
+                    sleep(500);
                 } else if (st == State.LEFT) {
                     if (state == State.DOWN) {
                         goTo(State.UP);
                     }
+                    sleep(1500);
+                    servoL.setPosition(1);
+                    servoR.setPosition(0.35);
+                    sleep(300);
+                    this.state = State.LEFT;
+                    setWrist(wristState);
+                    sleep(500);
+                } else if (st == State.RIGHT2) {
+                        if (state ==State.DOWN) {
+                            goTo(state.UP);
+                        }
+                    sleep(1500);
+                    servoL.setPosition(0.3);
+                    servoR.setPosition(1);
+                    sleep(1000);
+                    this.state = State.RIGHT;
+                    setWrist(wristState);
+                    sleep(500);
                 } else if (st == State.RIGHT) {
-//                    if (state == State.DOWN) {
-//                        goTo(State.UP);
-//                    }
+                    if (state ==State.DOWN) {
+                        goTo(state.UP);
+                    }
                     sleep(1500);
                     servoL.setPosition(0.3);
                     servoR.setPosition(1);
@@ -99,6 +127,7 @@ public class OuttakeDifferential {
                     setWrist(wristState);
                     sleep(500);
                 }
+
             } catch (Exception ignored) {}
         }).start();
     }
