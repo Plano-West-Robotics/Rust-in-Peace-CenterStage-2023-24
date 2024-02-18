@@ -32,9 +32,6 @@ public class OuttakeArmTesterLEFT extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         arm.goTo(OuttakeDifferential.State.LEFT);
         sleep(6000);
-        box.setWristPositionManual(1);
-        sleep(1000);
-        box.setWristPositionManual(0.69);
         arm.goTo(OuttakeDifferential.State.DOWN);
         sleep(6000);
     }

@@ -26,10 +26,11 @@ public class FieldCentricTeleOp extends OpMode {
 
     boolean intakeRunning = false;
 
-
-
     boolean driveSpeedMult = true; // true fast, false slow
     double liftSpeedMult = 0.85;
+
+    boolean rightStickPressed = false;
+    boolean isManual = true;
 
     @Override
     public void init() {
@@ -90,12 +91,37 @@ public class FieldCentricTeleOp extends OpMode {
                 outtake.goTo(OuttakeDifferential.State.UP);
             } else if (-gamepad2.right_stick_y < -0.8) {
                 outtake.goTo(OuttakeDifferential.State.DOWN);
+            } else if (gamepad2.right_stick_x > 0.8) {
+                outtake.goTo(OuttakeDifferential.State.FARRIGHT);
+            } else if (gamepad2.right_stick_x < -0.8) {
+                outtake.goTo(OuttakeDifferential.State.FARLEFT);
+            } else if (gamepad2.dpad_left) {
+                outtake.goTo(OuttakeDifferential.State.LEFT);
+            } else if (gamepad2.dpad_right) {
+                outtake.goTo(OuttakeDifferential.State.RIGHT);
             }
 
-            if (gamepad2.right_stick_x > 0.8) {
-                outtake.setWrist(OuttakeDifferential.WristState.MANUAL);
-            } else if (gamepad2.right_stick_x < -0.8) {
-                outtake.setWrist(OuttakeDifferential.WristState.PASSIVE);
+            if (gamepad2.right_stick_button && !rightStickPressed) {
+                if (isManual) outtake.setWrist(OuttakeDifferential.WristState.PASSIVE);
+                else outtake.setWrist(OuttakeDifferential.WristState.MANUAL);
+                rightStickPressed = true;
+                isManual = !isManual;
+            } else {
+                rightStickPressed = false;
+            }
+
+            // Outtake Arm Down Macro
+            if (gamepad2.a) {
+                new Thread(() -> {
+                    while (lift.getEncoderValue() > 300) {
+                        lift.setPower(-0.5);
+                    }
+                    lift.setPower(0);
+                    outtake.goTo(OuttakeDifferential.State.DOWN);
+                    while (lift.getEncoderValue() > 10) {
+                        lift.setPower(-0.5);
+                    }
+                }).start();
             }
 
             // Outtake Box

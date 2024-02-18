@@ -25,7 +25,10 @@ public class OuttakeBox {
         P1,
         P2,
         P3,
-        P4
+        P4,
+        P5,
+        P6,
+        P7
     }
 
     public OuttakeBox(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -71,7 +74,16 @@ public class OuttakeBox {
                     wrist.setPosition(0.69);
                 } else if (state == State.P4) {
                     // roller right
-                    wrist.setPosition(0.33);
+                      wrist.setPosition(0.37);
+                } else if (state == State.P5) {
+                    // passive left center
+                    wrist.setPosition(0.58);
+                } else if (state == State.P6) {
+                    // passive right center
+                    wrist.setPosition(0.81);
+                } else if (state == State.P7) {
+                    // active left center
+                    wrist.setPosition(0.13);
                 }
                 sleep(1500);
             } catch (Exception ignored) {}

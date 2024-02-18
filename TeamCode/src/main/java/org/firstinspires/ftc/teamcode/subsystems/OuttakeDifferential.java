@@ -21,10 +21,10 @@ public class OuttakeDifferential {
     public enum State{
         DOWN,
         UP,
+        FARLEFT,
         LEFT,
         RIGHT,
-        RIGHT2,
-        LEFT2
+        FARRIGHT
     };
 
     public enum WristState {
@@ -67,65 +67,61 @@ public class OuttakeDifferential {
                     servoL.setPosition(0.52);
                     sleep(500);
                     this.state = State.UP;
-                    setWrist(WristState.MANUAL);
+                    setWrist(wristState);
                     sleep(500);
                 } else if (st == State.DOWN) {
                     //if state is left or right set to up first
-                    if ((state == State.LEFT) || (state == State.RIGHT)) {
-                        goTo(State.UP);
+                    if ((state == State.LEFT) || (state == State.RIGHT) || (state == State.FARLEFT) || (state == State.FARRIGHT)) {
+                        goTo(State.UP, true);
+                        this.state = State.DOWN;
                     }
-                    this.state = State.DOWN;
                     setWrist(WristState.PASSIVE);
-                    sleep(900);
+                    sleep(500);
                     servoL.setPosition(0.02);
                     servoR.setPosition(0.02);
-                    sleep(700);
+                    sleep(650);
                     servoL.getController().pwmDisable();
                     servoR.getController().pwmDisable();
-                } else if (st == State.LEFT2) {
+                } else if (st == State.FARLEFT) {
                     if (state == State.DOWN) {
-                        goTo(State.UP);
-                   }
-                    sleep(1500);
+                        goTo(State.UP, true);
+                        sleep(700);
+                    }
+                    this.state = State.FARLEFT;
+                    setWrist(wristState);
                     servoL.setPosition(1);
                     servoR.setPosition(0.35);
-                    sleep(300);
-                    this.state = State.LEFT;
-                    setWrist(wristState);
-                    sleep(500);
+                    sleep(800);
                 } else if (st == State.LEFT) {
                     if (state == State.DOWN) {
-                        goTo(State.UP);
+                        goTo(State.UP, true);
+                        sleep(700);
                     }
-                    sleep(1500);
-                    servoL.setPosition(1);
-                    servoR.setPosition(0.35);
-                    sleep(300);
                     this.state = State.LEFT;
                     setWrist(wristState);
-                    sleep(500);
-                } else if (st == State.RIGHT2) {
-                        if (state ==State.DOWN) {
-                            goTo(state.UP);
-                        }
-                    sleep(1500);
-                    servoL.setPosition(0.3);
-                    servoR.setPosition(1);
-                    sleep(1000);
-                    this.state = State.RIGHT;
-                    setWrist(wristState);
-                    sleep(500);
+                    servoL.setPosition(0.6);
+                    servoR.setPosition(0.5);
+                    sleep(800);
                 } else if (st == State.RIGHT) {
-                    if (state ==State.DOWN) {
-                        goTo(state.UP);
+                    if (state == State.DOWN) {
+                        goTo(State.UP, true);
+                        sleep(700);
                     }
-                    sleep(1500);
-                    servoL.setPosition(0.3);
-                    servoR.setPosition(1);
-                    sleep(1000);
                     this.state = State.RIGHT;
                     setWrist(wristState);
-                    sleep(500);
+                    servoL.setPosition(0.4);
+                    servoR.setPosition(0.7);
+                    sleep(800);
+                } else if (st == State.FARRIGHT) {
+                    if (state == State.DOWN) {
+                        goTo(State.UP, true);
+                        sleep(700);
+                    }
+                    this.state = State.FARRIGHT;
+                    setWrist(wristState);
+                    servoL.setPosition(0.22);
+                    servoR.setPosition(0.85);
+                    sleep(800);
                 }
 
             } catch (Exception ignored) {}
@@ -144,11 +140,10 @@ public class OuttakeDifferential {
             }
 
             if (st == State.UP) {
-                servoL.setPosition(0.58);
-                servoR.setPosition(0.56);
+                servoL.setPosition(0.52);
+                servoR.setPosition(0.58);
                 sleep(500);
                 this.state = State.UP;
-                sleep(500);
             } else if (st == State.DOWN) {
                 //if state is left or right set to up first
                 if ((state == State.LEFT) || (state == State.RIGHT)) {
@@ -179,33 +174,45 @@ public class OuttakeDifferential {
 
     public void setWrist(WristState st) {
         new Thread(() -> {
-            if (st == WristState.PASSIVE && wristState != WristState.PASSIVE) {  //you don't need to check if the wriststate is passive or not
+            if (st == WristState.PASSIVE) {
                 if (state == State.UP || state == State.DOWN) {
                     try {
                         box.setWristPosition(OuttakeBox.State.P3);
                     } catch (Exception ignored) {}
-                } else if (state == State.RIGHT) {
+                } else if (state == State.FARRIGHT) {
                     try {
                         box.setWristPosition(OuttakeBox.State.P2);
                     } catch (Exception ignored) {}
-                } else if (state == State.LEFT) {
+                } else if (state == State.FARLEFT) {
                     try {
                         box.setWristPosition(OuttakeBox.State.P4);
                     } catch (Exception ignored) {}
+                } else if (state == State.LEFT) {
+                    try {
+                        box.setWristPosition(OuttakeBox.State.P5);
+                    } catch (Exception ignored) {}
+                } else if (state == State.RIGHT) {
+                    try {
+                        box.setWristPosition(OuttakeBox.State.P6);
+                    } catch (Exception ignored) {}
                 }
                 wristState = WristState.PASSIVE;
-            } else if (st == WristState.MANUAL && wristState != WristState.MANUAL) {
+            } else if (st == WristState.MANUAL) {
                 if (state == State.UP) {
                     try {
                         box.setWristPosition(OuttakeBox.State.P1);
                     } catch (Exception ignored) {}
-                }  else if (state == State.RIGHT) {
+                }  else if (state == State.FARRIGHT) {
                     try {
                         box.setWristPosition(OuttakeBox.State.P4);
                     } catch (Exception ignored) {}
-                } else if (state == State.LEFT) {
+                } else if (state == State.FARLEFT) {
                     try {
                         box.setWristPosition(OuttakeBox.State.P2);
+                    } catch (Exception ignored) {}
+                } else if (state == State.RIGHT) {
+                    try {
+                        box.setWristPosition(OuttakeBox.State.P7);
                     } catch (Exception ignored) {}
                 }
                 wristState = WristState.MANUAL;
