@@ -141,10 +141,8 @@ public class FieldCentricTeleOp extends OpMode {
             if (gamepad2.dpad_down) lift.setPower(-0.3, true);
 
             // Drone
-            if (gamepad1.y) {
+            if (gamepad2.y) {
                 droneLauncher.shoot();
-            } else if (gamepad1.x) {
-                droneLauncher.goTo(DroneLauncher.Position.DOWN);
             }
 
             // Hanging

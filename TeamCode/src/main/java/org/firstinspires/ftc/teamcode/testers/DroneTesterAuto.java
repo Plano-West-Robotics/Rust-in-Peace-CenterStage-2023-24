@@ -35,7 +35,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.subsystems.DroneLauncher;
 
-@Disabled
+//@Disabled
 @Autonomous(name="Drone Tester", group="Auto")
 public class DroneTesterAuto extends LinearOpMode {
 
@@ -52,9 +52,9 @@ public class DroneTesterAuto extends LinearOpMode {
         }
         // run until the end of the match (driver presses STOP)
 
-        drone.droneArm.setPosition(0.65); // up
-        sleep(7000);
-        drone.droneArm.setPosition(0.9); // down
+        drone.droneShoot.setPosition(0.6); // out
+        sleep(2000);
+        drone.droneShoot.setPosition(1); // secure
         sleep(2000);
     }
 }
