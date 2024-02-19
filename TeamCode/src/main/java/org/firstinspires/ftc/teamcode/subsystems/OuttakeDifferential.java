@@ -75,7 +75,7 @@ public class OuttakeDifferential {
                         goTo(State.UP, true);
                         this.state = State.DOWN;
                     }
-                    setWrist(WristState.PASSIVE);
+                    box.setWristPosition(OuttakeBox.State.P3);
                     sleep(500);
                     servoL.setPosition(0.02);
                     servoR.setPosition(0.02);

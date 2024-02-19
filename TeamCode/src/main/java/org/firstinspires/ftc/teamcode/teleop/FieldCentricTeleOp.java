@@ -27,7 +27,7 @@ public class FieldCentricTeleOp extends OpMode {
     boolean intakeRunning = false;
 
     boolean driveSpeedMult = true; // true fast, false slow
-    double liftSpeedMult = 0.85;
+    double liftSpeedMult = 1;
 
     boolean rightStickPressed = false;
     boolean isManual = true;
@@ -40,6 +40,7 @@ public class FieldCentricTeleOp extends OpMode {
         droneLauncher = new DroneLauncher(hardwareMap, telemetry);
 
         outtake = new OuttakeDifferential(hardwareMap, telemetry, OuttakeDifferential.State.DOWN);
+        outtake.setWrist(OuttakeDifferential.WristState.MANUAL);
 
         drive.setSpeed(1);
         lift.loadPosition();
@@ -101,13 +102,10 @@ public class FieldCentricTeleOp extends OpMode {
                 outtake.goTo(OuttakeDifferential.State.RIGHT);
             }
 
-            if (gamepad2.right_stick_button && !rightStickPressed) {
-                if (isManual) outtake.setWrist(OuttakeDifferential.WristState.PASSIVE);
-                else outtake.setWrist(OuttakeDifferential.WristState.MANUAL);
-                rightStickPressed = true;
-                isManual = !isManual;
-            } else {
-                rightStickPressed = false;
+            if (gamepad2.x) {
+                outtake.setWrist(OuttakeDifferential.WristState.MANUAL);
+            } else if (gamepad2.b) {
+                outtake.setWrist(OuttakeDifferential.WristState.PASSIVE);
             }
 
             // Outtake Arm Down Macro
@@ -125,11 +123,11 @@ public class FieldCentricTeleOp extends OpMode {
             }
 
             // Outtake Box
-            if (gamepad2.x) {
+            if (gamepad1.x) {
                 outtake.box.intake();
-            } else if (gamepad2.b) {
+            } else if (gamepad1.b) {
                 outtake.box.outtake();
-            } else if (gamepad2.y) {
+            } else if (gamepad1.y || gamepad2.y) {
                 outtake.box.stopSpinning();
             }
 
@@ -168,7 +166,7 @@ public class FieldCentricTeleOp extends OpMode {
 
             if (gamepad1.back) drive.resetHeading();
 
-            drive.setSpeed(driveSpeedMult ? 1 : 0.25);
+            drive.setSpeed(driveSpeedMult ? 1 : 0.4);
 
             drive.updateFieldCentric(-gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
 
