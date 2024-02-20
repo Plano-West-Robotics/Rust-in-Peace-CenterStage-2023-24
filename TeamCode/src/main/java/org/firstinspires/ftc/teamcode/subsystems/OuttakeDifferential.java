@@ -63,7 +63,7 @@ public class OuttakeDifferential {
                 }
 
                 if (st == State.UP) {
-                    servoR.setPosition(0.58);
+                    servoR.setPosition(0.6);
                     servoL.setPosition(0.52);
                     sleep(500);
                     this.state = State.UP;
@@ -79,7 +79,7 @@ public class OuttakeDifferential {
                     sleep(500);
                     servoL.setPosition(0.02);
                     servoR.setPosition(0.02);
-                    sleep(650);
+                    sleep(750);
                     servoL.getController().pwmDisable();
                     servoR.getController().pwmDisable();
                 } else if (st == State.FARLEFT) {
@@ -89,8 +89,8 @@ public class OuttakeDifferential {
                     }
                     this.state = State.FARLEFT;
                     setWrist(wristState);
-                    servoL.setPosition(1);
-                    servoR.setPosition(0.35);
+                    servoL.setPosition(0.93);
+                    servoR.setPosition(0.29);
                     sleep(800);
                 } else if (st == State.LEFT) {
                     if (state == State.DOWN) {

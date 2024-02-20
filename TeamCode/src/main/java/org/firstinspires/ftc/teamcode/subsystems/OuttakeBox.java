@@ -65,16 +65,16 @@ public class OuttakeBox {
             try {
                 if (state == State.P1) {
                     // manual
-                    wrist.setPosition(0.022);
+                    wrist.setPosition(0.01);
                 } else if (state == State.P2) {
                     // roller left
                     wrist.setPosition(1);
                 } else if (state == State.P3) {
                     // passive
-                    wrist.setPosition(0.69);
+                    wrist.setPosition(0.69); // change
                 } else if (state == State.P4) {
                     // roller right
-                      wrist.setPosition(0.37);
+                      wrist.setPosition(0.32);
                 } else if (state == State.P5) {
                     // passive left center
                     wrist.setPosition(0.58);

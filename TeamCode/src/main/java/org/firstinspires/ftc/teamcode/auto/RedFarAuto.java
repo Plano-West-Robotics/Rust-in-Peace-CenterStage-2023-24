@@ -93,28 +93,28 @@ public class RedFarAuto extends LinearOpMode {
 
         // CENTER ------------------- //
         Trajectory toSpikeMarkCenter = drive.trajectoryBuilder(startPose, true)
-                .splineToConstantHeading(new Vector2d(-43, -32), Math.toRadians(90),
+                .splineToConstantHeading(new Vector2d(-43, -32.5), Math.toRadians(90),
                         SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         Trajectory toBackToStackCenter = drive.trajectoryBuilder(toSpikeMarkCenter.end())
-                .lineToConstantHeading(new Vector2d(-38, -44))
+                .lineToConstantHeading(new Vector2d(-38, -48))
                 .build();
 
         Trajectory toStackCenter = drive.trajectoryBuilder(toBackToStackCenter.end(), true)
-                .splineToLinearHeading(new Pose2d(-60, -34.5, Math.toRadians(0)), Math.toRadians(180),
+                .splineToLinearHeading(new Pose2d(-61, -35, Math.toRadians(0)), Math.toRadians(180),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         Trajectory toBackdropCenter = drive.trajectoryBuilder(toStackCenter.end())
-                .splineToConstantHeading(new Vector2d(-54, -54), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(10, -54), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(-54, -55), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(0, -54), Math.toRadians(0))
                 .build();
 
         Trajectory toScoreCenter = drive.trajectoryBuilder(toBackdropCenter.end())
-                .splineToConstantHeading(new Vector2d(43, -32), Math.toRadians(0),
+                .splineToConstantHeading(new Vector2d(30, -32), Math.toRadians(0),
                         SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
@@ -126,10 +126,8 @@ public class RedFarAuto extends LinearOpMode {
         // RIGHT ------------------- //
 
         Trajectory toSpikeMarkRight = drive.trajectoryBuilder(startPose, true)
-                .splineTo(new Vector2d(-47, -48), Math.toRadians(120))
-                .splineToSplineHeading(new Pose2d(-34, -36, Math.toRadians(230)), Math.toRadians(20),
-                        SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .lineToConstantHeading(new Vector2d(-47, -48))
+                .splineToSplineHeading(new Pose2d(-34, -36, Math.toRadians(230)), Math.toRadians(20))
                 .build();
 
         Trajectory toBackToStackRight = drive.trajectoryBuilder(toSpikeMarkRight.end())
@@ -137,7 +135,7 @@ public class RedFarAuto extends LinearOpMode {
                 .build();
 
         Trajectory toStackRight = drive.trajectoryBuilder(toBackToStackRight.end(), true)
-                .splineToLinearHeading(new Pose2d(-59.5, -34.5, Math.toRadians(0)), Math.toRadians(180),
+                .splineToLinearHeading(new Pose2d(-60, -34, Math.toRadians(0)), Math.toRadians(190),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
@@ -164,7 +162,7 @@ public class RedFarAuto extends LinearOpMode {
             telemetry.addLine(String.valueOf(propDetector.getLocation()));
             telemetry.update();
 
-            location = propDetector.getLocation();
+            location = PropDetectionProcessor.Location.Center;
         }
 
         // ----- START PRESSED ----- //
@@ -176,7 +174,7 @@ public class RedFarAuto extends LinearOpMode {
         // ----- RUNNING OP-MODE ----- //
         intake.setTargetPositionPreset(Intake.Position.DOWN);
         intake.update();
-        sleep(1500);
+        sleep(500);
 
         if (location == PropDetectionProcessor.Location.Left) {
             // Location.Left
@@ -186,7 +184,7 @@ public class RedFarAuto extends LinearOpMode {
             // drop purple pixel
             intake.setTargetPositionPreset(Intake.Position.P5);
             intake.update();
-            sleep(1500);
+            sleep(500);
 
             // get white pixel
             drive.followTrajectory(toBackToStackLeft);
@@ -242,7 +240,7 @@ public class RedFarAuto extends LinearOpMode {
             // drop purple pixel
             intake.setTargetPositionPreset(Intake.Position.P5);
             intake.update();
-            sleep(1500);
+            sleep(500);
 
             // get white pixel
             drive.followTrajectory(toBackToStackCenter);
@@ -298,7 +296,7 @@ public class RedFarAuto extends LinearOpMode {
             // drop purple pixel
             intake.setTargetPositionPreset(Intake.Position.P5);
             intake.update();
-            sleep(1500);
+            sleep(500);
 
             // get white pixel
             drive.followTrajectory(toBackToStackRight);
