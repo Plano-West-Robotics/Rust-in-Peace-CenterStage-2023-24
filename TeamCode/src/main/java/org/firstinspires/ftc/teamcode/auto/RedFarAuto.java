@@ -110,17 +110,17 @@ public class RedFarAuto extends LinearOpMode {
 
         Trajectory toBackdropCenter = drive.trajectoryBuilder(toStackCenter.end())
                 .splineToConstantHeading(new Vector2d(-54, -55), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(0, -54), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(-30, -54), Math.toRadians(0))
                 .build();
 
         Trajectory toScoreCenter = drive.trajectoryBuilder(toBackdropCenter.end())
-                .splineToConstantHeading(new Vector2d(30, -32), Math.toRadians(0),
+                .splineToConstantHeading(new Vector2d(-10, -32), Math.toRadians(0),
                         SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         Trajectory toParkCenter = drive.trajectoryBuilder(toScoreCenter.end(), true)
-                .splineToLinearHeading(new Pose2d(45, -52, Math.toRadians(90)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(-8, -52, Math.toRadians(90)), Math.toRadians(0))
                 .build();
 
         // RIGHT ------------------- //
