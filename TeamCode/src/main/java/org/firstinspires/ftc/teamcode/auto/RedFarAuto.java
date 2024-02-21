@@ -103,14 +103,14 @@ public class RedFarAuto extends LinearOpMode {
                 .build();
 
         Trajectory toStackCenter = drive.trajectoryBuilder(toBackToStackCenter.end(), true)
-                .splineToLinearHeading(new Pose2d(-61, -35, Math.toRadians(0)), Math.toRadians(180),
+                .splineToLinearHeading(new Pose2d(-60, -35, Math.toRadians(0)), Math.toRadians(180),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         Trajectory toBackdropCenter = drive.trajectoryBuilder(toStackCenter.end())
-                .splineToConstantHeading(new Vector2d(-54, -55), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(-30, -54), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(-54, -55.5), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(-18, -54), Math.toRadians(0))
                 .build();
 
         Trajectory toScoreCenter = drive.trajectoryBuilder(toBackdropCenter.end())
@@ -120,7 +120,9 @@ public class RedFarAuto extends LinearOpMode {
                 .build();
 
         Trajectory toParkCenter = drive.trajectoryBuilder(toScoreCenter.end(), true)
-                .splineToLinearHeading(new Pose2d(-8, -52, Math.toRadians(90)), Math.toRadians(0))
+                .lineToConstantHeading(new Vector2d(-4,-52),
+                        SampleMecanumDrive.getVelocityConstraint(25,DriveConstants.MAX_ANG_VEL,DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         // RIGHT ------------------- //
