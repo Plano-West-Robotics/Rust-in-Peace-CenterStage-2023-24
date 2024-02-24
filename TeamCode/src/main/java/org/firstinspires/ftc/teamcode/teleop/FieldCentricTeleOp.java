@@ -59,23 +59,19 @@ public class FieldCentricTeleOp extends OpMode {
 
             // Intake - Spin
             if (gamepad2.left_bumper) {
-                if (!intakeRunning) {
-                    if (!outtake.boxIsFull()) {
-                        intake.spinForward();
-                    } else {
-                        intake.spinBackwards();
-                    }
-                    lift.setPower(-0.1, true);
-                    outtake.box.stopSpinning();
-                    outtake.box.intake();
-                    intakeRunning = true;
+                lift.resetEncoder();
+                if (!outtake.boxIsFull()) {
+                    intake.spinForward();
+                } else {
+                    intake.spinBackwards();
                 }
+                lift.setPower(-0.1, true);
+                outtake.box.stopSpinning();
+                outtake.box.intake();
             } else if (gamepad2.right_bumper) {
                 intake.spinBackwards();
-                intakeRunning = false;
             } else {
                 intake.stopSpin();
-                intakeRunning = false;
             }
 
             // Intake - Arm
@@ -166,9 +162,9 @@ public class FieldCentricTeleOp extends OpMode {
 
             if (gamepad1.back) drive.resetHeading();
 
-            drive.setSpeed(driveSpeedMult ? 1 : 0.4);
+            drive.setSpeed(driveSpeedMult ? 1 : 0.3);
 
-            drive.updateFieldCentric(-gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
+            drive.updateFieldCentric(-gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x*0.8);
 
             telemetry.addData("Chassis Motors (FL-FR-BL-BR)", Arrays.toString(drive.getEncoderValues()));
             telemetry.addData("Slide Motor (SR-Cloned to left)", lift.getEncoderValue());
@@ -181,7 +177,7 @@ public class FieldCentricTeleOp extends OpMode {
             telemetry.addLine();
 
             telemetry.addData("IMU Orientation", Math.toDegrees(drive.getHeading()));
-            telemetry.addData("\nDrive Speed", driveSpeedMult ? 1 : 0.25);
+            telemetry.addData("\nDrive Speed", driveSpeedMult ? 1 : 0.3);
             telemetry.addData("Lift Speed", liftSpeedMult);
             telemetry.addLine();
 

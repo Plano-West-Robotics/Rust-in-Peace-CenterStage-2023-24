@@ -58,48 +58,48 @@ public class RedCloseAuto extends LinearOpMode {
         // LEFT ------------------- //
 
         Trajectory toSpikeMarkLeft = drive.trajectoryBuilder(startPose, true)
-                .splineToLinearHeading(new Pose2d(1, -38, Math.toRadians(320)), Math.toRadians(135),
+                .splineToLinearHeading(new Pose2d(0, -38, Math.toRadians(320)), Math.toRadians(135),
                         SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         Trajectory toBackdropLeft = drive.trajectoryBuilder(toSpikeMarkLeft.end())
-                .splineToLinearHeading(new Pose2d(52, -32, Math.toRadians(0)), Math.toRadians(20))
+                .splineToLinearHeading(new Pose2d(42, -33, Math.toRadians(0)), Math.toRadians(20))
                 .build();
 
         Trajectory toParkLeft = drive.trajectoryBuilder(toBackdropLeft.end(), true)
-                .splineToLinearHeading(new Pose2d(50, -60, Math.toRadians(90)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(48, -57, Math.toRadians(90)), Math.toRadians(0))
                 .build();
 
         // CENTER ------------------- //
         Trajectory toSpikeMarkCenter = drive.trajectoryBuilder(startPose, true)
-                .splineToConstantHeading(new Vector2d(8, -32), Math.toRadians(90),
+                .splineToConstantHeading(new Vector2d(8, -30), Math.toRadians(90),
                         SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         Trajectory toBackdropCenter = drive.trajectoryBuilder(toSpikeMarkCenter.end())
-                .splineToLinearHeading(new Pose2d(52, -36, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(42, -31, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
         Trajectory toParkCenter = drive.trajectoryBuilder(toBackdropCenter.end(), true)
-                .splineToLinearHeading(new Pose2d(50, -60, Math.toRadians(90)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(48, -57, Math.toRadians(90)), Math.toRadians(0))
                 .build();
 
         // RIGHT ------------------- //
 
         Trajectory toSpikeMarkRight = drive.trajectoryBuilder(startPose, true)
-                .splineToConstantHeading(new Vector2d(17, -38), Math.toRadians(90),
+                .splineToConstantHeading(new Vector2d(19, -38), Math.toRadians(90),
                         SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         Trajectory toBackdropRight = drive.trajectoryBuilder(toSpikeMarkRight.end())
-                .splineToLinearHeading(new Pose2d(52, -41, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(42, -34, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
         Trajectory toParkRight = drive.trajectoryBuilder(toBackdropRight.end(), true)
-                .splineToLinearHeading(new Pose2d(50, -60, Math.toRadians(90)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(48, -57, Math.toRadians(90)), Math.toRadians(0))
                 .build();
 
         // ----- WAIT FOR START ----- //
@@ -130,10 +130,16 @@ public class RedCloseAuto extends LinearOpMode {
             // drop purple pixel
             intake.setTargetPositionPreset(Intake.Position.TOP);
             intake.update();
-            sleep(1500);
+            sleep(750);
 
             // drop yellow pixel
-            outtake.goTo(OuttakeDifferential.State.UP, true);
+            new Thread(() -> {
+                outtake.goTo(OuttakeDifferential.State.LEFT);
+                while(lift.getEncoderValue() < 110 && opModeIsActive()) {
+                    lift.setPower(0.5);
+                }
+                lift.setPower(0.1);
+            }).start();
             drive.followTrajectory(toBackdropLeft);
 
             drive.setMotorPowers(0.3, 0.3, 0.3, 0.3);
@@ -141,12 +147,20 @@ public class RedCloseAuto extends LinearOpMode {
             while (System.currentTimeMillis() - curr < 2500 && opModeIsActive()) {
                 if (outtake.boxIsEmpty()) break;
             }
-            sleep(1000);
-            drive.setMotorPowers(0, 0, 0, 0);
-
-            outtake.goTo(OuttakeDifferential.State.DOWN, true);
-
+            sleep(1500);
+            drive.setMotorPowers(-0.1, -0.1, -0.1, -0.1);
+            sleep(500);
+            new Thread(() -> {
+                outtake.goTo(OuttakeDifferential.State.DOWN);
+                while(lift.getEncoderValue() > 10 && opModeIsActive()) {
+                    lift.setPower(-0.5);
+                }
+                lift.setPower(0);
+            }).start();
             drive.followTrajectory(toParkLeft);
+            sleep(4000);
+
+
         } else if (location == PropDetectionProcessor.Location.Center) {
             // Location.Center
             drive.setPoseEstimate(startPose);
@@ -155,23 +169,22 @@ public class RedCloseAuto extends LinearOpMode {
             // drop purple pixel
             intake.setTargetPositionPreset(Intake.Position.TOP);
             intake.update();
-            sleep(1500);
+            sleep(750);
 
             // drop yellow pixel
-            outtake.goTo(OuttakeDifferential.State.UP, true);
-            drive.followTrajectory(toBackdropCenter);
+            outtake.goTo((OuttakeDifferential.State.UP));
+            drive.followTrajectory(toBackdropRight);
 
             drive.setMotorPowers(0.3, 0.3, 0.3, 0.3);
             long curr = System.currentTimeMillis();
             while (System.currentTimeMillis() - curr < 2500 && opModeIsActive()) {
                 if (outtake.boxIsEmpty()) break;
             }
-            sleep(1000);
+            sleep(1500);
             drive.setMotorPowers(0, 0, 0, 0);
-
-            outtake.goTo(OuttakeDifferential.State.DOWN, true);
-
             drive.followTrajectory(toParkCenter);
+            outtake.goTo(OuttakeDifferential.State.DOWN);
+            sleep(4000);
         } else {
             // Location.Right
             drive.setPoseEstimate(startPose);
@@ -180,10 +193,17 @@ public class RedCloseAuto extends LinearOpMode {
             // drop purple pixel
             intake.setTargetPositionPreset(Intake.Position.TOP);
             intake.update();
-            sleep(1500);
+            sleep(750);
 
             // drop yellow pixel
-            outtake.goTo(OuttakeDifferential.State.UP, true);
+            new Thread(() -> {
+                outtake.goTo(OuttakeDifferential.State.RIGHT);
+                while(lift.getEncoderValue() < 110 && opModeIsActive()) {
+                    lift.setPower(0.5);
+                }
+                lift.setPower(0.1);
+            }).start();
+
             drive.followTrajectory(toBackdropRight);
 
             drive.setMotorPowers(0.3, 0.3, 0.3, 0.3);
@@ -191,12 +211,18 @@ public class RedCloseAuto extends LinearOpMode {
             while (System.currentTimeMillis() - curr < 2500 && opModeIsActive()) {
                 if (outtake.boxIsEmpty()) break;
             }
-            sleep(1000);
-            drive.setMotorPowers(0, 0, 0, 0);
-
-            outtake.goTo(OuttakeDifferential.State.DOWN, true);
-
+            sleep(1500);
+            drive.setMotorPowers(-0.1, -0.1, -0.1, -0.1);
+            sleep(500);
+            new Thread(() -> {
+                outtake.goTo(OuttakeDifferential.State.DOWN);
+                while(lift.getEncoderValue() > 10 && opModeIsActive()) {
+                    lift.setPower(-0.5);
+                }
+                lift.setPower(0);
+            }).start();
             drive.followTrajectory(toParkRight);
+            sleep(4000);
         }
 
         Data.liftPosition = lift.getEncoderValue();
