@@ -30,8 +30,8 @@ public class PropDetectionProcessor implements VisionProcessor {
     public Prop propColor = Prop.RED;
 
     // Scalars that provide the lowHSV and highHSV for image processing
-    Scalar lowHSV;
-    Scalar highHSV;
+    public Scalar lowHSV;
+    public Scalar highHSV;
 
     // Rects define the areas that the prop must be on to be considered left, right, or center
     // remove the multipliers when building on robot. x multipliers -3, y multipliers -2.25
@@ -60,17 +60,17 @@ public class PropDetectionProcessor implements VisionProcessor {
 
         if (propColor == Prop.RED) {
             //Old values
-            //lowHSV = new Scalar(0, 138.8, 94.9);
-            //highHSV = new Scalar(18.4, 255, 255);
-            lowHSV = new Scalar(52.4, 143.1, 109.1);
-            highHSV = new Scalar(126.1, 187, 170);
+            lowHSV = new Scalar(0, 138.8, 94.9);
+            highHSV = new Scalar(18.4, 255, 255);
+            //lowHSV = new Scalar(52.4, 143.1, 109.1);
+            //highHSV = new Scalar(126.1, 187, 170);
 
         } else {
             //Old values
-            //lowHSV = new Scalar(107.7, 120, 116.2);
-            //highHSV = new Scalar(255, 255, 255);
-            lowHSV = new Scalar(55.3, 113.3, 86.4);
-            highHSV = new Scalar(236.6, 255, 255);
+            lowHSV = new Scalar(107.7, 120, 116.2);
+            highHSV = new Scalar(255, 255, 255);
+            //lowHSV = new Scalar(55.3, 113.3, 86.4);
+           // highHSV = new Scalar(236.6, 255, 255);
         }
 
         Core.inRange(frame, lowHSV, highHSV, frame);

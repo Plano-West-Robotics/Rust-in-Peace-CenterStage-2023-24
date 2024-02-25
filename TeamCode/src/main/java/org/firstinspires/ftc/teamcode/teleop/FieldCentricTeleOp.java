@@ -150,6 +150,7 @@ public class FieldCentricTeleOp extends OpMode {
                     outtake.box.setWristPosition(OuttakeBox.State.P4);
                     sleep(500);
                     } catch (Exception ignored) {}
+                    intake.setTargetPositionPreset(Intake.Position.TOP);
                 }).start();
             }
 
