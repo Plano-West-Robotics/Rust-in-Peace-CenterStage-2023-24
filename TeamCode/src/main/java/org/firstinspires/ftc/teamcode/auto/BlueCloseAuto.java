@@ -89,18 +89,16 @@ public class BlueCloseAuto extends LinearOpMode {
         // RIGHT ------------------- //
 
         Trajectory toSpikeMarkRight = drive.trajectoryBuilder(startPose, true)
-                .splineTo(new Vector2d(15.5, 48), Math.toRadians(300))
-                .splineToSplineHeading(new Pose2d(9, 36, Math.toRadians(50)), Math.toRadians(200),
-                        SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .splineTo(new Vector2d(16, 48), Math.toRadians(300))
+                .splineToSplineHeading(new Pose2d(11, 36, Math.toRadians(50)), Math.toRadians(200))
                 .build();
 
         Trajectory toBackdropRight = drive.trajectoryBuilder(toSpikeMarkRight.end())
-                .splineToLinearHeading(new Pose2d(40, 38, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(28, 36, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
         Trajectory toParkRight = drive.trajectoryBuilder(toBackdropRight.end(), true)
-                .splineToLinearHeading(new Pose2d(50, 60, Math.toRadians(270)), Math.toRadians(0))
+                .lineToLinearHeading(new Pose2d(50, 58, Math.toRadians(270)))
                 .build();
 
         // ----- WAIT FOR START ----- //
@@ -217,21 +215,24 @@ public class BlueCloseAuto extends LinearOpMode {
             }
             sleep(1000);
             drive.setMotorPowers(0, 0, 0, 0);
-            outtake.setWrist(OuttakeDifferential.WristState.PASSIVE);
-            new Thread(() -> {
-                sleep(200);
-                while(lift.getEncoderValue() > 10 && opModeIsActive()) {
-                    lift.setPower(-0.5);
-                }
-                lift.setPower(0);
 
-                outtake.setWrist(OuttakeDifferential.WristState.PASSIVE);
-                outtake.goTo(OuttakeDifferential.State.UP);
-                sleep(2000);
-            }).start();
-            sleep(500);
-            outtake.goTo(OuttakeDifferential.State.DOWN);
+            lift.setPower(0.7);
+            sleep(200);
+            lift.setPower(0);
+
             drive.followTrajectory(toParkRight);
+
+            while(lift.getEncoderValue() > 10 && opModeIsActive()) {
+                lift.setPower(-0.5);
+            }
+            lift.setPower(0);
+
+            outtake.goTo(OuttakeDifferential.State.UP);
+            outtake.wristState = OuttakeDifferential.WristState.MANUAL;
+            outtake.setWrist(OuttakeDifferential.WristState.PASSIVE);
+            sleep(700);
+            outtake.goTo(OuttakeDifferential.State.DOWN);
+            sleep(2000);
         }
 
         Data.liftPosition = lift.getEncoderValue();
