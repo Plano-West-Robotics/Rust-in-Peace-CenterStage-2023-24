@@ -82,7 +82,7 @@ public class RedFarAuto extends LinearOpMode {
                 .build();
 
         Trajectory toScoreLeft = drive.trajectoryBuilder(toBackdropLeft.end())
-                .splineToConstantHeading(new Vector2d(30, -27.5), Math.toRadians(0),
+                .splineToConstantHeading(new Vector2d(30, -30), Math.toRadians(0),
                         SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
@@ -110,11 +110,11 @@ public class RedFarAuto extends LinearOpMode {
 
         Trajectory toBackdropCenter = drive.trajectoryBuilder(toStackCenter.end())
                 .splineToConstantHeading(new Vector2d(-54, -56), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(0, -56), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(10, -56), Math.toRadians(0))
                 .build();
 
         Trajectory toScoreCenter = drive.trajectoryBuilder(toBackdropCenter.end())
-                .splineToConstantHeading(new Vector2d(20, -32), Math.toRadians(0),
+                .splineToConstantHeading(new Vector2d(20, -30), Math.toRadians(0),
                         SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
@@ -135,19 +135,19 @@ public class RedFarAuto extends LinearOpMode {
                 .build();
 
         Trajectory toStackRight = drive.trajectoryBuilder(toBackToStackRight.end(), true)
-                .splineToLinearHeading(new Pose2d(-60, -34, Math.toRadians(0)), Math.toRadians(190),
+                .splineToLinearHeading(new Pose2d(-59, -34, Math.toRadians(0)), Math.toRadians(190),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         Trajectory toBackdropRight = drive.trajectoryBuilder(toStackRight.end())
-                .splineToConstantHeading(new Vector2d(-54, -54), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(10, -54), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(-54, -54.5), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(30, -54.5), Math.toRadians(0))
                 .build();
 
         Trajectory toScoreRight = drive.trajectoryBuilder(toBackdropRight.end())
-                .splineToConstantHeading(new Vector2d(15, -34), Math.toRadians(0),
-                        SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                .splineToConstantHeading(new Vector2d(35, -34), Math.toRadians(0),
+                        SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
@@ -208,9 +208,9 @@ public class RedFarAuto extends LinearOpMode {
             drive.turn(Math.toRadians(20));
             drive.followTrajectory(toBackdropLeft);
             new Thread(() -> {
-                outtake.goTo(OuttakeDifferential.State.LEFT);
-                while(lift.getEncoderValue() < 150 && opModeIsActive()) {
-                    lift.setPower(0.8);
+                outtake.goTo(OuttakeDifferential.State.FARLEFT);
+                while(lift.getEncoderValue() < 600 && opModeIsActive()) {
+                    lift.setPower(0.6);
                 }
                 lift.setPower(0.1);
             }).start();
@@ -279,8 +279,8 @@ public class RedFarAuto extends LinearOpMode {
             outtake.setWrist(OuttakeDifferential.WristState.MANUAL);
             drive.setMotorPowers(0.2, 0.2, 0.2, 0.2);
             curr = System.currentTimeMillis();
-            while(System.currentTimeMillis() - curr < 3000 && opModeIsActive()) {
-                if (System.currentTimeMillis() - curr > 2500) outtake.box.outtake();
+            while(System.currentTimeMillis() - curr < 3300 && opModeIsActive()) {
+                if (System.currentTimeMillis() - curr > 2900) outtake.box.outtake();
             }
             sleep(500);
             drive.setMotorPowers(0, 0, 0, 0);
