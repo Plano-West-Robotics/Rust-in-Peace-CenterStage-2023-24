@@ -65,7 +65,7 @@ public class RedCloseAuto extends LinearOpMode {
                 .build();
 
         Trajectory toBackdropLeft = drive.trajectoryBuilder(toSpikeMarkLeft.end())
-                .splineToLinearHeading(new Pose2d(42, -31, Math.toRadians(0)), Math.toRadians(20))
+                .splineToLinearHeading(new Pose2d(49, -31, Math.toRadians(0)), Math.toRadians(20))
                 .build();
 
         TrajectorySequence toCyclePosition = drive.trajectorySequenceBuilder(toBackdropLeft.end())
@@ -73,16 +73,16 @@ public class RedCloseAuto extends LinearOpMode {
                 .build();
 
         TrajectorySequence toStackLeft = drive.trajectorySequenceBuilder(toCyclePosition.end())
-                .lineToConstantHeading(new Vector2d(-65, -12),
-                        SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                .lineToConstantHeading(new Vector2d(-65, -13),
+                        SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         TrajectorySequence toBackDropLeftCycle = drive.trajectorySequenceBuilder(toStackLeft.end())
-                .lineToConstantHeading(new Vector2d(20, -12),
+                .lineToConstantHeading(new Vector2d(30, -12),
                         SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
-                .lineToConstantHeading(new Vector2d(42, -33),
+                .lineToConstantHeading(new Vector2d(48, -37),
                         SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
@@ -167,7 +167,7 @@ public class RedCloseAuto extends LinearOpMode {
             while (System.currentTimeMillis() - curr < 2500 && opModeIsActive()) {
                 if (outtake.boxIsEmpty()) break;
             }
-            sleep(1000);
+            sleep(500);
             drive.setMotorPowers(-0.1, -0.1, -0.1, -0.1);
             sleep(500);
             new Thread(() -> {
@@ -185,7 +185,9 @@ public class RedCloseAuto extends LinearOpMode {
             outtake.box.intake();
            drive.followTrajectorySequence(toStackLeft);
            drive.setMotorPowers(-0.1,-0.1,-0.1,-0.1);
+           sleep(400);
             intake.setTargetPositionPreset(Intake.Position.P4);
+            intake.update();
            sleep(700);
            drive.setMotorPowers(0,0,0,0);
             intake.stopSpin();
@@ -199,8 +201,8 @@ public class RedCloseAuto extends LinearOpMode {
                 }
                 lift.setPower(0.1);
             }).start();
-            drive.setMotorPowers(0.2, 0.2, 0.2, 0.2);
-            sleep(1500);
+            drive.setMotorPowers(0.25, 0.25, 0.25, 0.25);
+            sleep(1000);
             drive.setMotorPowers(0, 0, 0, 0);
             new Thread(() -> {
                 while(lift.getEncoderValue() < 410 && opModeIsActive()) {

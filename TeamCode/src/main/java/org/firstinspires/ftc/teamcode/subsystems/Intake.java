@@ -38,7 +38,7 @@ public class Intake {
     public void setTargetPositionPreset(Position targetPosition) {
         switch (targetPosition) {
             case TOP: setTargetPosition(1); break;
-            case P5: setTargetPosition(0.59); break; // 0.57
+            case P5: setTargetPosition(0.54); break; // 0.57
             case P4: setTargetPosition(0.45); break;
             case P3: setTargetPosition(0.35); break;
             case P2: setTargetPosition(0.25); break;
