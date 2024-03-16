@@ -73,12 +73,12 @@ public class RedCloseAuto extends LinearOpMode {
                 .build();
 
         TrajectorySequence toStackLeft = drive.trajectorySequenceBuilder(toCyclePosition.end())
-                .lineToConstantHeading(new Vector2d(-65, -13),
+                .lineToConstantHeading(new Vector2d(-69, -13),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
-        TrajectorySequence toBackDropLeftCycle = drive.trajectorySequenceBuilder(toStackLeft.end())
+        TrajectorySequence toBackDropLeftCycle = drive.trajectorySequenceBuilder(toStackLeft.end().plus(new Pose2d(4,0, Math.toRadians(0))))
                 .lineToConstantHeading(new Vector2d(30, -12),
                         SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
@@ -162,7 +162,7 @@ public class RedCloseAuto extends LinearOpMode {
             }).start();
             drive.followTrajectory(toBackdropLeft);
 
-            drive.setMotorPowers(0.3, 0.3, 0.3, 0.3);
+            drive.setMotorPowers(0.2, 0.2, 0.2, 0.2);
             long curr = System.currentTimeMillis();
             while (System.currentTimeMillis() - curr < 2500 && opModeIsActive()) {
                 if (outtake.boxIsEmpty()) break;
@@ -179,29 +179,31 @@ public class RedCloseAuto extends LinearOpMode {
             }).start();
 
            drive.followTrajectorySequence(toCyclePosition);
-            intake.setTargetPositionPreset(Intake.Position.P5);
+
+           drive.followTrajectorySequence(toStackLeft);
+            intake.setTargetPositionPreset(Intake.Position.DOWN);
             intake.update();
+            sleep(300);
+
+           drive.setMotorPowers(0.2,0.2,0.2,0.2);
+           sleep(600);
             intake.spinForward();
             outtake.box.intake();
-           drive.followTrajectorySequence(toStackLeft);
-           drive.setMotorPowers(-0.1,-0.1,-0.1,-0.1);
-           sleep(400);
-            intake.setTargetPositionPreset(Intake.Position.P4);
-            intake.update();
            sleep(700);
+           drive.setMotorPowers(-0.07,-0.07,-0.07,-0.07);
+           sleep(300);
            drive.setMotorPowers(0,0,0,0);
-            intake.stopSpin();
-
             drive.followTrajectorySequence(toBackDropLeftCycle);
             outtake.box.stopSpinning();
+            intake.stopSpin();
             new Thread(() -> {
                 outtake.goTo(OuttakeDifferential.State.LEFT);
-                while(lift.getEncoderValue() < 210 && opModeIsActive()) {
+                while(lift.getEncoderValue() < 150 && opModeIsActive()) {
                     lift.setPower(0.5);
                 }
                 lift.setPower(0.1);
             }).start();
-            drive.setMotorPowers(0.25, 0.25, 0.25, 0.25);
+            drive.setMotorPowers(0.2, 0.2, 0.2, 0.2);
             sleep(1000);
             drive.setMotorPowers(0, 0, 0, 0);
             new Thread(() -> {

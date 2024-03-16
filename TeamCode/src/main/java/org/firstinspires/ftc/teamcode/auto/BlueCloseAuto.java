@@ -58,13 +58,13 @@ public class BlueCloseAuto extends LinearOpMode {
         // LEFT ------------------- //
 
         Trajectory toSpikeMarkLeft = drive.trajectoryBuilder(startPose, true)
-                .splineToConstantHeading(new Vector2d(28, 41), Math.toRadians(270),
+                .splineToConstantHeading(new Vector2d(30, 41), Math.toRadians(270),
                         SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         Trajectory toBackdropLeft = drive.trajectoryBuilder(toSpikeMarkLeft.end())
-                .splineToLinearHeading(new Pose2d(40, 37.5, Math.toRadians(0)), Math.toRadians(-20))
+                .splineToLinearHeading(new Pose2d(50, 37.5, Math.toRadians(0)), Math.toRadians(-20))
                 .build();
 
         Trajectory toParkLeft = drive.trajectoryBuilder(toBackdropLeft.end(), true)
@@ -73,13 +73,13 @@ public class BlueCloseAuto extends LinearOpMode {
 
         // CENTER ------------------- //
         Trajectory toSpikeMarkCenter = drive.trajectoryBuilder(startPose, true)
-                .splineToConstantHeading(new Vector2d(20, 34), Math.toRadians(270),
+                .splineToConstantHeading(new Vector2d(20, 31), Math.toRadians(270),
                         SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         Trajectory toBackdropCenter = drive.trajectoryBuilder(toSpikeMarkCenter.end())
-                .splineToLinearHeading(new Pose2d(47, 33.5, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(50, 33.5, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
         Trajectory toParkCenter = drive.trajectoryBuilder(toBackdropCenter.end(), true)
@@ -94,7 +94,7 @@ public class BlueCloseAuto extends LinearOpMode {
                 .build();
 
         Trajectory toBackdropRight = drive.trajectoryBuilder(toSpikeMarkRight.end())
-                .splineToLinearHeading(new Pose2d(28, 36, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(50, 36, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
         Trajectory toParkRight = drive.trajectoryBuilder(toBackdropRight.end(), true)
@@ -131,21 +131,29 @@ public class BlueCloseAuto extends LinearOpMode {
             intake.update();
             sleep(1500);
 
+            new Thread(() -> {
+                while(lift.getEncoderValue() < 110 && opModeIsActive()) {
+                    lift.setPower(0.6);
+                }
+                lift.setPower(0.1);
+            }).start();
+
             // drop yellow pixel
-            outtake.goTo(OuttakeDifferential.State.UP);
+            outtake.goTo(OuttakeDifferential.State.LEFT);
             drive.followTrajectory(toBackdropLeft);
-            outtake.setWrist(OuttakeDifferential.WristState.MANUAL);
 
             drive.setMotorPowers(0.3, 0.3, 0.3, 0.3);
-            long curr = System.currentTimeMillis();
-            while (System.currentTimeMillis() - curr < 2500 && opModeIsActive()) {
-                if (System.currentTimeMillis() - curr > 2000) outtake.box.outtake();
-            }
-            sleep(1000);
-            drive.setMotorPowers(0, 0, 0, 0);
-            outtake.box.stopSpinning();
-            outtake.setWrist(OuttakeDifferential.WristState.PASSIVE);
 
+            sleep(1000);
+            drive.setMotorPowers(-0.1, -0.1, -0.1, -0.1);
+            sleep(500);
+            drive.setMotorPowers(0,0,0,0);
+            new Thread(() -> {
+                while(lift.getEncoderValue() > 10 && opModeIsActive()) {
+                    lift.setPower(-0.5);
+                }
+                lift.setPower(0);
+            }).start();
 
             outtake.goTo(OuttakeDifferential.State.DOWN);
 
@@ -161,9 +169,15 @@ public class BlueCloseAuto extends LinearOpMode {
             sleep(1500);
 
             // drop yellow pixel
-            outtake.goTo(OuttakeDifferential.State.UP, true);
+            outtake.goTo(OuttakeDifferential.State.UP);
             drive.followTrajectory(toBackdropCenter);
             outtake.setWrist(OuttakeDifferential.WristState.MANUAL);
+            new Thread(() -> {
+                while(lift.getEncoderValue() < 110 && opModeIsActive()) {
+                    lift.setPower(0.5);
+                }
+                lift.setPower(0.1);
+            }).start();
 
             drive.setMotorPowers(0.3, 0.3, 0.3, 0.3);
             long curr = System.currentTimeMillis();
@@ -171,10 +185,18 @@ public class BlueCloseAuto extends LinearOpMode {
                 if (System.currentTimeMillis() - curr > 2000) outtake.box.outtake();
             }
             sleep(1000);
-            drive.setMotorPowers(0, 0, 0, 0);
+            drive.setMotorPowers(-0.1, -0.1, -0.1, -0.1);
             outtake.box.stopSpinning();
+            sleep(400);
+            drive.setMotorPowers(0,0,0,0);
 
-            outtake.goTo(OuttakeDifferential.State.DOWN, true);
+            new Thread(() -> {
+                outtake.goTo(OuttakeDifferential.State.DOWN);
+                while(lift.getEncoderValue() > 10 && opModeIsActive()) {
+                    lift.setPower(-0.5);
+                }
+                lift.setPower(0);
+            }).start();
 
             drive.followTrajectory(toParkCenter);
         } else {
