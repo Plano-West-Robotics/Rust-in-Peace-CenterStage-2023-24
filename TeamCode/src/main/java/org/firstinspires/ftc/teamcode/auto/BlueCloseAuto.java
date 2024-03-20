@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.auto.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.auto.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.auto.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.subsystems.Data;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
@@ -88,9 +89,10 @@ public class BlueCloseAuto extends LinearOpMode {
 
         // RIGHT ------------------- //
 
-        Trajectory toSpikeMarkRight = drive.trajectoryBuilder(startPose, true)
-                .splineTo(new Vector2d(16, 48), Math.toRadians(300))
-                .splineToSplineHeading(new Pose2d(11, 36, Math.toRadians(50)), Math.toRadians(200))
+        TrajectorySequence toSpikeMarkRight = drive.trajectorySequenceBuilder(startPose)
+                .lineToLinearHeading(new Pose2d(14, 36,Math.toRadians(0)))
+                .lineTo(new Vector2d(11,36))
+
                 .build();
 
         Trajectory toBackdropRight = drive.trajectoryBuilder(toSpikeMarkRight.end())
@@ -202,7 +204,7 @@ public class BlueCloseAuto extends LinearOpMode {
         } else {
             // Location.Right
             drive.setPoseEstimate(startPose);
-            drive.followTrajectory(toSpikeMarkRight);
+            drive.followTrajectorySequence(toSpikeMarkRight);
 
             // drop purple pixel
             intake.setTargetPositionPreset(Intake.Position.TOP);
@@ -210,16 +212,17 @@ public class BlueCloseAuto extends LinearOpMode {
             sleep(750);
 
             // drop yellow pixel
-            drive.followTrajectory(toBackdropRight);
+
 
             new Thread(() -> {
-                outtake.goTo(OuttakeDifferential.State.FARRIGHT);
+                outtake.goTo(OuttakeDifferential.State.RIGHT);
                 outtake.setWrist(OuttakeDifferential.WristState.MANUAL);
-                while(lift.getEncoderValue() < 400 && opModeIsActive()) {
+                while(lift.getEncoderValue() < 300 && opModeIsActive()) {
                     lift.setPower(0.6);
                 }
                 lift.setPower(0.1);
             }).start();
+            drive.followTrajectory(toBackdropRight);
 
             drive.setMotorPowers(0.3, 0.3, 0.3, 0.3);
             long curr = System.currentTimeMillis();

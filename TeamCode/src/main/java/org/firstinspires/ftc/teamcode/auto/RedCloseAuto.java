@@ -65,27 +65,27 @@ public class RedCloseAuto extends LinearOpMode {
                 .build();
 
         Trajectory toBackdropLeft = drive.trajectoryBuilder(toSpikeMarkLeft.end())
-                .splineToLinearHeading(new Pose2d(49, -31, Math.toRadians(0)), Math.toRadians(20))
+                .splineToLinearHeading(new Pose2d(50, -30, Math.toRadians(0)), Math.toRadians(20))
                 .build();
 
-        TrajectorySequence toCyclePosition = drive.trajectorySequenceBuilder(toBackdropLeft.end())
-                .lineToConstantHeading(new Vector2d(20,-12))
-                .build();
-
-        TrajectorySequence toStackLeft = drive.trajectorySequenceBuilder(toCyclePosition.end())
-                .lineToConstantHeading(new Vector2d(-69, -13),
-                        SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
-                .build();
-
-        TrajectorySequence toBackDropLeftCycle = drive.trajectorySequenceBuilder(toStackLeft.end().plus(new Pose2d(4,0, Math.toRadians(0))))
-                .lineToConstantHeading(new Vector2d(30, -12),
-                        SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
-                .lineToConstantHeading(new Vector2d(48, -37),
-                        SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
-                .build();
+//        TrajectorySequence toCyclePosition = drive.trajectorySequenceBuilder(toBackdropLeft.end())
+//                .lineToConstantHeading(new Vector2d(20,-12))
+//                .build();
+//
+//        TrajectorySequence toStackLeft = drive.trajectorySequenceBuilder(toCyclePosition.end())
+//                .lineToConstantHeading(new Vector2d(-69, -13),
+//                        SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+//                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+//                .build();
+//
+//        TrajectorySequence toBackDropLeftCycle = drive.trajectorySequenceBuilder(toStackLeft.end().plus(new Pose2d(4,0, Math.toRadians(0))))
+//                .lineToConstantHeading(new Vector2d(30, -12),
+//                        SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+//                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+//                .lineToConstantHeading(new Vector2d(48, -37),
+//                        SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+//                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+//                .build();
 //
 //        Trajectory toParkLeft = drive.trajectoryBuilder(toBackdropLeft.end(), true)
 //                .splineToLinearHeading(new Pose2d(48, -57, Math.toRadians(90)), Math.toRadians(0))
@@ -167,7 +167,7 @@ public class RedCloseAuto extends LinearOpMode {
             while (System.currentTimeMillis() - curr < 2500 && opModeIsActive()) {
                 if (outtake.boxIsEmpty()) break;
             }
-            sleep(500);
+            sleep(1000);
             drive.setMotorPowers(-0.1, -0.1, -0.1, -0.1);
             sleep(500);
             new Thread(() -> {
@@ -178,52 +178,52 @@ public class RedCloseAuto extends LinearOpMode {
                 lift.setPower(0);
             }).start();
 
-           drive.followTrajectorySequence(toCyclePosition);
-
-           drive.followTrajectorySequence(toStackLeft);
-            intake.setTargetPositionPreset(Intake.Position.DOWN);
-            intake.update();
-            sleep(300);
-
-           drive.setMotorPowers(0.2,0.2,0.2,0.2);
-           sleep(600);
-            intake.spinForward();
-            outtake.box.intake();
-           sleep(700);
-           drive.setMotorPowers(-0.07,-0.07,-0.07,-0.07);
-           sleep(300);
-           drive.setMotorPowers(0,0,0,0);
-            drive.followTrajectorySequence(toBackDropLeftCycle);
-            outtake.box.stopSpinning();
-            intake.stopSpin();
-            new Thread(() -> {
-                outtake.goTo(OuttakeDifferential.State.LEFT);
-                while(lift.getEncoderValue() < 150 && opModeIsActive()) {
-                    lift.setPower(0.5);
-                }
-                lift.setPower(0.1);
-            }).start();
-            drive.setMotorPowers(0.2, 0.2, 0.2, 0.2);
-            sleep(1000);
-            drive.setMotorPowers(0, 0, 0, 0);
-            new Thread(() -> {
-                while(lift.getEncoderValue() < 410 && opModeIsActive()) {
-                    lift.setPower(0.5);
-                }
-                lift.setPower(0.1);
-            }).start();
-            sleep(500);
-            new Thread(() -> {
-                sleep(500);
-                while(lift.getEncoderValue() > 10 && opModeIsActive()) {
-                    lift.setPower(-0.5);
-                }
-                lift.setPower(0);
-                outtake.setWrist(OuttakeDifferential.WristState.PASSIVE);
-
-                outtake.goTo(OuttakeDifferential.State.DOWN);
-                sleep(2000);
-            }).start();
+//           drive.followTrajectorySequence(toCyclePosition);
+//
+//           drive.followTrajectorySequence(toStackLeft);
+//            intake.setTargetPositionPreset(Intake.Position.DOWN);
+//            intake.update();
+//            sleep(300);
+//
+//           drive.setMotorPowers(0.2,0.2,0.2,0.2);
+//           sleep(600);
+//            intake.spinForward();
+//            outtake.box.intake();
+//           sleep(700);
+//           drive.setMotorPowers(-0.07,-0.07,-0.07,-0.07);
+//           sleep(300);
+//           drive.setMotorPowers(0,0,0,0);
+//            drive.followTrajectorySequence(toBackDropLeftCycle);
+//            outtake.box.stopSpinning();
+//            intake.stopSpin();
+//            new Thread(() -> {
+//                outtake.goTo(OuttakeDifferential.State.LEFT);
+//                while(lift.getEncoderValue() < 150 && opModeIsActive()) {
+//                    lift.setPower(0.5);
+//                }
+//                lift.setPower(0.1);
+//            }).start();
+//            drive.setMotorPowers(0.2, 0.2, 0.2, 0.2);
+//            sleep(1000);
+//            drive.setMotorPowers(0, 0, 0, 0);
+//            new Thread(() -> {
+//                while(lift.getEncoderValue() < 410 && opModeIsActive()) {
+//                    lift.setPower(0.5);
+//                }
+//                lift.setPower(0.1);
+//            }).start();
+//            sleep(500);
+//            new Thread(() -> {
+//                sleep(500);
+//                while(lift.getEncoderValue() > 10 && opModeIsActive()) {
+//                    lift.setPower(-0.5);
+//                }
+//                lift.setPower(0);
+//                outtake.setWrist(OuttakeDifferential.WristState.PASSIVE);
+//
+//                outtake.goTo(OuttakeDifferential.State.DOWN);
+//                sleep(2000);
+//            }).start();
             drive.turn(Math.toRadians(90));
 
         } else if (location == PropDetectionProcessor.Location.Center) {

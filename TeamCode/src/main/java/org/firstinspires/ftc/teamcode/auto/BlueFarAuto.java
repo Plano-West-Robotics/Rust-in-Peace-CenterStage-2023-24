@@ -100,23 +100,23 @@ public class BlueFarAuto extends LinearOpMode {
                 .build();
 
         Trajectory toBackToStackCenter = drive.trajectoryBuilder(toSpikeMarkCenter.end())
-                .forward(8)
+                .forward(16)
                 .build();
 
         Trajectory toStackCenter = drive.trajectoryBuilder(toBackToStackCenter.end(), true)
-                .splineToLinearHeading(new Pose2d(-58, 34.5, Math.toRadians(0)), Math.toRadians(180),
+                .splineToLinearHeading(new Pose2d(-60, 34.5, Math.toRadians(0)), Math.toRadians(180),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         Trajectory toBackdropCenter = drive.trajectoryBuilder(toStackCenter.end())
-                .splineToConstantHeading(new Vector2d(-54, 54), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(10, 54), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(-54, 55.5), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(10, 55.5), Math.toRadians(0))
                 .build();
 
         Trajectory toScoreCenter = drive.trajectoryBuilder(toBackdropCenter.end())
                 .splineToConstantHeading(new Vector2d(43, 34), Math.toRadians(0),
-                        SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
@@ -193,7 +193,7 @@ public class BlueFarAuto extends LinearOpMode {
             intake.spinForward();
             outtake.box.intake();
             drive.followTrajectory(toStackLeft);
-            drive.setMotorPowers(-0.1, -0.1, -0.1, -0.1);
+            drive.setMotorPowers(-0.17, -0.17, -0.17, -0.17);
             sleep(900);
             drive.setMotorPowers(0, 0, 0, 0);
             long curr = System.currentTimeMillis();
@@ -223,9 +223,6 @@ public class BlueFarAuto extends LinearOpMode {
             sleep(1000);
             drive.setMotorPowers(0, 0, 0, 0);
 
-
-
-
             new Thread(() -> {
                 sleep(200);
                 while (lift.getEncoderValue() > 10 && opModeIsActive()) {
@@ -245,15 +242,15 @@ public class BlueFarAuto extends LinearOpMode {
             // drop purple pixel
             intake.setTargetPositionPreset(Intake.Position.P5);
             intake.update();
-            sleep(750);
+            sleep(450);
 
             // get white pixel
             drive.followTrajectory(toBackToStackCenter);
             intake.spinForward();
             outtake.box.intake();
             drive.followTrajectory(toStackCenter);
-            drive.setMotorPowers(-0.1, -0.1, -0.1, -0.1);
-            sleep(500);
+            drive.setMotorPowers(-0.17, -0.17, -0.17, -0.17);
+            sleep(800);
             drive.setMotorPowers(0, 0, 0, 0);
             long curr = System.currentTimeMillis();
             while (System.currentTimeMillis() - curr < 1000 * STACK_TIME && opModeIsActive()) {
@@ -266,31 +263,18 @@ public class BlueFarAuto extends LinearOpMode {
 
             // drop yellow pixel
             drive.followTrajectory(toBackdropCenter);
-            new Thread(() -> {
-                outtake.goTo(OuttakeDifferential.State.UP, true);
-                while (lift.getEncoderValue() < 150 && opModeIsActive()) {
-                    lift.setPower(0.8);
-                }
-                lift.setPower(0.1);
-            }).start();
+
+            outtake.goTo(OuttakeDifferential.State.UP);
+
             drive.followTrajectory(toScoreCenter);
-            drive.setMotorPowers(0.25, 0.25, 0.25, 0.25);
-            curr = System.currentTimeMillis();
-            while (System.currentTimeMillis() - curr < 3500 && opModeIsActive()) {
-                if (outtake.boxIsEmpty()) break;
-            }
+            drive.setMotorPowers(0.22, 0.22, 0.22, 0.22);
+
             sleep(1000);
             drive.setMotorPowers(0, 0, 0, 0);
+            sleep(200);
 
-            new Thread(() -> {
-                sleep(200);
-                while (lift.getEncoderValue() > 10 && opModeIsActive()) {
-                    lift.setPower(-0.5);
-                }
-                lift.setPower(0);
-                outtake.goTo(OuttakeDifferential.State.DOWN, true);
-                sleep(2000);
-            }).start();
+            outtake.goTo(OuttakeDifferential.State.DOWN);
+            sleep(1000);
 
             drive.followTrajectory(toParkCenter);
         } else {
@@ -308,27 +292,22 @@ public class BlueFarAuto extends LinearOpMode {
             intake.spinForward();
             outtake.box.intake();
             drive.followTrajectory(toStackRight);
-            drive.setMotorPowers(-0.1, -0.1, -0.1, -0.1);
-            sleep(500);
+            drive.setMotorPowers(-0.17, -0.17, -0.17, -0.17);
+            sleep(800);
             drive.setMotorPowers(0, 0, 0, 0);
             long curr = System.currentTimeMillis();
             while (System.currentTimeMillis() - curr < 1000 * STACK_TIME && opModeIsActive()) {
                 if (outtake.boxIsFull()) break;
             }
             intake.spinBackwards();
-            sleep(30000);
+            sleep(1500);
             intake.stopSpin();
             outtake.box.stopSpinning();
 
             // drop yellow pixel
             drive.followTrajectory(toBackdropRight);
-            new Thread(() -> {
-                outtake.goTo(OuttakeDifferential.State.UP, true);
-                while (lift.getEncoderValue() < 150 && opModeIsActive()) {
-                    lift.setPower(0.8);
-                }
-                lift.setPower(0.1);
-            }).start();
+            outtake.goTo(OuttakeDifferential.State.UP);
+
             drive.followTrajectory(toScoreRight);
             drive.setMotorPowers(0.25, 0.25, 0.25, 0.25);
             curr = System.currentTimeMillis();
@@ -338,16 +317,9 @@ public class BlueFarAuto extends LinearOpMode {
             sleep(1000);
             drive.setMotorPowers(0, 0, 0, 0);
 
-            new Thread(() -> {
                 sleep(200);
-                while (lift.getEncoderValue() > 10 && opModeIsActive()) {
-                    lift.setPower(-0.5);
-                }
-                lift.setPower(0);
-                outtake.goTo(OuttakeDifferential.State.DOWN, true);
+                outtake.goTo(OuttakeDifferential.State.DOWN);
                 sleep(2000);
-            }).start();
-
             drive.followTrajectory(toParkRight);
         }
 
