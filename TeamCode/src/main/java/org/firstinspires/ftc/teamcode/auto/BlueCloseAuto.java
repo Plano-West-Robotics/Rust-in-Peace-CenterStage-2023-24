@@ -22,7 +22,8 @@ import org.firstinspires.ftc.vision.VisionPortal;
 public class BlueCloseAuto extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
-
+//i love auto!!!
+  //nah shut up foo
     // Vision
     private PropDetectionProcessor propDetector;
     private VisionPortal visionPortal;
