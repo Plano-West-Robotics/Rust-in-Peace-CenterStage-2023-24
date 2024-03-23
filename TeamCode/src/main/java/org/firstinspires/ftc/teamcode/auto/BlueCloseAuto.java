@@ -81,7 +81,7 @@ public class BlueCloseAuto extends LinearOpMode {
                 .build();
 
         Trajectory toBackdropCenter = drive.trajectoryBuilder(toSpikeMarkCenter.end())
-                .splineToLinearHeading(new Pose2d(50, 33.5, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(50, 34.5, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
         Trajectory toParkCenter = drive.trajectoryBuilder(toBackdropCenter.end(), true)
@@ -97,7 +97,7 @@ public class BlueCloseAuto extends LinearOpMode {
                 .build();
 
         Trajectory toBackdropRight = drive.trajectoryBuilder(toSpikeMarkRight.end())
-                .splineToLinearHeading(new Pose2d(50, 36, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(50, 35, Math.toRadians(0)), Math.toRadians(0))
                 .build();
 
         Trajectory toParkRight = drive.trajectoryBuilder(toBackdropRight.end(), true)
@@ -176,7 +176,7 @@ public class BlueCloseAuto extends LinearOpMode {
             drive.followTrajectory(toBackdropCenter);
             outtake.setWrist(OuttakeDifferential.WristState.MANUAL);
             new Thread(() -> {
-                while(lift.getEncoderValue() < 110 && opModeIsActive()) {
+                while(lift.getEncoderValue() < 80 && opModeIsActive()) {
                     lift.setPower(0.5);
                 }
                 lift.setPower(0.1);

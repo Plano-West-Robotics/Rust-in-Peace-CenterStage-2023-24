@@ -177,6 +177,7 @@ public class RedCloseAuto extends LinearOpMode {
                 }
                 lift.setPower(0);
             }).start();
+            drive.setMotorPowers(0,0,0,0);
 
 //           drive.followTrajectorySequence(toCyclePosition);
 //
@@ -240,7 +241,7 @@ public class RedCloseAuto extends LinearOpMode {
             outtake.goTo((OuttakeDifferential.State.UP));
             drive.followTrajectory(toBackdropRight);
 
-            drive.setMotorPowers(0.3, 0.3, 0.3, 0.3);
+            drive.setMotorPowers(0.2, 0.2, 0.2, 0.2);
             long curr = System.currentTimeMillis();
             while (System.currentTimeMillis() - curr < 2500 && opModeIsActive()) {
                 if (outtake.boxIsEmpty()) break;
@@ -249,6 +250,7 @@ public class RedCloseAuto extends LinearOpMode {
             drive.setMotorPowers(0, 0, 0, 0);
 //            drive.followTrajectory(toParkCenter);
             outtake.goTo(OuttakeDifferential.State.DOWN);
+            drive.turn(Math.toRadians(90));
             sleep(4000);
         } else {
             // Location.Right
@@ -263,7 +265,7 @@ public class RedCloseAuto extends LinearOpMode {
             // drop yellow pixel
             new Thread(() -> {
                 outtake.goTo(OuttakeDifferential.State.RIGHT);
-                while(lift.getEncoderValue() < 110 && opModeIsActive()) {
+                while(lift.getEncoderValue() < 100 && opModeIsActive()) {
                     lift.setPower(0.5);
                 }
                 lift.setPower(0.1);
@@ -271,7 +273,7 @@ public class RedCloseAuto extends LinearOpMode {
 
             drive.followTrajectory(toBackdropRight);
 
-            drive.setMotorPowers(0.3, 0.3, 0.3, 0.3);
+            drive.setMotorPowers(0.25, 0.25, 0.25, 0.25);
             long curr = System.currentTimeMillis();
             while (System.currentTimeMillis() - curr < 2500 && opModeIsActive()) {
                 if (outtake.boxIsEmpty()) break;
@@ -287,6 +289,9 @@ public class RedCloseAuto extends LinearOpMode {
                 lift.setPower(0);
             }).start();
 //            drive.followTrajectory(toParkRight);
+            drive.setMotorPowers(0,0,0,0);
+            drive.turn(Math.toRadians(90));
+
             sleep(4000);
         }
 

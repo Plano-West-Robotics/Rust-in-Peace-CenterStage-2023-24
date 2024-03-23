@@ -46,7 +46,7 @@ public class FieldCentricTeleOp extends OpMode {
         lift.loadPosition();
         lift.setManual(true);
 
-        intake.setSpeed(0.7);
+        intake.setSpeed(0.8);
     }
 
     @Override
